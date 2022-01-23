@@ -1,0 +1,27 @@
+{
+  "name": "troisjs-app",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@xailabs/three-renderer-stats": "^1.0.4",
+    "@xstate/vue": "^0.8.1",
+    "stats.js": "^0.17.0",
+    "three": "^0.134.0",
+    "three-instanced-group-mesh": "^1.0.1",
+    "troisjs": "^0.3.3",
+    "vue": "^3.2.20",
+    "xstate": "^4.27.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.9.4",
+    "@vue/compiler-sfc": "^3.2.20",
+    "autoprefixer": "^10.4.2",
+    "postcss": "^8.4.5",
+    "tailwindcss": "^3.0.15",
+    "vite": "^2.6.14"
+  }
+}
