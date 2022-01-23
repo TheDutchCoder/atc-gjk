@@ -15,40 +15,67 @@
 
 <script setup>
 import { Group } from 'troisjs'
-import Airplane from '#components/airplane.vue'
 import { randomRoundNumber } from '../tools'
+import { getDirection } from '#tiles/airport/utils'
 
 import ForestTile from '#tiles/forest.vue'
-import AirportTile from '#tiles/airport.vue'
+import AirportTile from '#tiles/airport'
 
 const WIDTH = 5
 const HEIGHT = 5
-const MIN_AIRPORTS = 1
-const MAX_AIRPORTS = 2
 
 const forestTile = () => ({
   type: 'ForestTile',
 })
 
-const airportTile = () => ({
+const airportTile = (x, y) => ({
   type: 'AirportTile',
-  direction: randomRoundNumber(0, 7),
+  direction: getDirection(x, y),
 })
+
+const getRange = (width, offset = 0) => {
+  const normalizedX = Math.floor(width / 2)
+  const minX = 0 - normalizedX
+  const maxX = normalizedX
+
+  return {
+    min: minX + offset,
+    max: maxX - offset,
+  }
+}
 
 /**
  * Randomization of tiles.
  *
  * Airports are always at least 1 tile from the edge.
+ * Airports need to always point towards the origin.
  */
-const amountOfAirports = randomRoundNumber(MIN_AIRPORTS, MAX_AIRPORTS)
+const rangeX = getRange(WIDTH, 1)
+const rangeY = getRange(HEIGHT, 1)
+const airportLocation = {
+  x: randomRoundNumber(rangeX.min, rangeX.max),
+  y: randomRoundNumber(rangeY.min, rangeY.max),
+}
 
-const matrix = []
+const generateBoard = (width = WIDTH, height = HEIGHT) => {
+  const board = []
+  const rY = getRange(height)
+  const rX = getRange(width)
 
-const board = [
-  [forestTile(), forestTile(), forestTile(), forestTile(), forestTile()],
-  [forestTile(), forestTile(), forestTile(), forestTile(), forestTile()],
-  [forestTile(), forestTile(), airportTile(), forestTile(), forestTile()],
-  [forestTile(), forestTile(), forestTile(), forestTile(), forestTile()],
-  [forestTile(), forestTile(), forestTile(), forestTile(), forestTile()],
-]
+  for (let y = rY.min; y <= rY.max; y++) {
+    const row = []
+    for (let x = rX.min; x <= rX.max; x++) {
+      if (airportLocation.x === x && airportLocation.y === y) {
+        row.push(airportTile(x, y))
+      } else {
+        row.push(forestTile())
+      }
+    }
+    board.push(row)
+  }
+
+  return board
+}
+
+const board = generateBoard()
 </script>
