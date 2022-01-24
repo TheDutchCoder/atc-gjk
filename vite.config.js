@@ -14,6 +14,7 @@ export default defineConfig({
     },
   },
   plugins: [vue()],
+  base: '/atc-gjk/',
   build: {
     outDir: 'docs',
   },
