@@ -10,6 +10,7 @@ export const gameMachine = () => createMachine({
     seeding: {
       on: {
         'DONE': 'playing',
+        'STOP': 'stopped',
       }
     },
     playing: {
@@ -17,8 +18,12 @@ export const gameMachine = () => createMachine({
         'UPDATE_SCORE': {
           actions: ['updateScore'],
         },
+        'STOP': 'stopped',
         'FINISHED': 'finished',
       },
+    },
+    stopped: {
+      type: 'final',
     },
     finished: {
       type: 'final',
