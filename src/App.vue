@@ -3,7 +3,7 @@
     <div v-if="state.matches('loading')" class="fixed top-1/2 left-1/2 bg-red-500">loading</div>
 
     <transition
-      enter-active-class="transition duration-100 ease-out delay-500"
+      enter-active-class="transition duration-100 ease-out"
       enter-from-class="transform scale-95 opacity-0"
       enter-to-class="transform scale-100 opacity-100"
       leave-active-class="transition duration-75 ease-in"
@@ -11,17 +11,17 @@
       leave-to-class="transform scale-95 opacity-0"
     >
       <div
-        class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col space-y-4 items-center"
+        class="fixed bottom-20 left-1/2 transform -translate-x-1/2"
         v-if="state.matches('idle')"
       >
-        <div class="text-center text-sky-700 bg-white rounded-lg p-10 shadow-xl bg-opacity-90">
-          <h1 class="font-bold font-callout text-6xl">Air Traffic Control</h1>
+        <!-- <div class="text-center text-sky-700 bg-white rounded-lg p-10 shadow-xl bg-opacity-90"> -->
+          <!-- <h1 class="font-bold font-callout text-6xl">Air Traffic Control</h1> -->
 
           <button
-            class="rounded-md bg-gradient-to-r from-cyan-500 to-blue-500 px-10 py-3 text-white font-bold m-auto mt-8"
+            class="rounded-md bg-gradient-to-r from-cyan-500 to-blue-500 px-10 py-3 text-white font-bold m-auto shadow-lg"
             @click="send({ type: 'START' })"
           >Start new game</button>
-        </div>
+        <!-- </div> -->
       </div>
     </transition>
 
