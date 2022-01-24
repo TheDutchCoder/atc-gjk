@@ -15,13 +15,43 @@
         v-if="state.matches('idle')"
       >
         <div class="text-center text-sky-700 bg-white rounded-lg p-10 shadow-xl bg-opacity-90">
-          <!-- <p class="font-dongle text-4xl text-sky-500">GJK's</p> -->
           <h1 class="font-bold font-callout text-6xl">Air Traffic Control</h1>
 
           <button
             class="rounded-md bg-gradient-to-r from-cyan-500 to-blue-500 px-10 py-3 text-white font-bold m-auto mt-8"
             @click="send({ type: 'START' })"
           >Start new game</button>
+        </div>
+      </div>
+    </transition>
+
+    <button v-if="state.matches('start')" class="fixed bottom-1 left-1 rounded-md bg-gradient-to-r from-red-500 to-orange-500 px-10 py-3 text-white font-bold m-auto mt-8" @click="showQuitDialog">Quit</button>
+    <transition
+      enter-active-class="transition duration-100 ease-out"
+      enter-from-class="transform scale-95 opacity-0"
+      enter-to-class="transform scale-100 opacity-100"
+      leave-active-class="transition duration-75 ease-in"
+      leave-from-class="transform scale-100 opacity-100"
+      leave-to-class="transform scale-95 opacity-0"
+    >
+      <div
+        class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col space-y-4 items-center"
+        v-if="state.matches('start') && quitDialog"
+      >
+        <div class="text-center text-red-700 bg-white rounded-lg p-10 shadow-xl bg-opacity-90">
+          <h1 class="font-bold font-callout text-2xl">Are you sure you want to quit?</h1>
+          <p>Your game will not be saved and you will lose all points.</p>
+
+          <div class="space-x-2">
+          <button
+            class="rounded-md bg-gradient-to-r from-red-500 to-orange-500 px-10 py-3 text-white font-bold m-auto mt-8"
+            @click="quitGame"
+          >Quit the game</button>
+          <button
+            class="rounded-md bg-gradient-to-r from-green-500 to-lime-500 px-10 py-3 text-white font-bold m-auto mt-8"
+            @click="hideQuitDialog"
+          >Keep playing</button>
+          </div>
         </div>
       </div>
     </transition>
@@ -296,8 +326,15 @@ const { cameraRef, camera } = useCamera()
 const { rendererRef, renderer } = useRenderer()
 
 
-const { state, send } = useMachine(machine)
+const { state, send, service } = useMachine(machine)
 
+const quitDialog = ref(false)
+const showQuitDialog = () => quitDialog.value = true
+const hideQuitDialog = () => quitDialog.value = false
+const quitGame = () => {
+  hideQuitDialog()
+  service.children.get('gameMachine').send('STOP')
+}
 
 /**
  * States

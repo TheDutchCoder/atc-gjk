@@ -17,9 +17,9 @@ export const machine = () => createMachine({
     },
     start: {
       invoke: {
-        id: 'yolo',
+        id: 'gameMachine',
         src: gameMachine,
-        onDone: 'end'
+        onDone: 'idle'
       },
     },
     end: {},
