@@ -13,5 +13,8 @@ export default defineConfig({
       '#tiles': path.resolve(__dirname, './src/components/tiles'),
     },
   },
-  plugins: [vue()]
+  plugins: [vue()],
+  build: {
+    outDir: 'docs',
+  },
 })
