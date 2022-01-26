@@ -494,7 +494,7 @@
 import { LambertMaterial, Group, Box, PointLight } from 'troisjs'
 import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, toRefs, watch } from 'vue'
 import useRenderer from '#composables/use-renderer'
-import { setPoint } from '#/tools'
+import { setPoint } from '#tools'
 import * as COLORS from '#/colors'
 
 const { rendererRef } = useRenderer()
@@ -505,13 +505,11 @@ const props = defineProps({
   altitude: {
     type: Number,
     default: 0,
-    required: true,
   },
 
   direction: {
     type: Number,
     default: 0,
-    required: true,
   },
 
   ghost: Boolean,

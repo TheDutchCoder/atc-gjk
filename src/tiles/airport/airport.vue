@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, toRefs } from 'vue'
+import { computed, toRefs } from 'vue'
 import { Group } from 'troisjs'
 
 import GrassTile from '#tiles/grass.vue'
@@ -20,7 +20,7 @@ import useDark from '#composables/use-prop-dark'
 
 const props = defineProps({
   ...usePosition(),
-  ...useDirection(0, true),
+  ...useDirection(0),
   ...useOffsets(),
   ...useDark(),
 })
@@ -32,8 +32,4 @@ const normalizedPosition = computed(() => ({
   y: 0,
   z: position.value.y * 10,
 }))
-
-onMounted(() => {
-  //
-})
 </script>

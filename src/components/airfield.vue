@@ -64,7 +64,7 @@
 <script setup>
 import { Box, LambertMaterial, Group } from 'troisjs'
 import { ref, onMounted, onBeforeUpdate, toRefs, computed } from 'vue'
-import { randomNumber } from '#/tools'
+import { randomNumber } from '#tools'
 import * as COLORS from '#/colors'
 import useRenderer from '#composables/use-renderer'
 

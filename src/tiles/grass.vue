@@ -14,7 +14,7 @@
 <script setup>
 import { LambertMaterial } from 'troisjs'
 import { toRefs, computed, onMounted, ref } from 'vue'
-import { setPoint } from '#/tools'
+import { setPoint } from '#tools'
 
 import usePosition from '#composables/use-prop-position'
 import useDark from '#composables/use-prop-dark'
