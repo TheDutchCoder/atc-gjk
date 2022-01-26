@@ -3,7 +3,7 @@
     ref="clouds"
     :position="normalizedPosition"
     :rotation="{ x: 0, y: rotation, z: 0 }"
-    :scale="{ x: 2.5, y: 2.5, z: 2.5 }"
+    :scale="{ x: 1, y: 1, z: 1 }"
   >
     <Group ref="animation">
       <Dodecahedron
