@@ -60,14 +60,14 @@
     <Renderer
       ref="rendererRef"
       antialias
-      :orbit-ctrl="{ enableDamping: true, enablePan: false, minDistance: state.matches('idle') ? 10 : 20, maxDistance: state.matches('idle') ? 50 : 100 }"
+      :orbit-ctrl="{ enableDamping: true, enablePan: false, enableZoom: false }"
       resize="window"
       shadow
       alpha
     >
       <Camera
         ref="cameraRef"
-        :position="state.matches('idle') ? { x: 10, y: 6, z: 10 } : { x: 50, y: 50, z: 50 }"
+        :position="{ x: 15, y: 9, z: 15 }"
       />
       <Scene ref="sceneRef">
         <HemisphereLight
@@ -107,7 +107,7 @@
 <script setup>
 import { ref, onMounted, watch, computed, onBeforeUnmount } from 'vue'
 import { Camera, DirectionalLight, HemisphereLight, Renderer, Scene } from 'troisjs'
-import { AxesHelper, HemisphereLightHelper, DirectionalLightHelper, Object3D, Color, Quaternion, Vector3 } from 'three'
+import { AxesHelper, HemisphereLightHelper, DirectionalLightHelper, Object3D, Color, Quaternion, Vector3, PCFSoftShadowMap } from 'three'
 
 import { useMachine } from '@xstate/vue'
 import { machine } from '#/machines/main'
@@ -150,6 +150,21 @@ onMounted(() => {
 watch(
   state,
   (newState) => {
+    // Update shadows when switching between game modes.
+    shouldShadowsUpdate = true
+
+    if (newState.matches('idle')) {
+      dirLight.value.light.shadow.camera.top = 90
+      dirLight.value.light.shadow.camera.bottom = -120
+      dirLight.value.light.shadow.camera.left = -90
+      dirLight.value.light.shadow.camera.right = 90
+    } else {
+      dirLight.value.light.shadow.camera.top = 5
+      dirLight.value.light.shadow.camera.bottom = -5
+      dirLight.value.light.shadow.camera.left = -5
+      dirLight.value.light.shadow.camera.right = 5
+    }
+
     if (newState.matches('start')) {
       pivot2.rotation.y = 0
     }
@@ -227,9 +242,9 @@ watch(
     if (newTick % 4 === 0) {
       cycle.value++
 
-      cleanPlanes()
-      movePlanes()
-      scorePlanes()
+      // cleanPlanes()
+      // movePlanes()
+      // scorePlanes()
     }
 
     // Move the sun.
@@ -287,10 +302,13 @@ onMounted(() => {
   sceneRef.value.add(dirLightHelper)
 
   console.log(dirLight.value)
-  dirLight.value.light.shadow.camera.top = 90
-  dirLight.value.light.shadow.camera.bottom = -120
-  dirLight.value.light.shadow.camera.left = -90
-  dirLight.value.light.shadow.camera.right = 90
+  // dirLight.value.light.shadow.radius = 10
+
+  console.log(dirLight.value)
+  // dirLight.value.light.shadow.camera.top = 90
+  // dirLight.value.light.shadow.camera.bottom = -120
+  // dirLight.value.light.shadow.camera.left = -90
+  // dirLight.value.light.shadow.camera.right = 90
 
   sceneRef.value.scene.add(pivot)
   pivot.add(dirLight.value.light)
@@ -315,6 +333,7 @@ onMounted(() => {
 
   let i = 0
 
+  // rendererRef.value.renderer.shadowMap.type = PCFSoftShadowMap
   rendererRef.value.renderer.shadowMap.autoUpdate = false
 
   console.log(cameraRef.value.camera)

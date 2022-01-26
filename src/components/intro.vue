@@ -7,7 +7,7 @@
 
 <script setup>
 import { Group } from 'troisjs'
-import { FogExp2, Color } from 'three'
+import { Fog, Color } from 'three'
 import { randomItemFromArray } from '#tools'
 import Airplane from '#components/airplane.vue'
 
@@ -23,7 +23,7 @@ import { onMounted } from 'vue'
 const { scene } = useScene()
 
 onMounted(() => {
-  const fog = new FogExp2(new Color(0x9bc8e9), 0.015)
+  const fog = new Fog(new Color(0x9bc8e9), 10, 35)
   scene.value.fog = fog
 })
 

@@ -26,7 +26,6 @@
 <script setup>
 import { StandardMaterial } from 'troisjs'
 import { toRefs, computed, onMounted, ref } from 'vue'
-import { setPoint } from '#tools'
 import { Vector3 } from 'three'
 
 import usePosition from '#composables/use-prop-position'
