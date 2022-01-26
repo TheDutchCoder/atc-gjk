@@ -14,7 +14,7 @@
 import { CylinderGeometry, DodecahedronGeometry, LambertMaterial } from 'troisjs'
 import { onMounted, ref, toRefs } from 'vue'
 import { Object3D, Color } from 'three'
-import { randomRoundNumber, randomNumber } from '#/tools'
+import { randomRoundNumber, randomNumber } from '#tools'
 
 import useAmount from '#composables/use-prop-amount'
 import useExlcudes from '#composables/use-prop-excludes'

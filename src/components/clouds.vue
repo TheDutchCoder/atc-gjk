@@ -103,7 +103,7 @@
 <script setup>
 import { Dodecahedron, LambertMaterial, Group } from 'troisjs'
 import { ref, onMounted, toRefs, computed } from 'vue'
-import { randomRoundNumber } from '../tools'
+import { randomRoundNumber } from '#tools'
 
 import useRenderer from '#composables/use-renderer'
 import usePosition from '#composables/use-prop-position'

@@ -79,7 +79,7 @@
 <script setup>
 import { Box, LambertMaterial, Group } from 'troisjs'
 import { ref, onMounted, toRefs, computed } from 'vue'
-import { setPoint } from '#/tools'
+import { setPoint } from '#tools'
 
 import useRenderer from '#composables/use-renderer'
 

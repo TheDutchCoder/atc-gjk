@@ -25,10 +25,10 @@
 <script setup>
 import { Box, LambertMaterial, InstancedMesh } from 'troisjs'
 import { toRefs, onMounted, ref } from 'vue'
-import { randomNumber } from '../../tools'
+import { randomNumber } from '#tools'
 import { Object3D } from 'three'
 
-import GrassTile from '#components/tiles/grass.vue'
+import GrassTile from '#tiles/grass.vue'
 import Rocks from '#components/rocks.vue'
 import Bushes from '#components/bushes.vue'
 
@@ -51,24 +51,19 @@ const props = defineProps({
   },
 })
 
-const { direction } = toRefs(props)
+const { direction, position } = toRefs(props)
 
 const beams = ref()
 
 onMounted(() => {
-  console.log('train tracks')
-
   const beamsMesh = beams.value.mesh
   const dummy = new Object3D()
 
   for (let i = 0; i < 20; i++) {
-    // const color = colors[randomRoundNumber(0, colors.length - 1)]
-    // const scale = randomNumber(0.2, 1)
     const rotation = randomNumber(-0.05, 0.05)
     const positionZ = 4.75 - (i * 0.5)
 
     dummy.position.set(0, 0.15, positionZ)
-    // dummy.scale.set(scale, scale, scale)
     dummy.rotation.set(0, rotation, 0)
     dummy.updateMatrix()
 

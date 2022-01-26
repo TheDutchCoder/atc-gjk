@@ -292,7 +292,7 @@ import useRenderer from '#composables/use-renderer'
 import useScene from '#composables/use-scene'
 import useCamera from '#composables/use-camera'
 
-import { randomNumber, randomRoundNumber, lerpColor } from '#/tools'
+import { randomNumber, randomRoundNumber, lerpColor } from '#tools'
 
 import { DEBUG } from './utils'
 // import { sceneC } from './scene'
@@ -302,8 +302,8 @@ import { DEBUG } from './utils'
 // Object3D.DefaultUp.set(0, 0, 1)
 
 import GrassTile from '#tiles/grass.vue'
-import ForestTile from '#tiles/forest.vue'
-import TrainTracksTile from '#tiles/train-tracks.vue'
+import ForestTile from '#tiles/forest'
+import TrainTracksTile from '#tiles/train-tracks'
 import AirportTile from '#tiles/airport'
 import FarmTile from '#tiles/farm.vue'
 import WaterTile from '#tiles/water.vue'
@@ -316,7 +316,7 @@ import Airfield from '#components/airfield.vue'
 import Clouds from '#components/clouds.vue'
 // import Test from '#components/test.vue'
 // import Tile from '#components/tile.vue'
-import { displayTime, setPoint } from './tools'
+import { displayTime, setPoint } from '#tools'
 
 import Intro from '#components/intro.vue'
 import Board from '#components/board.vue'

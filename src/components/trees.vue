@@ -18,7 +18,7 @@
 <script setup>
 import { LambertMaterial, InstancedMesh, ConeGeometry } from 'troisjs'
 import { toRefs, onMounted, ref } from 'vue'
-import { randomNumber, randomRoundNumber } from '#/tools'
+import { randomNumber, randomRoundNumber } from '#tools'
 import { Object3D, Color, Vector3, Euler } from 'three'
 
 import useAmount from '#composables/use-prop-amount'
