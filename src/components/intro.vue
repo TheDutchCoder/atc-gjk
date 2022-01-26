@@ -2,6 +2,7 @@
   <Group>
     <component :is="randomTile"></component>
     <Airplane :position="{ x: 0, y: 0 }" :altitude="1"></Airplane>
+    <Clouds :altitude="1.8"></Clouds>
   </Group>
 </template>
 
@@ -9,7 +10,9 @@
 import { Group } from 'troisjs'
 import { Fog, Color } from 'three'
 import { randomItemFromArray } from '#tools'
+
 import Airplane from '#components/airplane.vue'
+import Clouds from '#components/clouds.vue'
 
 // import GrassTile from '#tiles/grass.vue'
 import FarmTile from '#tiles/farm.vue'
