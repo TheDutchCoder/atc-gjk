@@ -3,9 +3,14 @@
     <div v-if="state.matches('loading')" class="fixed top-1/2 left-1/2 bg-red-500">loading</div>
 
     <button
-      class="fixed top-1 right-1 rounded-md bg-gradient-to-r from-red-500 to-rose-500 px-10 py-3 text-white font-bold m-auto shadow-lg"
+      class="fixed top-1 right-1 rounded-md bg-gradient-to-br from-violet-500 to-purple-500 px-10 py-3 text-white font-bold m-auto shadow-lg"
       @click="toggleDebugging"
     >Debug</button>
+
+    <button
+      class="fixed top-1 right-36 rounded-md bg-gradient-to-br from-violet-500 to-purple-500 px-10 py-3 text-white font-bold m-auto shadow-lg"
+      @click="state.matches('idle') ? send('EDIT') : send('IDLE')"
+    >Edit</button>
 
     <transition
       enter-active-class="transition duration-100 ease-out"
@@ -92,6 +97,7 @@
         />
 
         <Intro v-if="state.matches('idle')"></Intro>
+        <Editor v-if="state.matches('edit')"></Editor>
         <Board v-if="state.matches('start')"></Board>
       </Scene>
     </Renderer>
@@ -122,12 +128,13 @@ import { randomNumber, randomRoundNumber, lerpColor } from '#tools'
 import { DEBUG } from './utils'
 
 import Intro from '#components/intro.vue'
+import Editor from '#components/editor.vue'
 import Board from '#components/board.vue'
 
 const { debugging, toggleDebugging } = useDebugger()
 const { sceneRef } = useScene()
-const { cameraRef } = useCamera()
-const { rendererRef } = useRenderer()
+const { cameraRef, camera } = useCamera()
+const { rendererRef, renderer } = useRenderer()
 
 const { state, send, service } = useMachine(machine)
 
@@ -167,6 +174,18 @@ watch(
 
     if (newState.matches('start')) {
       pivot2.rotation.y = 0
+    }
+
+    // When entering edit mode, we enable certain orbit controls (like zooming)
+    // and reset them when we exit this mode.
+    if (newState.matches('edit')) {
+      rendererRef.value.three.cameraCtrl.enableZoom = true
+      rendererRef.value.three.cameraCtrl.enablePan = true
+      rendererRef.value.three.cameraCtrl.reset()
+    } else {
+      rendererRef.value.three.cameraCtrl.enableZoom = false
+      rendererRef.value.three.cameraCtrl.enablePan = false
+      rendererRef.value.three.cameraCtrl.reset()
     }
   }
 )

@@ -56,20 +56,16 @@ const normalizedPosition2 = computed(() => ({
 }))
 
 const grass = ref()
-// const grassMaterial = ref()
 
 onMounted(() => {
-  // grassMaterial.value.material.flatShading = true
-
   const v = grass.value.geometry.getAttribute('position')
 
   for (let i = 0; i < v.count; i++) {
     const vt = new Vector3()
     vt.fromBufferAttribute(v, i)
-    // console.log(vt)
 
     if (vt.y >= 0.5 && (vt.x !== -5 && vt.x !== 5 && vt.z !== -5 && vt.z !== 5)) {
-      const randomY = 0.1 - (Math.random() * 0.2)
+      const randomY = 0.15 - (Math.random() * 0.3)
       const randomX = (WIDTH_SEGMENTS / 40) - (Math.random() * (WIDTH_SEGMENTS / 20))
       const randomZ = (DEPTH_SEGMENTS / 40) - (Math.random() * (DEPTH_SEGMENTS / 20))
 
@@ -78,27 +74,13 @@ onMounted(() => {
         vt2.fromBufferAttribute(v, y)
 
         if (vt.x === vt2.x && vt.y === vt2.y && vt.z === vt2.z) {
-          // console.log('yes', vt.x, vt.y, vt.z)
-
           v.setXYZ(i, vt.x + randomX, vt.y + randomY, vt.z + randomZ);
           v.setXYZ(y, vt2.x + randomX, vt2.y + randomY, vt2.z + randomZ);
         }
       }
-      // console.log(v.array(vec => fromBufferAttribute(v, i)))
-      // const r = v.array.filter(vertex => vertex.x === vt.x && vertex.y === vt.y && vertex.z === vt.z)
-      const r = v.array
-      // console.log(r.filter(vertex))
-      // v.setXYZ(i, vt.x, vt.y + Math.random(), vt.z);
     }
   }
 
-  // grass.value.geometry.attributes.position.array[724] = 1
-  // grassMaterial.value.material.needsUpdate = true
   grass.value.geometry.attributes.position.needsUpdate = true
-
-  // setPoint(5, grass, null, offsets.value[0])
-  // setPoint(1, grass, null, offsets.value[1])
-  // setPoint(0, grass, null, offsets.value[2])
-  // setPoint(4, grass, null, offsets.value[3])
 })
 </script>

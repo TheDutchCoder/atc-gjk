@@ -18,13 +18,17 @@ import AirportTile from '#tiles/airport'
 import TrainTracksTile from '#tiles/train-tracks'
 
 import useScene from '#composables/use-scene'
-import { onMounted } from 'vue'
+import { onBeforeUnmount, onMounted } from 'vue'
 
 const { scene } = useScene()
 
 onMounted(() => {
   const fog = new Fog(new Color(0x9bc8e9), 10, 35)
   scene.value.fog = fog
+})
+
+onBeforeUnmount(() => {
+  scene.value.fog = null
 })
 
 const tiles = [
