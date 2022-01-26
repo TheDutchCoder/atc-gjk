@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { Box, LambertMaterial, Group } from 'troisjs'
+import { Group } from 'troisjs'
 import { ref, onMounted, toRefs, computed } from 'vue'
 
 import GrassTile from '#tiles/grass.vue'

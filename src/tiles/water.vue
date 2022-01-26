@@ -7,14 +7,13 @@
     :position="normalizedPosition"
     receive-shadow
   >
-    <LambertMaterial color="#85bde5" :props="{ transparent: true, opacity: 0.85 }" />
+    <StandardMaterial color="#85bde5" :props="{ flatShading: true, transparent: true, opacity: 0.85 }" />
   </Box>
 </template>
 
 <script setup>
-import { LambertMaterial } from 'troisjs'
-import { toRefs, computed, onMounted, ref } from 'vue'
-import { setPoint } from '#tools'
+import { StandardMaterial } from 'troisjs'
+import { toRefs, computed } from 'vue'
 
 import usePosition from '#composables/use-prop-position'
 
