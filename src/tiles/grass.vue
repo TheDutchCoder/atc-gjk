@@ -4,21 +4,37 @@
     :width="10"
     :height="1"
     :depth="10"
+    :width-segments="WIDTH_SEGMENTS"
+    :depth-segments="DEPTH_SEGMENTS"
     :position="normalizedPosition"
     receive-shadow
   >
-    <LambertMaterial :color="dark ? '#a8cf86' : '#b6dd94'" />
+    <StandardMaterial ref="grassMaterial" :color="dark ? '#a8cf86' : '#b6dd94'" :props="{ flatShading: true }" />
+  </Box>
+
+  <Box
+    ref="ground"
+    :width="10"
+    :height="2"
+    :depth="10"
+    :position="normalizedPosition2"
+  >
+    <StandardMaterial color="#a58670" :props="{ flatShading: true }" />
   </Box>
 </template>
 
 <script setup>
-import { LambertMaterial } from 'troisjs'
+import { StandardMaterial } from 'troisjs'
 import { toRefs, computed, onMounted, ref } from 'vue'
 import { setPoint } from '#tools'
+import { Vector3 } from 'three'
 
 import usePosition from '#composables/use-prop-position'
 import useDark from '#composables/use-prop-dark'
 import useOffsets from '#composables/use-prop-offsets'
+
+const WIDTH_SEGMENTS = 10
+const DEPTH_SEGMENTS = 10
 
 const props = defineProps({
   ...usePosition(),
@@ -34,12 +50,56 @@ const normalizedPosition = computed(() => ({
   z: position.value.y * 10,
 }))
 
+const normalizedPosition2 = computed(() => ({
+  x: position.value.x * 10,
+  y: -2,
+  z: position.value.y * 10,
+}))
+
 const grass = ref()
+// const grassMaterial = ref()
 
 onMounted(() => {
-  setPoint(5, grass, null, offsets.value[0])
-  setPoint(1, grass, null, offsets.value[1])
-  setPoint(0, grass, null, offsets.value[2])
-  setPoint(4, grass, null, offsets.value[3])
+  // grassMaterial.value.material.flatShading = true
+
+  const v = grass.value.geometry.getAttribute('position')
+
+  for (let i = 0; i < v.count; i++) {
+    const vt = new Vector3()
+    vt.fromBufferAttribute(v, i)
+    // console.log(vt)
+
+    if (vt.y >= 0.5 && (vt.x !== -5 && vt.x !== 5 && vt.z !== -5 && vt.z !== 5)) {
+      const randomY = 0.1 - (Math.random() * 0.2)
+      const randomX = (WIDTH_SEGMENTS / 40) - (Math.random() * (WIDTH_SEGMENTS / 20))
+      const randomZ = (DEPTH_SEGMENTS / 40) - (Math.random() * (DEPTH_SEGMENTS / 20))
+
+      for (let y = 0; y < v.count; y++) {
+        const vt2 = new Vector3()
+        vt2.fromBufferAttribute(v, y)
+
+        if (vt.x === vt2.x && vt.y === vt2.y && vt.z === vt2.z) {
+          // console.log('yes', vt.x, vt.y, vt.z)
+
+          v.setXYZ(i, vt.x + randomX, vt.y + randomY, vt.z + randomZ);
+          v.setXYZ(y, vt2.x + randomX, vt2.y + randomY, vt2.z + randomZ);
+        }
+      }
+      // console.log(v.array(vec => fromBufferAttribute(v, i)))
+      // const r = v.array.filter(vertex => vertex.x === vt.x && vertex.y === vt.y && vertex.z === vt.z)
+      const r = v.array
+      // console.log(r.filter(vertex))
+      // v.setXYZ(i, vt.x, vt.y + Math.random(), vt.z);
+    }
+  }
+
+  // grass.value.geometry.attributes.position.array[724] = 1
+  // grassMaterial.value.material.needsUpdate = true
+  grass.value.geometry.attributes.position.needsUpdate = true
+
+  // setPoint(5, grass, null, offsets.value[0])
+  // setPoint(1, grass, null, offsets.value[1])
+  // setPoint(0, grass, null, offsets.value[2])
+  // setPoint(4, grass, null, offsets.value[3])
 })
 </script>

@@ -1,25 +1,25 @@
 <template>
   <Group ref="fence" :position="normalizedPosition" :rotation="rotation">
     <Box :width="0.05" :height="0.1" :depth="1" receive-shadow :position="{ x: -0.5, y: 0.15, z: 0 }">
-      <LambertMaterial color="#c89872" />
+      <StandardMaterial color="#c89872" :props="{ flatShading: true }" />
     </Box>
 
     <Box :width="0.05" :height="0.1" :depth="1" receive-shadow :position="{ x: -0.5, y: 0.35, z: 0 }">
-      <LambertMaterial color="#c89872" />
+      <StandardMaterial color="#c89872" :props="{ flatShading: true }" />
     </Box>
 
     <Box :width="0.07" :height="0.5" :depth="0.07" receive-shadow :position="{ x: -0.5, y: 0.25, z: 0.4 }">
-      <LambertMaterial color="#c89872" />
+      <StandardMaterial color="#c89872" :props="{ flatShading: true }" />
     </Box>
 
     <Box :width="0.07" :height="0.5" :depth="0.07" receive-shadow :position="{ x: -0.5, y: 0.25, z: -0.4 }">
-      <LambertMaterial color="#c89872" />
+      <StandardMaterial color="#c89872" :props="{ flatShading: true }" />
     </Box>
   </Group>
 </template>
 
 <script setup>
-import { Box, LambertMaterial, Group } from 'troisjs'
+import { Box, StandardMaterial, Group } from 'troisjs'
 import { ref, onMounted, toRefs, computed } from 'vue'
 
 const props = defineProps({

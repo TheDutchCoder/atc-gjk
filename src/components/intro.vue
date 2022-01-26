@@ -7,14 +7,29 @@
 
 <script setup>
 import { Group } from 'troisjs'
+import { FogExp2, Color } from 'three'
 import { randomItemFromArray } from '#tools'
 import Airplane from '#components/airplane.vue'
 
+// import GrassTile from '#tiles/grass.vue'
+import FarmTile from '#tiles/farm.vue'
 import ForestTile from '#tiles/forest'
 import AirportTile from '#tiles/airport'
 import TrainTracksTile from '#tiles/train-tracks'
 
+import useScene from '#composables/use-scene'
+import { onMounted } from 'vue'
+
+const { scene } = useScene()
+
+onMounted(() => {
+  const fog = new FogExp2(new Color(0x9bc8e9), 0.015)
+  scene.value.fog = fog
+})
+
 const tiles = [
+  // GrassTile,
+  // FarmTile,
   ForestTile,
   AirportTile,
   TrainTracksTile,

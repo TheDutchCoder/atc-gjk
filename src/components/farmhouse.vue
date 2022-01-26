@@ -1,83 +1,83 @@
 <template>
   <Group ref="farmhouse" :position="normalizedPosition" :rotation="rotation">
     <Box :width="2" :height="0.2" :depth="3" receive-shadow :position="{ x: 0, y: 0.1, z: 0 }">
-      <LambertMaterial color="#9cb2c5" />
+      <StandardMaterial color="#9cb2c5" :props="{ flatShading: true }" />
     </Box>
 
     <Box :width="1.9" :height="0.6" :depth="2.9" receive-shadow :position="{ x: 0, y: 0.5, z: 0 }">
-      <LambertMaterial color="#ffffff" />
+      <StandardMaterial color="#ffffff" :props="{ flatShading: true }" />
     </Box>
 
     <Box ref="top" :width="1.9" :height="1.3" :depth="2.9" receive-shadow :position="{ x: 0, y: 1.45, z: 0 }">
-      <LambertMaterial color="#ffffff" />
+      <StandardMaterial color="#ffffff" :props="{ flatShading: true }" />
     </Box>
 
     <Group ref="beams">
       <Box :width="0.1" :height="0.6" :depth="0.1" receive-shadow :position="{ x: 0.95, y: 0.5, z: 1.45 }">
-        <LambertMaterial color="#caa27c" />
+        <StandardMaterial color="#caa27c" :props="{ flatShading: true }" />
       </Box>
 
       <Box :width="0.1" :height="0.6" :depth="0.1" receive-shadow :position="{ x: -0.95, y: 0.5, z: 1.45 }">
-        <LambertMaterial color="#caa27c" />
+        <StandardMaterial color="#caa27c" :props="{ flatShading: true }" />
       </Box>
 
       <Box :width="1.9" :height="0.1" :depth="0.1" receive-shadow :position="{ x: 0, y: 0.8, z: 1.45 }">
-        <LambertMaterial color="#caa27c" />
+        <StandardMaterial color="#caa27c" :props="{ flatShading: true }" />
       </Box>
 
       <Box :width="0.1" :height="0.6" :depth="0.1" receive-shadow :position="{ x: 0.95, y: 0.5, z: -1.45 }">
-        <LambertMaterial color="#caa27c" />
+        <StandardMaterial color="#caa27c" :props="{ flatShading: true }" />
       </Box>
 
       <Box :width="0.1" :height="0.6" :depth="0.1" receive-shadow :position="{ x: -0.95, y: 0.5, z: -1.45 }">
-        <LambertMaterial color="#caa27c" />
+        <StandardMaterial color="#caa27c" :props="{ flatShading: true }" />
       </Box>
 
       <Box :width="1.9" :height="0.1" :depth="0.1" receive-shadow :position="{ x: 0, y: 0.8, z: -1.45 }">
-        <LambertMaterial color="#caa27c" />
+        <StandardMaterial color="#caa27c" :props="{ flatShading: true }" />
       </Box>
     </Group>
 
     <Group ref="roof">
       <Box ref="roofRight" :width="0.1" :height="1.4" :depth="3.1" receive-shadow :position="{ x: 1, y: 1.45, z: 0 }">
-        <LambertMaterial color="#f5c662" />
+        <StandardMaterial color="#f5c662" :props="{ flatShading: true }" />
       </Box>
 
       <Box ref="roofLeft" :width="0.1" :height="1.4" :depth="3.1" receive-shadow :position="{ x: -1, y: 1.45, z: 0 }">
-        <LambertMaterial color="#f5c662" />
+        <StandardMaterial color="#f5c662" :props="{ flatShading: true }" />
       </Box>
     </Group>
 
     <Group ref="chimney">
       <Box ref="chimneyBase" :width="0.2" :height="1" :depth="0.8" receive-shadow :position="{ x: -0.4, y: 1.3, z: 0.8 }">
-        <LambertMaterial color="#a0684d" />
+        <StandardMaterial color="#a0684d" :props="{ flatShading: true }" />
       </Box>
 
       <Box ref="chimneyAngle" :width="0.2" :height="0.4" :depth="0.8" receive-shadow :position="{ x: -0.4, y: 2, z: 0.8 }">
-        <LambertMaterial color="#a0684d" />
+        <StandardMaterial color="#a0684d" :props="{ flatShading: true }" />
       </Box>
 
       <Box ref="chimneyTop" :width="0.2" :height="0.3" :depth="0.2" receive-shadow :position="{ x: -0.4, y: 2.3, z: 0.8 }">
-        <LambertMaterial color="#a0684d" />
+        <StandardMaterial color="#a0684d" :props="{ flatShading: true }" />
       </Box>
     </Group>
 
     <Group ref="smoke" :position="{ x: -0.4, y: 2.4, z: 0.8 }">
       <Box ref="smoke1" :width="0.1" :height="0.1" :depth="0.1">
-        <LambertMaterial color="#ffffff" />
+        <StandardMaterial color="#ffffff" :props="{ flatShading: true }" />
       </Box>
       <Box ref="smoke2" :width="0.1" :height="0.1" :depth="0.1">
-        <LambertMaterial color="#ffffff" />
+        <StandardMaterial color="#ffffff" :props="{ flatShading: true }" />
       </Box>
       <Box ref="smoke3" :width="0.1" :height="0.1" :depth="0.1">
-        <LambertMaterial color="#ffffff" />
+        <StandardMaterial color="#ffffff" :props="{ flatShading: true }" />
       </Box>
     </Group>
   </Group>
 </template>
 
 <script setup>
-import { Box, LambertMaterial, Group } from 'troisjs'
+import { Box, StandardMaterial, Group } from 'troisjs'
 import { ref, onMounted, toRefs, computed } from 'vue'
 import { setPoint } from '#tools'
 

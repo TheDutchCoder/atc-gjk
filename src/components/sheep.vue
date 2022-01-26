@@ -2,54 +2,54 @@
   <Group ref="sheep" :position="normalizedPosition" :rotation="rotation">
     <Group ref="animation">
       <Box :width="0.4" :height="0.4" :depth="0.5" receive-shadow :position="{ x: 0, y: 0.3, z: 0 }">
-        <LambertMaterial color="#eeeeee" />
+        <StandardMaterial color="#eeeeee" :props="{ flatShading: true }" />
       </Box>
 
       <Box :width="0.1" :height="0.1" :depth="0.1" receive-shadow :position="{ x: 0.1, y: 0.05, z: 0.13 }">
-        <LambertMaterial color="#eeeeee" />
+        <StandardMaterial color="#eeeeee" :props="{ flatShading: true }" />
       </Box>
 
       <Box :width="0.1" :height="0.1" :depth="0.1" receive-shadow :position="{ x: -0.1, y: 0.05, z: 0.13 }">
-        <LambertMaterial color="#eeeeee" />
+        <StandardMaterial color="#eeeeee" :props="{ flatShading: true }" />
       </Box>
 
       <Box :width="0.1" :height="0.1" :depth="0.1" receive-shadow :position="{ x: 0.1, y: 0.05, z: -0.13 }">
-        <LambertMaterial color="#eeeeee" />
+        <StandardMaterial color="#eeeeee" :props="{ flatShading: true }" />
       </Box>
 
       <Box :width="0.1" :height="0.1" :depth="0.1" receive-shadow :position="{ x: -0.1, y: 0.05, z: -0.13 }">
-        <LambertMaterial color="#eeeeee" />
+        <StandardMaterial color="#eeeeee" :props="{ flatShading: true }" />
       </Box>
 
       <Group ref="eyeLeft">
         <Box :width="0.1" :height="0.1" :depth="0.02" receive-shadow :position="{ x: -0.1, y: 0.4, z: 0.25 }">
-          <LambertMaterial color="#ffffff" />
+          <StandardMaterial color="#ffffff" :props="{ flatShading: true }" />
         </Box>
 
         <Box :width="0.05" :height="0.05" :depth="0.02" receive-shadow :position="{ x: -0.1, y: 0.4, z: 0.26 }">
-          <LambertMaterial color="#000000" />
+          <StandardMaterial color="#000000" :props="{ flatShading: true }" />
         </Box>
       </Group>
 
       <Group ref="eyeRight">
         <Box :width="0.1" :height="0.1" :depth="0.02" receive-shadow :position="{ x: 0.1, y: 0.4, z: 0.25 }">
-          <LambertMaterial color="#ffffff" />
+          <StandardMaterial color="#ffffff" :props="{ flatShading: true }" />
         </Box>
 
         <Box :width="0.05" :height="0.05" :depth="0.02" receive-shadow :position="{ x: 0.1, y: 0.4, z: 0.26 }">
-          <LambertMaterial color="#000000" />
+          <StandardMaterial color="#000000" :props="{ flatShading: true }" />
         </Box>
       </Group>
 
       <Box ref="nose" :width="0.2" :height="0.1" :depth="0.1" receive-shadow :position="{ x: 0, y: 0.25, z: 0.25 }">
-        <LambertMaterial color="#eeeeee" />
+        <StandardMaterial color="#eeeeee" :props="{ flatShading: true }" />
       </Box>
     </Group>
   </Group>
 </template>
 
 <script setup>
-import { Box, LambertMaterial, Group } from 'troisjs'
+import { Box, StandardMaterial, Group } from 'troisjs'
 import { ref, onMounted, toRefs, computed } from 'vue'
 
 import useRenderer from '#composables/use-renderer'

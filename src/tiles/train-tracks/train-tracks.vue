@@ -7,23 +7,23 @@
       <Bushes :amount="6" :excludes="{ x: [-1.2, 1.2] }"></Bushes>
 
       <Box :width="0.1" :height="0.1" :depth="10" :position="{ x: -0.75, y: 0.24, z: 0 }">
-        <LambertMaterial color="#eeeeee" />
+        <StandardMaterial color="#eeeeee" :props="{ flatShading: true }" />
       </Box>
 
       <Box :width="0.1" :height="0.1" :depth="10" :position="{ x: 0.75, y: 0.24, z: 0 }">
-        <LambertMaterial color="#eeeeee" />
+        <StandardMaterial color="#eeeeee" :props="{ flatShading: true }" />
       </Box>
 
       <InstancedMesh ref="beams" :count="20">
         <BoxGeometry :width="2" :height="0.15" :depth="0.2" />
-        <LambertMaterial color="#763116" />
+        <StandardMaterial color="#763116" :props="{ flatShading: true }" />
       </InstancedMesh>
     </Group>
   </Group>
 </template>
 
 <script setup>
-import { Box, LambertMaterial, InstancedMesh } from 'troisjs'
+import { Box, StandardMaterial, InstancedMesh } from 'troisjs'
 import { toRefs, onMounted, ref } from 'vue'
 import { randomNumber } from '#tools'
 import { Object3D } from 'three'

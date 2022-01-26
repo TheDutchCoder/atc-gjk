@@ -15,7 +15,7 @@
         :position="{ x: 0, y: 0, z: 0 }"
         cast-shadow
       >
-        <LambertMaterial :color="currentColor" />
+        <StandardMaterial :color="currentColor" :props="{ flatShading: true }" />
       </Box>
 
       <Box
@@ -27,7 +27,7 @@
         :position="{ x: 0, y: 0.65, z: -0.7 }"
         :rotation="{ x: 0.2, y: 0, z: 0 }"
       >
-        <LambertMaterial color="#e2eff4" :props="{ transparent: true, opacity: 0.5 }" />
+        <StandardMaterial color="#e2eff4" :props="{ flatShading: true, transparent: true, opacity: 0.5 }" />
       </Box>
 
       <Box
@@ -39,7 +39,7 @@
         :position="{ x: 0, y: 0, z: -1.25 }"
         cast-shadow
       >
-        <LambertMaterial :color="COLORS.WHITE" />
+        <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
       </Box>
 
       <Group
@@ -56,7 +56,7 @@
           :position="{ x: 0.5, y: 0.2, z: -1.05 }"
           :rotation="{ x: 0, y: 0.2, z: Math.PI / 4 }"
         >
-          <LambertMaterial :color="COLORS.GREY" />
+          <StandardMaterial :color="COLORS.GREY" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -68,7 +68,7 @@
           :position="{ x: 0.55, y: 0.2, z: -0.55 }"
           :rotation="{ x: 0, y: 0, z: Math.PI / 4 }"
         >
-          <LambertMaterial :color="COLORS.GREY" />
+          <StandardMaterial :color="COLORS.GREY" :props="{ flatShading: true }" />
         </Box>
       </Group>
 
@@ -81,7 +81,7 @@
           :depth="0.1"
           :position="{ x: -0.55, y: 0.3, z: -0.25 }"
         >
-          <LambertMaterial :color="COLORS.WHITE" />
+          <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>
         <Box
           @click="selectAirplane"
@@ -91,7 +91,7 @@
           :depth="0.1"
           :position="{ x: -0.55, y: 0.3, z: -0.25 }"
         >
-          <LambertMaterial :color="COLORS.WHITE" />
+          <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>
         <Box
           @click="selectAirplane"
@@ -101,7 +101,7 @@
           :depth="0.1"
           :position="{ x: -0.55, y: 0.3, z: -0.25 }"
         >
-          <LambertMaterial :color="COLORS.WHITE" />
+          <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>
       </Group>
 
@@ -114,7 +114,7 @@
           :depth="0.1"
           :position="{ x: 0.55, y: 0.3, z: -0.25 }"
         >
-          <LambertMaterial :color="COLORS.WHITE" />
+          <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>
         <Box
           @click="selectAirplane"
@@ -124,7 +124,7 @@
           :depth="0.1"
           :position="{ x: 0.55, y: 0.3, z: -0.25 }"
         >
-          <LambertMaterial :color="COLORS.WHITE" />
+          <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>
         <Box
           @click="selectAirplane"
@@ -134,7 +134,7 @@
           :depth="0.1"
           :position="{ x: 0.55, y: 0.3, z: -0.25 }"
         >
-          <LambertMaterial :color="COLORS.WHITE" />
+          <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>
       </Group>
 
@@ -152,7 +152,7 @@
           :position="{ x: -0.5, y: 0.2, z: -1.05 }"
           :rotation="{ x: 0, y: -0.2, z: Math.PI / 4 }"
         >
-          <LambertMaterial :color="COLORS.GREY" />
+          <StandardMaterial :color="COLORS.GREY" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -164,7 +164,7 @@
           :position="{ x: -0.55, y: 0.2, z: -0.55 }"
           :rotation="{ x: 0, y: 0, z: Math.PI / 4 }"
         >
-          <LambertMaterial :color="COLORS.GREY" />
+          <StandardMaterial :color="COLORS.GREY" :props="{ flatShading: true }" />
         </Box>
       </Group>
 
@@ -177,7 +177,7 @@
         :position="{ x: 0, y: 0, z: -1.55 }"
         cast-shadow
       >
-        <LambertMaterial :color="COLORS.BROWN" />
+        <StandardMaterial :color="COLORS.BROWN" :props="{ flatShading: true }" />
       </Box>
 
       <Box
@@ -190,7 +190,7 @@
         :rotation="{ x: 0, y: 0, z: Math.PI / 4 }"
         cast-shadow
       >
-        <LambertMaterial :color="COLORS.BLACK" />
+        <StandardMaterial :color="COLORS.BLACK" :props="{ flatShading: true }" />
       </Box>
 
       <Box
@@ -202,7 +202,7 @@
         :position="{ x: 0, y: 0, z: -1.6 }"
         :rotation="{ x: 0, y: 0, z: -Math.PI / 4 }"
       >
-        <LambertMaterial :color="COLORS.BLACK" />
+        <StandardMaterial :color="COLORS.BLACK" :props="{ flatShading: true }" />
       </Box>
 
       <Box
@@ -214,7 +214,7 @@
         :position="{ x: 0, y: 0, z: -0.25 }"
         cast-shadow
       >
-        <LambertMaterial :color="currentColor" />
+        <StandardMaterial :color="currentColor" :props="{ flatShading: true }" />
       </Box>
 
       <Box
@@ -226,7 +226,7 @@
         :position="{ x: 0, y: 0.5, z: 0.95 }"
         cast-shadow
       >
-        <LambertMaterial :color="currentColor" />
+        <StandardMaterial :color="currentColor" :props="{ flatShading: true }" />
       </Box>
 
       <Group ref="rightWheel" :position="{ x: -0.3, y: 0, z: -1.4 }">
@@ -239,7 +239,7 @@
           :position="{ x: 0, y: -0.3, z: 0.75 }"
           cast-shadow
         >
-          <LambertMaterial :color="currentColor" />
+          <StandardMaterial :color="currentColor" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -251,7 +251,7 @@
           :position="{ x: 0, y: -0.6, z: 0.75 }"
           cast-shadow
         >
-          <LambertMaterial :color="COLORS.BROWN" />
+          <StandardMaterial :color="COLORS.BROWN" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -263,7 +263,7 @@
           :position="{ x: 0, y: -0.6, z: 0.75 }"
           cast-shadow
         >
-          <LambertMaterial :color="COLORS.BLACK" />
+          <StandardMaterial :color="COLORS.BLACK" :props="{ flatShading: true }" />
         </Box>
       </Group>
 
@@ -277,7 +277,7 @@
           :position="{ x: 0, y: -0.3, z: 0.75 }"
           cast-shadow
         >
-          <LambertMaterial :color="currentColor" />
+          <StandardMaterial :color="currentColor" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -289,7 +289,7 @@
           :position="{ x: 0, y: -0.6, z: 0.75 }"
           cast-shadow
         >
-          <LambertMaterial :color="COLORS.BROWN" />
+          <StandardMaterial :color="COLORS.BROWN" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -301,7 +301,7 @@
           :position="{ x: 0, y: -0.6, z: 0.75 }"
           cast-shadow
         >
-          <LambertMaterial :color="COLORS.BLACK" />
+          <StandardMaterial :color="COLORS.BLACK" :props="{ flatShading: true }" />
         </Box>
       </Group>
 
@@ -316,7 +316,7 @@
           :rotation="{ x: -0.2, y: 0, z: 0 }"
           cast-shadow
         >
-          <LambertMaterial :color="currentColor" />
+          <StandardMaterial :color="currentColor" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -328,7 +328,7 @@
           :position="{ x: 0, y: -0.5, z: 0.8 }"
           cast-shadow
         >
-          <LambertMaterial :color="COLORS.BROWN" />
+          <StandardMaterial :color="COLORS.BROWN" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -340,7 +340,7 @@
           :position="{ x: 0, y: -0.5, z: 0.8 }"
           cast-shadow
         >
-          <LambertMaterial :color="COLORS.BLACK" />
+          <StandardMaterial :color="COLORS.BLACK" :props="{ flatShading: true }" />
         </Box>
       </Group>
 
@@ -353,7 +353,7 @@
           :depth="0.3"
           :position="{ x: 0, y: 0.4, z: 0 }"
         >
-          <LambertMaterial color="#9d795a" />
+          <StandardMaterial color="#9d795a" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -364,7 +364,7 @@
           :depth="0.2"
           :position="{ x: 0, y: 0.65, z: 0.02 }"
         >
-          <LambertMaterial color="#f5dbb0" />
+          <StandardMaterial color="#f5dbb0" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -375,7 +375,7 @@
           :depth="0.05"
           :position="{ x: 0.1, y: 0.65, z: 0.02 }"
         >
-          <LambertMaterial color="#f5dbb0" />
+          <StandardMaterial color="#f5dbb0" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -386,7 +386,7 @@
           :depth="0.05"
           :position="{ x: -0.1, y: 0.65, z: 0.02 }"
         >
-          <LambertMaterial color="#f5dbb0" />
+          <StandardMaterial color="#f5dbb0" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -397,7 +397,7 @@
           :depth="0.22"
           :position="{ x: 0, y: 0.65, z: 0.02 }"
         >
-          <LambertMaterial color="#76573c" />
+          <StandardMaterial color="#76573c" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -408,7 +408,7 @@
           :depth="0.07"
           :position="{ x: 0.05, y: 0.65, z: -0.07 }"
         >
-          <LambertMaterial color="#76573c" />
+          <StandardMaterial color="#76573c" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -419,7 +419,7 @@
           :depth="0.07"
           :position="{ x: -0.05, y: 0.65, z: -0.07 }"
         >
-          <LambertMaterial color="#76573c" />
+          <StandardMaterial color="#76573c" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -430,7 +430,7 @@
           :depth="0.2"
           :position="{ x: 0, y: 0.775, z: 0.02 }"
         >
-          <LambertMaterial :color="COLORS.WHITE" />
+          <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>
 
         <Box
@@ -441,11 +441,11 @@
           :depth="0.22"
           :position="{ x: 0, y: 0.74, z: 0.05 }"
         >
-          <LambertMaterial :color="COLORS.WHITE" />
+          <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>
 
         <!-- <Box ref="hair2" :width="0.05" :height="0.05" :depth="0.05" :position="{ x: 0.09, y: 0.75, z: -0.07 }">
-          <LambertMaterial :color="COLORS.WHITE" />
+          <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>-->
 
         <!-- Lights -->
@@ -457,7 +457,7 @@
           :depth="0.1"
           :position="{ x: 1.6, y: 0, z: -0.75 }"
         >
-          <LambertMaterial :color="COLORS.GREEN" :props="{ transparent: true, opacity: 0.5 }" />
+          <StandardMaterial :color="COLORS.GREEN" :props="{ flatShading: true, transparent: true, opacity: 0.5 }" />
         </Box>
 
         <Box
@@ -468,7 +468,7 @@
           :depth="0.1"
           :position="{ x: -1.6, y: 0, z: -0.75 }"
         >
-          <LambertMaterial :color="COLORS.RED" :props="{ transparent: true, opacity: 0.85 }" />
+          <StandardMaterial :color="COLORS.RED" :props="{ flatShading: true, transparent: true, opacity: 0.85 }" />
         </Box>
 
         <PointLight
@@ -491,12 +491,15 @@
 </template>
 
 <script setup>
-import { LambertMaterial, Group, Box, PointLight } from 'troisjs'
+import { StandardMaterial, Group, Box, PointLight } from 'troisjs'
 import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, toRefs, watch } from 'vue'
-import useRenderer from '#composables/use-renderer'
 import { setPoint } from '#tools'
 import * as COLORS from '#/colors'
 
+import useDebugger from '#composables/use-debugger'
+import useRenderer from '#composables/use-renderer'
+
+const { debugging } = useDebugger()
 const { rendererRef } = useRenderer()
 
 const props = defineProps({
@@ -675,76 +678,78 @@ onMounted(() => {
 
   // console.log(lightGreen.value)
   animate = () => {
-    smokeRight1Mesh.position.z = getSmokePosition(i)
-    smokeRight1Mesh.rotation.y = getSmokeRotation(i)
-    smokeRight1Mesh.rotation.z = getSmokeRotation(i)
-    smokeRight1Mesh.scale.x = getSmokeScale(i) * 1.1
-    smokeRight1Mesh.scale.y = getSmokeScale(i) * 1.1
-    smokeRight1Mesh.scale.z = getSmokeScale(i) * 1.1
+    if (!debugging.value) {
+      smokeRight1Mesh.position.z = getSmokePosition(i)
+      smokeRight1Mesh.rotation.y = getSmokeRotation(i)
+      smokeRight1Mesh.rotation.z = getSmokeRotation(i)
+      smokeRight1Mesh.scale.x = getSmokeScale(i) * 1.1
+      smokeRight1Mesh.scale.y = getSmokeScale(i) * 1.1
+      smokeRight1Mesh.scale.z = getSmokeScale(i) * 1.1
 
-    smokeRight2Mesh.position.z = getSmokePosition(i, 15)
-    smokeRight2Mesh.rotation.y = getSmokeRotation(i, 15)
-    smokeRight2Mesh.rotation.z = getSmokeRotation(i, 15)
-    smokeRight2Mesh.scale.x = getSmokeScale(i, 15) * 1.5
-    smokeRight2Mesh.scale.y = getSmokeScale(i, 15) * 1.5
-    smokeRight2Mesh.scale.z = getSmokeScale(i, 15) * 1.5
+      smokeRight2Mesh.position.z = getSmokePosition(i, 15)
+      smokeRight2Mesh.rotation.y = getSmokeRotation(i, 15)
+      smokeRight2Mesh.rotation.z = getSmokeRotation(i, 15)
+      smokeRight2Mesh.scale.x = getSmokeScale(i, 15) * 1.5
+      smokeRight2Mesh.scale.y = getSmokeScale(i, 15) * 1.5
+      smokeRight2Mesh.scale.z = getSmokeScale(i, 15) * 1.5
 
-    smokeRight3Mesh.position.z = getSmokePosition(i, 35)
-    smokeRight3Mesh.rotation.y = getSmokeRotation(i, 35)
-    smokeRight3Mesh.rotation.z = getSmokeRotation(i, 35)
-    smokeRight3Mesh.scale.x = getSmokeScale(i, 35) * 1.3
-    smokeRight3Mesh.scale.y = getSmokeScale(i, 35) * 1.3
-    smokeRight3Mesh.scale.z = getSmokeScale(i, 35) * 1.3
+      smokeRight3Mesh.position.z = getSmokePosition(i, 35)
+      smokeRight3Mesh.rotation.y = getSmokeRotation(i, 35)
+      smokeRight3Mesh.rotation.z = getSmokeRotation(i, 35)
+      smokeRight3Mesh.scale.x = getSmokeScale(i, 35) * 1.3
+      smokeRight3Mesh.scale.y = getSmokeScale(i, 35) * 1.3
+      smokeRight3Mesh.scale.z = getSmokeScale(i, 35) * 1.3
 
-    smokeLeft1Mesh.position.z = getSmokePosition(i, 40)
-    smokeLeft1Mesh.rotation.y = getSmokeRotation(i, 40)
-    smokeLeft1Mesh.rotation.z = getSmokeRotation(i, 40)
-    smokeLeft1Mesh.scale.x = getSmokeScale(i, 40) * 1.2
-    smokeLeft1Mesh.scale.y = getSmokeScale(i, 40) * 1.2
-    smokeLeft1Mesh.scale.z = getSmokeScale(i, 40) * 1.2
+      smokeLeft1Mesh.position.z = getSmokePosition(i, 40)
+      smokeLeft1Mesh.rotation.y = getSmokeRotation(i, 40)
+      smokeLeft1Mesh.rotation.z = getSmokeRotation(i, 40)
+      smokeLeft1Mesh.scale.x = getSmokeScale(i, 40) * 1.2
+      smokeLeft1Mesh.scale.y = getSmokeScale(i, 40) * 1.2
+      smokeLeft1Mesh.scale.z = getSmokeScale(i, 40) * 1.2
 
-    smokeLeft2Mesh.position.z = getSmokePosition(i, 55)
-    smokeLeft2Mesh.rotation.y = getSmokeRotation(i, 55)
-    smokeLeft2Mesh.rotation.z = getSmokeRotation(i, 55)
-    smokeLeft2Mesh.scale.x = getSmokeScale(i, 55)
-    smokeLeft2Mesh.scale.y = getSmokeScale(i, 55)
-    smokeLeft2Mesh.scale.z = getSmokeScale(i, 55)
+      smokeLeft2Mesh.position.z = getSmokePosition(i, 55)
+      smokeLeft2Mesh.rotation.y = getSmokeRotation(i, 55)
+      smokeLeft2Mesh.rotation.z = getSmokeRotation(i, 55)
+      smokeLeft2Mesh.scale.x = getSmokeScale(i, 55)
+      smokeLeft2Mesh.scale.y = getSmokeScale(i, 55)
+      smokeLeft2Mesh.scale.z = getSmokeScale(i, 55)
 
-    smokeLeft3Mesh.position.z = getSmokePosition(i, 75)
-    smokeLeft3Mesh.rotation.y = getSmokeRotation(i, 75)
-    smokeLeft3Mesh.rotation.z = getSmokeRotation(i, 75)
-    smokeLeft3Mesh.scale.x = getSmokeScale(i, 75) * 1.35
-    smokeLeft3Mesh.scale.y = getSmokeScale(i, 75) * 1.35
-    smokeLeft3Mesh.scale.z = getSmokeScale(i, 75) * 1.35
+      smokeLeft3Mesh.position.z = getSmokePosition(i, 75)
+      smokeLeft3Mesh.rotation.y = getSmokeRotation(i, 75)
+      smokeLeft3Mesh.rotation.z = getSmokeRotation(i, 75)
+      smokeLeft3Mesh.scale.x = getSmokeScale(i, 75) * 1.35
+      smokeLeft3Mesh.scale.y = getSmokeScale(i, 75) * 1.35
+      smokeLeft3Mesh.scale.z = getSmokeScale(i, 75) * 1.35
 
-    const rotation = (Math.PI / 2) * (i / 5)
-    const bob = Math.sin(i / Math.PI / 8) / 5
-    const pitch = Math.sin(i / Math.PI / 10) / 10
+      const rotation = (Math.PI / 2) * (i / 5)
+      const bob = Math.sin(i / Math.PI / 8) / 5
+      const pitch = Math.sin(i / Math.PI / 10) / 10
 
-    prop1Mesh.rotation.z = rotation
-    prop2Mesh.rotation.z = rotation + propelerOffset
+      prop1Mesh.rotation.z = rotation
+      prop2Mesh.rotation.z = rotation + propelerOffset
 
-    if (animation.value) {
-      animation.value.o3d.position.y = isFlying.value ? bob : 0
-      animation.value.o3d.rotation.z = isFlying.value ? pitch : 0
+      if (animation.value) {
+        animation.value.o3d.position.y = isFlying.value ? bob : 0
+        animation.value.o3d.rotation.z = isFlying.value ? pitch : 0
+      }
+
+      // Animate the lights
+      if (i % 200 === 0) {
+        lightGreen.value.material.opacity = 1
+        lightGreenLight.value.light.visible = true
+
+        lightRed.value.material.opacity = 1
+        lightRedLight.value.light.visible = true
+      } else if (i % 200 === 10) {
+        lightGreen.value.material.opacity = 0.5
+        lightGreenLight.value.light.visible = false
+
+        lightRed.value.material.opacity = 0.5
+        lightRedLight.value.light.visible = false
+      }
+
+      i++
     }
-
-    // Animate the lights
-    if (i % 200 === 0) {
-      lightGreen.value.material.opacity = 1
-      lightGreenLight.value.light.visible = true
-
-      lightRed.value.material.opacity = 1
-      lightRedLight.value.light.visible = true
-    } else if (i % 200 === 10) {
-      lightGreen.value.material.opacity = 0.5
-      lightGreenLight.value.light.visible = false
-
-      lightRed.value.material.opacity = 0.5
-      lightRedLight.value.light.visible = false
-    }
-
-    i++
   }
 
   rendererRef.value?.onBeforeRender(animate)
