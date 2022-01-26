@@ -503,7 +503,13 @@ const { debugging } = useDebugger()
 const { rendererRef } = useRenderer()
 
 const props = defineProps({
-  position: Object,
+  position: {
+    type: Object,
+    default: () => ({
+      x: 0,
+      y: 0,
+    })
+  },
 
   altitude: {
     type: Number,

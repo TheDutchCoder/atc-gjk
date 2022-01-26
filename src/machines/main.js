@@ -10,9 +10,15 @@ export const machine = () => createMachine({
         'IDLE': 'idle',
       },
     },
+    edit: {
+      on: {
+        'IDLE': 'idle'
+      }
+    },
     idle: {
       on: {
         'START': 'start',
+        'EDIT': 'edit',
       },
     },
     start: {
