@@ -31,7 +31,9 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  scene.value.fog = null
+  if (scene.value) {
+    scene.value.fog = null
+  }
 })
 
 const tiles = [

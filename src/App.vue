@@ -182,6 +182,11 @@ watch(
       rendererRef.value.three.cameraCtrl.enableZoom = true
       rendererRef.value.three.cameraCtrl.enablePan = true
       rendererRef.value.three.cameraCtrl.reset()
+    } else if (newState.matches('start')) {
+      rendererRef.value.three.cameraCtrl.enableZoom = true
+      rendererRef.value.three.cameraCtrl.reset()
+      // console.log(cameraRef.value.camera)
+      cameraRef.value.camera.position.set(100, 80, 100)
     } else {
       rendererRef.value.three.cameraCtrl.enableZoom = false
       rendererRef.value.three.cameraCtrl.enablePan = false
