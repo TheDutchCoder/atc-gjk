@@ -16,13 +16,29 @@
 
 <script setup>
 import { Group } from 'troisjs'
+import { Fog, Color } from 'three'
 import { addTrainTracks } from '#tiles/train-tracks/utils'
 import { addAirports } from '#tiles/airport/utils'
-import { checkForAvailableSpots } from '#tools'
 
 import ForestTile from '#tiles/forest'
 import AirportTile from '#tiles/airport'
 import TrainTracksTile from '#tiles/train-tracks'
+
+import useScene from '#composables/use-scene'
+import { onBeforeUnmount, onMounted } from 'vue'
+
+const { scene } = useScene()
+
+onMounted(() => {
+  const fog = new Fog(new Color(0x9bc8e9), 20, 350)
+  scene.value.fog = fog
+})
+
+onBeforeUnmount(() => {
+  if (scene.value) {
+    scene.value.fog = null
+  }
+})
 
 const WIDTH = 10
 const HEIGHT = 10
