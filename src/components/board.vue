@@ -1,13 +1,14 @@
 <template>
-  <Group>
-    <template v-for="(y, indexY) in board">
-      <template v-for="(x, indexX) in y">
-        <ForestTile v-if="x.type === 'ForestTile'" :position="{ x: indexX - 2, y: indexY - 2 }"></ForestTile>
+  <Group :position="{ x: (WIDTH - 1) / 2 * -10, y: 0, z: (HEIGHT - 1) / 2 * -10 }">
+    <template v-for="(row, indexY) in board">
+      <template v-for="(tile, indexX) in row">
+        <ForestTile v-if="tile === null" :position="{ x: indexX, y: indexY }"></ForestTile>
         <AirportTile
-          v-if="x.type === 'AirportTile'"
-          :position="{ x: indexX - 2, y: indexY - 2 }"
-          :direction="x.direction"
+          v-else-if="tile.type === 'AirportTile'"
+          :position="{ x: indexX, y: indexY }"
+          :direction="tile.direction"
         ></AirportTile>
+        <TrainTracksTile v-else-if="tile.type === 'TrainTrackTile'" :position="tile.position" :direction="tile.direction"></TrainTracksTile>
       </template>
     </template>
   </Group>
@@ -15,40 +16,47 @@
 
 <script setup>
 import { Group } from 'troisjs'
-import Airplane from '#components/airplane.vue'
-import { randomRoundNumber } from '../tools'
+import { Fog, Color } from 'three'
+import { addTrainTracks } from '#tiles/train-tracks/utils'
+import { addAirports } from '#tiles/airport/utils'
 
-import ForestTile from '#tiles/forest.vue'
-import AirportTile from '#tiles/airport.vue'
+import ForestTile from '#tiles/forest'
+import AirportTile from '#tiles/airport'
+import TrainTracksTile from '#tiles/train-tracks'
 
-const WIDTH = 5
-const HEIGHT = 5
-const MIN_AIRPORTS = 1
-const MAX_AIRPORTS = 2
+import useScene from '#composables/use-scene'
+import { onBeforeUnmount, onMounted } from 'vue'
 
-const forestTile = () => ({
-  type: 'ForestTile',
+const { scene } = useScene()
+
+onMounted(() => {
+  const fog = new Fog(new Color(0x9bc8e9), 20, 350)
+  scene.value.fog = fog
 })
 
-const airportTile = () => ({
-  type: 'AirportTile',
-  direction: randomRoundNumber(0, 7),
+onBeforeUnmount(() => {
+  if (scene.value) {
+    scene.value.fog = null
+  }
 })
+
+const WIDTH = 10
+const HEIGHT = 10
+const MAX_AIRPORTS = 1
+
+const generateBoard = (width = WIDTH, height = HEIGHT) => {
+  return Array.apply(null, Array(width)).map(() => {
+    return Array.apply(null, Array(height)).map(() => null)
+  })
+}
 
 /**
- * Randomization of tiles.
- *
- * Airports are always at least 1 tile from the edge.
+ * The board gets generated with just empty (null) values and is passed around
+ * to different functions that generate other tiles, populating the board along
+ * the way.
  */
-const amountOfAirports = randomRoundNumber(MIN_AIRPORTS, MAX_AIRPORTS)
+const board = generateBoard(WIDTH, HEIGHT)
 
-const matrix = []
-
-const board = [
-  [forestTile(), forestTile(), forestTile(), forestTile(), forestTile()],
-  [forestTile(), forestTile(), forestTile(), forestTile(), forestTile()],
-  [forestTile(), forestTile(), airportTile(), forestTile(), forestTile()],
-  [forestTile(), forestTile(), forestTile(), forestTile(), forestTile()],
-  [forestTile(), forestTile(), forestTile(), forestTile(), forestTile()],
-]
+addTrainTracks(board)
+addAirports(board, MAX_AIRPORTS)
 </script>

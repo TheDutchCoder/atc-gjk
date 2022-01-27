@@ -1,15 +1,15 @@
 <template>
   <InstancedMesh ref="rocks" :count="amount" receive-shadow cast-shadow>
     <DodecahedronGeometry :radius="0.5" />
-    <LambertMaterial />
+    <StandardMaterial :props="{ flatShading: true }" />
   </InstancedMesh>
 </template>
 
 <script setup>
-import { DodecahedronGeometry, LambertMaterial } from 'troisjs'
+import { DodecahedronGeometry, StandardMaterial } from 'troisjs'
 import { onMounted, ref, toRefs } from 'vue'
 import { Object3D, Color } from 'three'
-import { randomRoundNumber, randomNumber } from '#/tools'
+import { randomRoundNumber, randomNumber } from '#tools'
 
 import useAmount from '#composables/use-prop-amount'
 import useExcludes from '#composables/use-prop-excludes'

@@ -3,7 +3,7 @@
     ref="clouds"
     :position="normalizedPosition"
     :rotation="{ x: 0, y: rotation, z: 0 }"
-    :scale="{ x: 2.5, y: 2.5, z: 2.5 }"
+    :scale="{ x: 1, y: 1, z: 1 }"
   >
     <Group ref="animation">
       <Dodecahedron
@@ -13,9 +13,9 @@
         :rotation="{ x: 0, y: 0, z: 0 }"
         cast-shadow
       >
-        <LambertMaterial
+        <StandardMaterial
           :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ transparent: true, opacity: 0.95 }"
+          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
         />
       </Dodecahedron>
 
@@ -26,9 +26,9 @@
         :rotation="{ x: 0, y: 0, z: 0 }"
         cast-shadow
       >
-        <LambertMaterial
+        <StandardMaterial
           :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ transparent: true, opacity: 0.95 }"
+          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
         />
       </Dodecahedron>
 
@@ -39,9 +39,9 @@
         :rotation="{ x: 0, y: 0, z: 0 }"
         cast-shadow
       >
-        <LambertMaterial
+        <StandardMaterial
           :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ transparent: true, opacity: 0.95 }"
+          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
         />
       </Dodecahedron>
 
@@ -52,9 +52,9 @@
         :rotation="{ x: 0, y: 0, z: 0 }"
         cast-shadow
       >
-        <LambertMaterial
+        <StandardMaterial
           :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ transparent: true, opacity: 0.95 }"
+          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
         />
       </Dodecahedron>
 
@@ -65,9 +65,9 @@
         :rotation="{ x: 0, y: 0, z: 0 }"
         cast-shadow
       >
-        <LambertMaterial
+        <StandardMaterial
           :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ transparent: true, opacity: 0.95 }"
+          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
         />
       </Dodecahedron>
 
@@ -78,9 +78,9 @@
         :rotation="{ x: 0, y: 0, z: 0 }"
         cast-shadow
       >
-        <LambertMaterial
+        <StandardMaterial
           :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ transparent: true, opacity: 0.95 }"
+          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
         />
       </Dodecahedron>
 
@@ -91,9 +91,9 @@
         :rotation="{ x: 0, y: 0, z: 0 }"
         cast-shadow
       >
-        <LambertMaterial
+        <StandardMaterial
           :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ transparent: true, opacity: 0.95 }"
+          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
         />
       </Dodecahedron>
     </Group>
@@ -101,9 +101,9 @@
 </template>
 
 <script setup>
-import { Dodecahedron, LambertMaterial, Group } from 'troisjs'
+import { Dodecahedron, StandardMaterial, Group } from 'troisjs'
 import { ref, onMounted, toRefs, computed } from 'vue'
-import { randomRoundNumber } from '../tools'
+import { randomRoundNumber } from '#tools'
 
 import useRenderer from '#composables/use-renderer'
 import usePosition from '#composables/use-prop-position'

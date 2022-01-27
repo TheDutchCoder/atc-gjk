@@ -1,20 +1,20 @@
 <template>
   <InstancedMesh ref="bushesBase" :count="amount" receive-shadow cast-shadow>
     <CylinderGeometry :radius-top="0.05" :radius-bottom="0.1" />
-    <LambertMaterial color="#763116" />
+    <StandardMaterial color="#763116" :props="{ flatShading: true }" />
   </InstancedMesh>
 
   <InstancedMesh ref="bushes" :count="amount" receive-shadow cast-shadow>
     <DodecahedronGeometry :radius="0.5" />
-    <LambertMaterial />
+    <StandardMaterial :props="{ flatShading: true }" />
   </InstancedMesh>
 </template>
 
 <script setup>
-import { CylinderGeometry, DodecahedronGeometry, LambertMaterial } from 'troisjs'
+import { CylinderGeometry, DodecahedronGeometry, StandardMaterial } from 'troisjs'
 import { onMounted, ref, toRefs } from 'vue'
 import { Object3D, Color } from 'three'
-import { randomRoundNumber, randomNumber } from '#/tools'
+import { randomRoundNumber, randomNumber } from '#tools'
 
 import useAmount from '#composables/use-prop-amount'
 import useExlcudes from '#composables/use-prop-excludes'

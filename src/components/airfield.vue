@@ -1,7 +1,7 @@
 <template>
   <Group ref="airfield" :position="{ x: 0, y: 0.1, z: 0 }" :rotation="{ x: 0, y: rotation, z: 0 }">
     <Box :width="3" :height="0.1" :depth="9" receive-shadow>
-      <LambertMaterial color="#222222" />
+      <StandardMaterial color="#222222" :props="{ flatShading: true }" />
     </Box>
 
     <Rocks :amount="10" :excludes="{ x: [-2, 2] }"></Rocks>
@@ -16,7 +16,7 @@
       receive-shadow
       :position="{ x: 0, y: 0.05, z: -4.6 + (n * 1.15) }"
     >
-      <LambertMaterial color="#f7c654" />
+      <StandardMaterial color="#f7c654" :props="{ flatShading: true }" />
     </Box>
 
     <Box
@@ -27,7 +27,7 @@
       :depth="0.2"
       :position="{ x: -1.4 + (n * 0.4), y: 0.05, z: -4.2 }"
     >
-      <LambertMaterial color="#ff0000" :props="{ transparent: true, opacity: 0.85 }" />
+      <StandardMaterial color="#ff0000" :props="{ flatShading: true, transparent: true, opacity: 0.85 }" />
     </Box>
 
     <PointLight
@@ -47,7 +47,7 @@
       :depth="0.2"
       :position="{ x: -1.4 + (n * 0.4), y: 0.05, z: 4.2 }"
     >
-      <LambertMaterial color="#00ff00" :props="{ transparent: true, opacity: 0.85 }" />
+      <StandardMaterial color="#00ff00" :props="{ flatShading: true, transparent: true, opacity: 0.85 }" />
     </Box>
 
     <PointLight
@@ -62,9 +62,9 @@
 </template>
 
 <script setup>
-import { Box, LambertMaterial, Group } from 'troisjs'
+import { Box, StandardMaterial, Group } from 'troisjs'
 import { ref, onMounted, onBeforeUpdate, toRefs, computed } from 'vue'
-import { randomNumber } from '#/tools'
+import { randomNumber } from '#tools'
 import * as COLORS from '#/colors'
 import useRenderer from '#composables/use-renderer'
 

@@ -1,3 +1,17 @@
+const plugin = require('tailwindcss/plugin')
+
+const rotateY = plugin(function ({ addUtilities }) {
+  addUtilities({
+    '.rotate-x-10': {
+      transform: 'rotateY(10deg)',
+    },
+    '.rotate-x-20': {
+      transform: 'rotateY(20deg)',
+    }
+  })
+})
+
+// Commit
 module.exports = {
   content: [
     "./index.html",
@@ -5,9 +19,11 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      'callout': ['"Alegreya Sans"'],
+      'callout': ['Carter One'],
       'dongle': ['Dongle'],
-    }
+    },
   },
-  plugins: [],
+  plugins: [
+    rotateY,
+  ],
 }

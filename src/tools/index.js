@@ -45,6 +45,9 @@ export const setPoint = (point, obj, x, y, z, relative = true) => {
   obj.value.geometry.attributes.position.needsUpdate = true
 }
 
+/**
+ * Generates a random float number between a min and max value.
+ */
 export const randomNumber = (min, max, excludes) => {
   const number = Math.round(Math.random() * ((max * 100000) - (min * 100000)) + (min * 100000)) / 100000
 
@@ -55,8 +58,27 @@ export const randomNumber = (min, max, excludes) => {
   }
 }
 
+
+/**
+ * Generates a random whole number between a min and max value.
+ */
 export const randomRoundNumber = (min, max) => {
   return Math.round(Math.random() * (max - min) + min)
+}
+
+
+/**
+ * Picks a random number from an array of numbers.
+ */
+export const randomItemFromArray = (array, remove = false) => {
+  const index = Math.floor(Math.random() * array.length)
+  const item = array[index]
+
+  if (remove) {
+    array.splice(index, 1)
+  }
+
+  return item
 }
 
 export const lerpColor = (a, b, amount) => {
@@ -74,4 +96,21 @@ export const lerpColor = (a, b, amount) => {
 
 export const displayTime = (number) => {
   return `${String(Math.floor((number / 4))).padStart(2, '0')}:${String(number % 4 * 15).padStart(2, '0')}`
+}
+
+
+/**
+ * Takes a board and checks for available spots on the board and returns an
+ * array of objects with x/y coordinates of the available spots.
+ */
+export const checkForAvailableSpots = (board) => {
+  let b = []
+
+  board.forEach((row, rowIndex) => row.forEach((cell, cellIndex) => {
+    if (cell === null) {
+      b.push({ x: cellIndex, y: rowIndex })
+    }
+  }))
+
+  return b
 }

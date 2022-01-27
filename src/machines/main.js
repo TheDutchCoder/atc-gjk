@@ -10,16 +10,22 @@ export const machine = () => createMachine({
         'IDLE': 'idle',
       },
     },
+    edit: {
+      on: {
+        'IDLE': 'idle'
+      }
+    },
     idle: {
       on: {
         'START': 'start',
+        'EDIT': 'edit',
       },
     },
     start: {
       invoke: {
-        id: 'yolo',
+        id: 'gameMachine',
         src: gameMachine,
-        onDone: 'end'
+        onDone: 'idle'
       },
     },
     end: {},

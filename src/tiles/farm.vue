@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { Box, LambertMaterial, Group } from 'troisjs'
+import { Group } from 'troisjs'
 import { ref, onMounted, toRefs, computed } from 'vue'
 
 import GrassTile from '#tiles/grass.vue'
@@ -76,7 +76,7 @@ import Trees from '#components/trees.vue'
 import usePosition from '#composables/use-prop-position'
 import useOffsets from '#composables/use-prop-offsets'
 import useDark from '#composables/use-prop-dark'
-import { randomRoundNumber } from '../../tools'
+import { randomRoundNumber } from '#tools'
 
 const farm = ref()
 
