@@ -15,7 +15,7 @@
     "three": "^0.134.0",
     "three-instanced-group-mesh": "^1.0.1",
     "troisjs": "^0.3.3",
-    "vue": "^3.2.20",
+    "vue": "^3.2.29",
     "xstate": "^4.27.0"
   },
   "devDependencies": {
