@@ -2,15 +2,41 @@
   <div class="what">
     <div v-if="state.matches('loading')" class="fixed top-1/2 left-1/2 bg-red-500">loading</div>
 
-    <button
+    <div v-if="state.matches('idle')" class="stage">
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+      <div class="layer"></div>
+    </div>
+
+    <!-- <button
       class="fixed top-1 right-1 rounded-md bg-gradient-to-br from-violet-500 to-purple-500 px-10 py-3 text-white font-bold m-auto shadow-lg"
       @click="toggleDebugging"
-    >Debug</button>
+    >Debug</button> -->
 
-    <button
+    <!-- <button
       class="fixed top-1 right-36 rounded-md bg-gradient-to-br from-violet-500 to-purple-500 px-10 py-3 text-white font-bold m-auto shadow-lg"
       @click="state.matches('idle') ? send('EDIT') : send('IDLE')"
-    >Edit</button>
+    >Edit</button> -->
+
+    <TestButton class="fixed top-2 right-4" text="Debug" @click="toggleDebugging">Debug</TestButton>
+    <TestButton class="fixed top-2 right-36" text="Editor" @click="state.matches('idle') ? send('EDIT') : send('IDLE')">Editor</TestButton>
 
     <transition
       enter-active-class="transition duration-100 ease-out"
@@ -21,13 +47,15 @@
       leave-to-class="transform scale-95 opacity-0"
     >
       <div
-        class="fixed bottom-20 left-1/2 transform -translate-x-1/2"
+        class="fixed bottom-4 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
         v-if="state.matches('idle')"
       >
-        <button
+        <!-- <button
           class="rounded-md bg-gradient-to-r from-cyan-500 to-blue-500 px-10 py-3 text-white font-bold m-auto shadow-lg"
           @click="send({ type: 'START' })"
-        >Start new game</button>
+        >Start new game</button> -->
+
+        <TestButton text="Start a\a new game" @click="send({ type: 'START' })">Start a<br>new game</TestButton>
       </div>
     </transition>
 
@@ -130,6 +158,8 @@ import { DEBUG } from './utils'
 import Intro from '#components/intro.vue'
 import Editor from '#components/editor.vue'
 import Board from '#components/board.vue'
+
+import TestButton from '#components/test-button.vue'
 
 const { debugging, toggleDebugging } = useDebugger()
 const { sceneRef } = useScene()
@@ -420,6 +450,157 @@ canvas {
 .what {
   width: 100%;
   height: 100%;
-  background: radial-gradient(#ffffff, #9bc8e9);
+  background: radial-gradient(#ecfeff, #7dd3fc);
+}
+
+.stage {
+  height: 250px;
+  width: 500px;
+  position: fixed;
+  /* bottom: 0; */
+  top: 0;
+  left: 50%;
+  perspective: 9999px;
+  transform-style: preserve-3d;
+  transform: translateX(-50%);
+}
+
+.layer {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  color: whitesmoke;
+  transform-style: preserve-3d;
+  animation: ಠ_ಠ 10s infinite alternate ease-in-out -10s;
+  animation-fill-mode: forwards;
+  transform: rotateY(-15deg) translateZ(0);
+}
+
+.layer:after {
+  font: 4rem/0.95 "Carter One", "Domgle", Futura, "Roboto", "Trebuchet MS", Helvetica, sans-serif;
+  content: "Air Traffic Control";
+  white-space: pre;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 50px;
+  letter-spacing: -2px;
+  text-shadow: 4px 0 10px rgba(0, 0, 0, 0.13);
+}
+
+.layer:nth-child(1):after {
+  transform: translateZ(0px);
+}
+
+.layer:nth-child(2):after {
+  transform: translateZ(-1.5px);
+}
+
+.layer:nth-child(3):after {
+  transform: translateZ(-3px);
+}
+
+.layer:nth-child(4):after {
+  transform: translateZ(-4.5px);
+}
+
+.layer:nth-child(5):after {
+  transform: translateZ(-6px);
+}
+
+.layer:nth-child(6):after {
+  transform: translateZ(-7.5px);
+}
+
+.layer:nth-child(7):after {
+  transform: translateZ(-9px);
+}
+
+.layer:nth-child(8):after {
+  transform: translateZ(-10.5px);
+}
+
+.layer:nth-child(9):after {
+  transform: translateZ(-12px);
+}
+
+.layer:nth-child(10):after {
+  transform: translateZ(-13.5px);
+}
+
+.layer:nth-child(11):after {
+  transform: translateZ(-15px);
+}
+
+.layer:nth-child(12):after {
+  transform: translateZ(-16.5px);
+}
+
+.layer:nth-child(13):after {
+  transform: translateZ(-18px);
+}
+
+.layer:nth-child(14):after {
+  transform: translateZ(-19.5px);
+}
+
+.layer:nth-child(15):after {
+  transform: translateZ(-21px);
+}
+
+.layer:nth-child(16):after {
+  transform: translateZ(-22.5px);
+}
+
+.layer:nth-child(17):after {
+  transform: translateZ(-24px);
+}
+
+.layer:nth-child(18):after {
+  transform: translateZ(-25.5px);
+}
+
+.layer:nth-child(19):after {
+  transform: translateZ(-27px);
+}
+
+.layer:nth-child(20):after {
+  transform: translateZ(-28.5px);
+}
+
+.layer:nth-child(n+10):after {
+  -webkit-text-stroke: 3px rgba(0, 0, 0, 0.25);
+}
+
+.layer:nth-child(n+11):after {
+  -webkit-text-stroke: 15px #0891b2;
+  text-shadow: 6px 0 6px #00366b, 5px 5px 5px #002951, 0 6px 6px #00366b;
+}
+
+.layer:nth-child(n+12):after {
+  -webkit-text-stroke: 15px #0077ea;
+}
+
+.layer:last-child:after {
+  -webkit-text-stroke: 17px rgba(0, 0, 0, 0.1);
+}
+
+.layer:first-child:after {
+  /* color: #fff; */
+  text-shadow: none;
+}
+
+@keyframes ಠ_ಠ {
+  0% {
+    color: #eee;
+  }
+  50% {
+    color: #fff;
+  }
+  100% {
+    color: #eee;
+    transform: rotateY(15deg);
+  }
 }
 </style>
