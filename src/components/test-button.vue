@@ -34,6 +34,7 @@ const props = defineProps({
   text: String,
 })
 
+// test commit
 const { text } = toRefs(props)
 
 const styles = computed(() => ({
@@ -49,12 +50,6 @@ const styles = computed(() => ({
 
 .button-stage {
   position: relative;
-  /* height: 100px; */
-  /* width: 500px; */
-  /* position: fixed; */
-  /* bottom: 0; */
-  /* left: 50%; */
-  /* perspective: 10em; */
   transform-style: preserve-3d;
   /* transform: rotateY(10deg) translateZ(0); */
 }
