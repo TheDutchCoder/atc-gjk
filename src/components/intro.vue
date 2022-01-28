@@ -26,7 +26,7 @@ import { onBeforeUnmount, onMounted } from 'vue'
 const { scene } = useScene()
 
 onMounted(() => {
-  const fog = new Fog(new Color(0x9bc8e9), 10, 35)
+  const fog = new Fog(new Color(0x9bc8e9), 15, 30)
   scene.value.fog = fog
 })
 
@@ -40,8 +40,8 @@ const tiles = [
   // GrassTile,
   // FarmTile,
   ForestTile,
-  AirportTile,
-  TrainTracksTile,
+  // AirportTile,
+  // TrainTracksTile,
 ]
 
 const randomTile = randomItemFromArray(tiles)

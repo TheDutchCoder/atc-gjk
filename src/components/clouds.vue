@@ -1,109 +1,107 @@
 <template>
-  <Group
-    ref="clouds"
-    :position="normalizedPosition"
-    :rotation="{ x: 0, y: rotation, z: 0 }"
-    :scale="{ x: 1, y: 1, z: 1 }"
-  >
-    <Group ref="animation">
-      <Dodecahedron
-        ref="cloud1"
-        :radius="0.8"
-        :position="{ x: 0, y: 0.5, z: 0 }"
-        :rotation="{ x: 0, y: 0, z: 0 }"
-        cast-shadow
-      >
-        <StandardMaterial
-          :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
-        />
-      </Dodecahedron>
+  <Animated is-animated scale-all :delay="90" :position="normalizedPosition"
+      :rotation="{ x: 0, y: rotation, z: 0 }">
+      <Group ref="animation">
+        <Dodecahedron
+          ref="cloud1"
+          :radius="0.8"
+          :position="{ x: 0, y: 0.5, z: 0 }"
+          :rotation="{ x: 0, y: 0, z: 0 }"
+          cast-shadow
+        >
+          <StandardMaterial
+            :color="colors[randomRoundNumber(0, colors.length - 1)]"
+            :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
+          />
+        </Dodecahedron>
 
-      <Dodecahedron
-        ref="cloud2"
-        :radius="0.6"
-        :position="{ x: 0.5, y: 0.5, z: 0.5 }"
-        :rotation="{ x: 0, y: 0, z: 0 }"
-        cast-shadow
-      >
-        <StandardMaterial
-          :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
-        />
-      </Dodecahedron>
+        <Dodecahedron
+          ref="cloud2"
+          :radius="0.6"
+          :position="{ x: 0.5, y: 0.5, z: 0.5 }"
+          :rotation="{ x: 0, y: 0, z: 0 }"
+          cast-shadow
+        >
+          <StandardMaterial
+            :color="colors[randomRoundNumber(0, colors.length - 1)]"
+            :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
+          />
+        </Dodecahedron>
 
-      <Dodecahedron
-        ref="cloud3"
-        :radius="0.45"
-        :position="{ x: -0.3, y: 0.5, z: 0.7 }"
-        :rotation="{ x: 0, y: 0, z: 0 }"
-        cast-shadow
-      >
-        <StandardMaterial
-          :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
-        />
-      </Dodecahedron>
+        <Dodecahedron
+          ref="cloud3"
+          :radius="0.45"
+          :position="{ x: -0.3, y: 0.5, z: 0.7 }"
+          :rotation="{ x: 0, y: 0, z: 0 }"
+          cast-shadow
+        >
+          <StandardMaterial
+            :color="colors[randomRoundNumber(0, colors.length - 1)]"
+            :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
+          />
+        </Dodecahedron>
 
-      <Dodecahedron
-        ref="cloud4"
-        :radius="0.3"
-        :position="{ x: -0.3, y: 0.5, z: 1.2 }"
-        :rotation="{ x: 0, y: 0, z: 0 }"
-        cast-shadow
-      >
-        <StandardMaterial
-          :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
-        />
-      </Dodecahedron>
+        <Dodecahedron
+          ref="cloud4"
+          :radius="0.3"
+          :position="{ x: -0.3, y: 0.5, z: 1.2 }"
+          :rotation="{ x: 0, y: 0, z: 0 }"
+          cast-shadow
+        >
+          <StandardMaterial
+            :color="colors[randomRoundNumber(0, colors.length - 1)]"
+            :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
+          />
+        </Dodecahedron>
 
-      <Dodecahedron
-        ref="cloud5"
-        :radius="0.4"
-        :position="{ x: 0.2, y: 0.5, z: 1.1 }"
-        :rotation="{ x: 0, y: 0, z: 0 }"
-        cast-shadow
-      >
-        <StandardMaterial
-          :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
-        />
-      </Dodecahedron>
+        <Dodecahedron
+          ref="cloud5"
+          :radius="0.4"
+          :position="{ x: 0.2, y: 0.5, z: 1.1 }"
+          :rotation="{ x: 0, y: 0, z: 0 }"
+          cast-shadow
+        >
+          <StandardMaterial
+            :color="colors[randomRoundNumber(0, colors.length - 1)]"
+            :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
+          />
+        </Dodecahedron>
 
-      <Dodecahedron
-        ref="cloud6"
-        :radius="0.64"
-        :position="{ x: 0.4, y: 0.5, z: -0.8 }"
-        :rotation="{ x: 0, y: 0, z: 0 }"
-        cast-shadow
-      >
-        <StandardMaterial
-          :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
-        />
-      </Dodecahedron>
+        <Dodecahedron
+          ref="cloud6"
+          :radius="0.64"
+          :position="{ x: 0.4, y: 0.5, z: -0.8 }"
+          :rotation="{ x: 0, y: 0, z: 0 }"
+          cast-shadow
+        >
+          <StandardMaterial
+            :color="colors[randomRoundNumber(0, colors.length - 1)]"
+            :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
+          />
+        </Dodecahedron>
 
-      <Dodecahedron
-        ref="cloud7"
-        :radius="0.34"
-        :position="{ x: -0.2, y: 0.5, z: -1.2 }"
-        :rotation="{ x: 0, y: 0, z: 0 }"
-        cast-shadow
-      >
-        <StandardMaterial
-          :color="colors[randomRoundNumber(0, colors.length - 1)]"
-          :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
-        />
-      </Dodecahedron>
-    </Group>
-  </Group>
+        <Dodecahedron
+          ref="cloud7"
+          :radius="0.34"
+          :position="{ x: -0.2, y: 0.5, z: -1.2 }"
+          :rotation="{ x: 0, y: 0, z: 0 }"
+          cast-shadow
+        >
+          <StandardMaterial
+            :color="colors[randomRoundNumber(0, colors.length - 1)]"
+            :props="{ flatShading: true, transparent: true, opacity: 0.95 }"
+          />
+        </Dodecahedron>
+      </Group>
+  </Animated>
 </template>
 
 <script setup>
 import { Dodecahedron, StandardMaterial, Group } from 'troisjs'
 import { ref, onMounted, toRefs, computed } from 'vue'
 import { randomRoundNumber } from '#tools'
+
+import Animated from '#components/animated.vue'
 
 import useRenderer from '#composables/use-renderer'
 import usePosition from '#composables/use-prop-position'
@@ -139,7 +137,6 @@ const colors = ['#e7ebef', '#d3d8dd', '#dae1e9', '#ffffff']
 const rotation = Math.round(Math.random() * Math.PI * 20) / 10
 
 onMounted(() => {
-  console.log(clouds.value)
   animation.value.o3d.scale.x = 2
   animation.value.o3d.scale.y = 2
   animation.value.o3d.scale.z = 2

@@ -16,6 +16,8 @@ import usePosition from '#composables/use-prop-position'
 import useOffsets from '#composables/use-prop-offsets'
 import useDark from '#composables/use-prop-dark'
 
+import Animated from '#components/animated.vue'
+
 import GrassTile from '#tiles/grass.vue'
 import Rocks from '#components/rocks.vue'
 import Trees from '#components/trees.vue'

@@ -7,8 +7,9 @@
 <script setup>
 import { Group } from 'troisjs'
 
+import GrassTile from '#tiles/grass.vue'
 import ForestTile from '#tiles/forest'
 import Airplane from '#components/airplane.vue'
 
-const selectedComponent = ForestTile
+const selectedComponent = GrassTile
 </script>
