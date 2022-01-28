@@ -114,3 +114,33 @@ export const checkForAvailableSpots = (board) => {
 
   return b
 }
+
+
+
+
+
+/**
+ * Cubic bezier test
+ */
+const CubicBezierP0 = (t, p) => {
+  const k = 1 - t
+  return k * k * k * p
+}
+
+const CubicBezierP1 = (t, p) => {
+  const k = 1 - t
+  return 3 * k * k * t * p
+}
+
+const CubicBezierP2 = (t, p) => {
+  return 3 * (1 - t) * t * t * p
+}
+
+const CubicBezierP3 = (t, p) => {
+  return t * t * t * p
+}
+
+export const CubicBezier = (t, p0, p1, p2, p3) => {
+  return CubicBezierP0(t, p0) + CubicBezierP1(t, p1) + CubicBezierP2(t, p2) +
+    CubicBezierP3(t, p3)
+}

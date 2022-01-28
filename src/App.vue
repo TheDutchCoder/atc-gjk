@@ -36,7 +36,7 @@
     >Edit</button> -->
 
     <TestButton class="fixed top-2 right-4" text="Debug" @click="toggleDebugging">Debug</TestButton>
-    <TestButton class="fixed top-2 right-36" text="Editor" @click="state.matches('idle') ? send('EDIT') : send('IDLE')">Editor</TestButton>
+    <TestButton class="fixed top-2 right-36" :text="state.matches('idle') ? 'Editor' : 'Exit'" @click="state.matches('idle') ? send('EDIT') : send('IDLE')">{{ state.matches('idle') ? 'Editor' : 'Exit' }}</TestButton>
 
     <transition
       enter-active-class="transition duration-100 ease-out"
@@ -139,7 +139,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed, onBeforeUnmount } from 'vue'
+import { ref, onMounted, watch, computed, onBeforeUnmount, provide } from 'vue'
 import { Camera, DirectionalLight, HemisphereLight, Renderer, Scene } from 'troisjs'
 import { AxesHelper, HemisphereLightHelper, DirectionalLightHelper, Object3D, Color, Quaternion, Vector3, PCFSoftShadowMap } from 'three'
 
@@ -175,7 +175,6 @@ const quitGame = () => {
   hideQuitDialog()
   service.children.get('gameMachine').send('STOP')
 }
-
 /**
  * States
  */
@@ -394,7 +393,7 @@ onMounted(() => {
 
   sceneRef.value.scene.add(pivot2)
   pivot2.add(cameraRef.value.camera)
-  shouldShadowsUpdate = true
+  // shouldShadowsUpdate = true
   // pivot.rotation.x = Math.PI / -3
   // pivot.rotation.y = (Math.PI / 2) + (((nextTick % 96) / 96) * Math.PI * 2) // move depending on start time (nectTick) this is currently midnight
   // pivot.rotation.y += i/100
@@ -402,7 +401,7 @@ onMounted(() => {
 
   beforeRenderMethod = () => {
     stats.begin()
-    rendererRef.value.renderer.shadowMap.needsUpdate = shouldShadowsUpdate
+    // rendererRef.value.renderer.shadowMap.needsUpdate = shouldShadowsUpdate
 
     if (state.value.matches('idle') && !debugging.value) {
       pivot2.rotation.y = i / 300
@@ -413,7 +412,7 @@ onMounted(() => {
 
   afterRenderMethod = () => {
     stats.end()
-    shouldShadowsUpdate = false
+    // shouldShadowsUpdate = false
   }
 
   rendererRef.value.onBeforeRender(beforeRenderMethod)
@@ -473,7 +472,7 @@ canvas {
   transform-style: preserve-3d;
   animation: ಠ_ಠ 10s infinite alternate ease-in-out -10s;
   animation-fill-mode: forwards;
-  transform: rotateY(-15deg) translateZ(0);
+  transform: rotateX(15deg) translateZ(0) translateY(-5%);
 }
 
 .layer:after {
@@ -600,7 +599,7 @@ canvas {
   }
   100% {
     color: #eee;
-    transform: rotateY(15deg);
+    transform: rotateX(-15deg) translateY(5%);
   }
 }
 </style>

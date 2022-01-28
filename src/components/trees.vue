@@ -1,18 +1,20 @@
 <template>
-  <InstancedMesh ref="bases" :count="amount" receive-shadow cast-shadow>
-    <ConeGeometry :radial-segments="4" />
-    <StandardMaterial color="#c6966f" :props="{ flatShading: true }" />
-  </InstancedMesh>
+  <Animated is-animated scaleY :delay="60">
+    <InstancedMesh ref="bases" :count="amount" receive-shadow cast-shadow>
+      <ConeGeometry :radial-segments="4" />
+      <StandardMaterial color="#c6966f" :props="{ flatShading: true }" />
+    </InstancedMesh>
 
-  <InstancedMesh ref="treesLow" :count="amount" receive-shadow cast-shadow>
-    <ConeGeometry :radial-segments="4" />
-    <StandardMaterial color="#9fcf88" :props="{ flatShading: true }" />
-  </InstancedMesh>
+    <InstancedMesh ref="treesLow" :count="amount" receive-shadow cast-shadow>
+      <ConeGeometry :radial-segments="4" />
+      <StandardMaterial color="#9fcf88" :props="{ flatShading: true }" />
+    </InstancedMesh>
 
-  <InstancedMesh ref="treesHigh" :count="amount" receive-shadow cast-shadow>
-    <ConeGeometry :radial-segments="4" />
-    <StandardMaterial color="#9fcf88" :props="{ flatShading: true }" />
-  </InstancedMesh>
+    <InstancedMesh ref="treesHigh" :count="amount" receive-shadow cast-shadow>
+      <ConeGeometry :radial-segments="4" />
+      <StandardMaterial color="#9fcf88" :props="{ flatShading: true }" />
+    </InstancedMesh>
+  </Animated>
 </template>
 
 <script setup>
@@ -23,6 +25,8 @@ import { Object3D, Color, Vector3, Euler } from 'three'
 
 import useAmount from '#composables/use-prop-amount'
 import useExcludes from '#composables/use-prop-excludes'
+
+import Animated from '#components/animated.vue'
 
 const props = defineProps({
   ...useAmount(),
@@ -40,10 +44,6 @@ onMounted(() => {
   const treesLowMesh = treesLow.value.mesh;
   const treesHighMesh = treesHigh.value.mesh;
 
-  const dummy2 = new Object3D();
-  const dummy3 = new Object3D();
-  const dummy4 = new Object3D();
-
   const colors = [new Color('#9fcf88'), new Color('#8bbb75'), new Color('#cfc788'), new Color('#cb906d')]
   const vectorY = new Vector3(0, 1, 0)
 
@@ -58,31 +58,35 @@ onMounted(() => {
     const y = randomNumber(-4.8, 4.8, excludes.value.y)
     const euler = new Euler(randomRotationX, randomRotationY, 0, 'XYZ')
 
+    const dummy1 = new Object3D()
+    const dummy2 = new Object3D()
+
+    dummy1.setRotationFromEuler(euler)
+    dummy1.position.set(x, 0, y);
+    dummy1.translateOnAxis(vectorY, 0.3 * randomScale)
+    dummy1.scale.set(0.1 * randomScale, 0.6 * randomScale, 0.1 * randomScale);
+    dummy1.updateMatrix();
+
     dummy2.setRotationFromEuler(euler)
     dummy2.position.set(x, 0, y);
-    dummy2.translateOnAxis(vectorY, 0.3 * randomScale)
-    dummy2.scale.set(0.1 * randomScale, 0.6 * randomScale, 0.1 * randomScale); // Random position
-    dummy2.updateMatrix();
-
-    dummy3.setRotationFromEuler(euler)
-    dummy3.position.set(x, 0, y);
-    dummy3.translateOnAxis(vectorY, 0.5 * randomScale)
-    dummy3.scale.set(0.15 * randomScale, 0.8 * randomScale, 0.15 * randomScale)
-    dummy3.updateMatrix()
+    dummy2.translateOnAxis(vectorY, 0.5 * randomScale)
+    dummy2.scale.set(0.15 * randomScale, 0.8 * randomScale, 0.15 * randomScale)
+    dummy2.updateMatrix()
 
     if (isHigh) {
-      dummy4.setRotationFromEuler(euler)
-      dummy4.position.set(x, 0, y);
-      dummy4.translateOnAxis(vectorY, 0.8 * randomScale)
-      dummy4.scale.set(0.1 * randomScale, 0.6 * randomScale, 0.1 * randomScale)
-      dummy4.updateMatrix()
+      const dummy3 = new Object3D()
+      dummy3.setRotationFromEuler(euler)
+      dummy3.position.set(x, 0, y);
+      dummy3.translateOnAxis(vectorY, 0.8 * randomScale)
+      dummy3.scale.set(0.1 * randomScale, 0.6 * randomScale, 0.1 * randomScale)
+      dummy3.updateMatrix()
 
-      treesHighMesh.setMatrixAt(i, dummy4.matrix)
+      treesHighMesh.setMatrixAt(i, dummy3.matrix)
       treesHighMesh.setColorAt(i, color)
     }
 
-    basesMesh.setMatrixAt(i, dummy2.matrix)
-    treesLowMesh.setMatrixAt(i, dummy3.matrix)
+    basesMesh.setMatrixAt(i, dummy1.matrix)
+    treesLowMesh.setMatrixAt(i, dummy2.matrix)
     treesLowMesh.setColorAt(i, color)
   }
 

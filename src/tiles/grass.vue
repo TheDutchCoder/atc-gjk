@@ -1,26 +1,28 @@
 <template>
-  <Box
-    ref="grass"
-    :width="10"
-    :height="1"
-    :depth="10"
-    :width-segments="WIDTH_SEGMENTS"
-    :depth-segments="DEPTH_SEGMENTS"
-    :position="normalizedPosition"
-    receive-shadow
-  >
-    <StandardMaterial ref="grassMaterial" :color="dark ? '#a8cf86' : '#b6dd94'" :props="{ flatShading: true }" />
-  </Box>
+  <Animated is-animated scale-all>
+    <Box
+      ref="grass"
+      :width="10"
+      :height="1"
+      :depth="10"
+      :width-segments="WIDTH_SEGMENTS"
+      :depth-segments="DEPTH_SEGMENTS"
+      :position="normalizedPosition"
+      receive-shadow
+    >
+      <StandardMaterial ref="grassMaterial" :color="dark ? '#a8cf86' : '#b6dd94'" :props="{ flatShading: true }" />
+    </Box>
 
-  <Box
-    ref="ground"
-    :width="10"
-    :height="2"
-    :depth="10"
-    :position="normalizedPosition2"
-  >
-    <StandardMaterial color="#a58670" :props="{ flatShading: true }" />
-  </Box>
+    <Box
+      ref="ground"
+      :width="10"
+      :height="2"
+      :depth="10"
+      :position="normalizedPosition2"
+    >
+      <StandardMaterial color="#a58670" :props="{ flatShading: true }" />
+    </Box>
+  </Animated>
 </template>
 
 <script setup>
@@ -32,6 +34,8 @@ import usePosition from '#composables/use-prop-position'
 import useDark from '#composables/use-prop-dark'
 import useOffsets from '#composables/use-prop-offsets'
 
+import Animated from '#components/animated.vue'
+
 const WIDTH_SEGMENTS = 10
 const DEPTH_SEGMENTS = 10
 
@@ -42,6 +46,8 @@ const props = defineProps({
 })
 
 const { position, offsets } = toRefs(props)
+const grass = ref()
+const ground = ref()
 
 const normalizedPosition = computed(() => ({
   x: position.value.x * 10,
@@ -54,8 +60,6 @@ const normalizedPosition2 = computed(() => ({
   y: -2,
   z: position.value.y * 10,
 }))
-
-const grass = ref()
 
 onMounted(() => {
   const v = grass.value.geometry.getAttribute('position')
