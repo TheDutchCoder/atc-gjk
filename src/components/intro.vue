@@ -1,8 +1,16 @@
 <template>
   <Group>
-    <component :is="randomTile"></component>
-    <Airplane :position="{ x: 0, y: 0 }" :altitude="1"></Airplane>
-    <Clouds :altitude="1.8"></Clouds>
+    <Animated is-animated scale-all>
+      <component :is="randomTile"></component>
+    </Animated>
+
+    <Animated is-animated scale-all :delay="90">
+      <Airplane :position="{ x: 0, y: 0 }" :altitude="1"></Airplane>
+    </Animated>
+
+    <Animated is-animated scaleY :delay="60">
+      <Clouds :altitude="1.8"></Clouds>
+    </Animated>
   </Group>
 </template>
 
@@ -13,6 +21,7 @@ import { randomItemFromArray } from '#tools'
 
 import Airplane from '#components/airplane.vue'
 import Clouds from '#components/clouds.vue'
+import Animated from '#components/animated.vue'
 
 // import GrassTile from '#tiles/grass.vue'
 import FarmTile from '#tiles/farm.vue'

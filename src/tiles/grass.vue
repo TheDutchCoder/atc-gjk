@@ -1,5 +1,5 @@
 <template>
-  <Animated is-animated scale-all>
+  <!-- <Animated is-animated scale-all> -->
     <Box
       ref="grass"
       :width="10"
@@ -22,7 +22,7 @@
     >
       <StandardMaterial color="#a58670" :props="{ flatShading: true }" />
     </Box>
-  </Animated>
+  <!-- </Animated> -->
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-  <Animated is-animated scale-all :delay="90" :position="normalizedPosition"
+  <Animated is-animated scale-all :delay="80" :position="normalizedPosition"
       :rotation="{ x: 0, y: rotation, z: 0 }">
       <Group ref="animation">
         <Dodecahedron
