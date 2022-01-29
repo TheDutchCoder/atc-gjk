@@ -2,28 +2,39 @@
   <div class="what">
     <div v-if="state.matches('loading')" class="fixed top-1/2 left-1/2 bg-red-500">loading</div>
 
-    <div v-if="state.matches('idle')" class="stage">
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-    </div>
+    <transition
+      enter-active-class="transition duration-500 ease-in-out delay-[1500ms]"
+      enter-from-class="transform scale-50 opacity-0 -translate-y-full"
+      enter-to-class="transform scale-100 opacity-100"
+      leave-active-class="transition duration-75 ease-in"
+      leave-from-class="transform scale-100 opacity-100"
+      leave-to-class="transform scale-95 opacity-0"
+    >
+      <div v-if="state.matches('idle')">
+      <div class="stage">
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+      </div>
+      </div>
+    </transition>
 
     <!-- <button
       class="fixed top-1 right-1 rounded-md bg-gradient-to-br from-violet-500 to-purple-500 px-10 py-3 text-white font-bold m-auto shadow-lg"
@@ -35,12 +46,31 @@
       @click="state.matches('idle') ? send('EDIT') : send('IDLE')"
     >Edit</button> -->
 
-    <TestButton class="fixed top-2 right-4" text="Debug" @click="toggleDebugging">Debug</TestButton>
-    <TestButton class="fixed top-2 right-36" :text="state.matches('idle') ? 'Editor' : 'Exit'" @click="state.matches('idle') ? send('EDIT') : send('IDLE')">{{ state.matches('idle') ? 'Editor' : 'Exit' }}</TestButton>
+    <transition
+      enter-active-class="transition duration-500 ease-in-out delay-[1750ms]"
+      enter-from-class="transform scale-50 opacity-0 -translate-y-full"
+      enter-to-class="transform scale-100 opacity-100"
+      leave-active-class="transition duration-75 ease-in"
+      leave-from-class="transform scale-100 opacity-100"
+      leave-to-class="transform scale-95 opacity-0"
+    >
+      <TestButton v-if="state.matches('idle') || state.matches('edit')" size="sm" color="green" class="fixed top-2 right-4" text="Debug" @click="toggleDebugging">Debug</TestButton>
+    </transition>
 
     <transition
-      enter-active-class="transition duration-100 ease-out"
-      enter-from-class="transform scale-95 opacity-0"
+      enter-active-class="transition duration-500 ease-in-out delay-[2000ms]"
+      enter-from-class="transform scale-50 opacity-0 -translate-y-full"
+      enter-to-class="transform scale-100 opacity-100"
+      leave-active-class="transition duration-75 ease-in"
+      leave-from-class="transform scale-100 opacity-100"
+      leave-to-class="transform scale-95 opacity-0"
+    >
+      <TestButton v-if="state.matches('idle') || state.matches('edit')" size="sm" color="green" class="fixed top-2 right-36" :text="state.matches('idle') ? 'Editor' : 'Exit'" @click="state.matches('idle') ? send('EDIT') : send('IDLE')">{{ state.matches('idle') ? 'Editor' : 'Exit' }}</TestButton>
+    </transition>
+
+    <transition
+      enter-active-class="transition duration-500 ease-in-out delay-[2000ms]"
+      enter-from-class="transform scale-50 opacity-0 translate-y-full"
       enter-to-class="transform scale-100 opacity-100"
       leave-active-class="transition duration-75 ease-in"
       leave-from-class="transform scale-100 opacity-100"
@@ -55,7 +85,8 @@
           @click="send({ type: 'START' })"
         >Start new game</button> -->
 
-        <TestButton text="Start a\a new game" @click="send({ type: 'START' })">Start a<br>new game</TestButton>
+        <!-- <TestButton text="Start a\a new game" @click="send({ type: 'START' })">Start a<br>new game</TestButton> -->
+        <TestButton size="lg" text="New game" @click="send({ type: 'START' })">New game</TestButton>
       </div>
     </transition>
 

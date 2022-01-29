@@ -1,10 +1,8 @@
 <template>
-  <Animated is-animated scaleY :delay="40">
-    <InstancedMesh ref="rocks" :count="amount" receive-shadow cast-shadow :props="{ name: 'Rock' }">
-      <DodecahedronGeometry :radius="0.5" />
-      <StandardMaterial :props="{ flatShading: true }" />
-    </InstancedMesh>
-  </Animated>
+  <InstancedMesh ref="rocks" :count="amount" receive-shadow cast-shadow :props="{ name: 'Rock' }">
+    <DodecahedronGeometry :radius="0.5" />
+    <StandardMaterial :props="{ flatShading: true }" />
+  </InstancedMesh>
 </template>
 
 <script setup>
@@ -15,8 +13,6 @@ import { randomRoundNumber, randomNumber } from '#tools'
 
 import useAmount from '#composables/use-prop-amount'
 import useExcludes from '#composables/use-prop-excludes'
-
-import Animated from '#components/animated.vue'
 
 const props = defineProps({
   ...useAmount(),
