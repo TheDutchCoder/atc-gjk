@@ -1,18 +1,24 @@
 <template>
-  <InstancedMesh ref="bases" :count="amount" receive-shadow cast-shadow>
-    <ConeGeometry :radial-segments="4" />
-    <StandardMaterial color="#c6966f" :props="{ flatShading: true }" />
-  </InstancedMesh>
+  <!-- <AnimatedInstances is-animated scaleY :delay="30"> -->
+    <InstancedMesh ref="bases" :count="amount" receive-shadow cast-shadow>
+      <ConeGeometry :radial-segments="4" />
+      <StandardMaterial color="#c6966f" :props="{ flatShading: true }" />
+    </InstancedMesh>
+  <!-- </AnimatedInstances> -->
 
-  <InstancedMesh ref="treesLow" :count="amount" receive-shadow cast-shadow>
-    <ConeGeometry :radial-segments="4" />
-    <StandardMaterial color="#9fcf88" :props="{ flatShading: true }" />
-  </InstancedMesh>
+  <!-- <AnimatedInstances is-animated scaleY :delay="60"> -->
+    <InstancedMesh ref="treesLow" :count="amount" receive-shadow cast-shadow>
+      <ConeGeometry :radial-segments="4" />
+      <StandardMaterial color="#9fcf88" :props="{ flatShading: true }" />
+    </InstancedMesh>
+  <!-- </AnimatedInstances> -->
 
-  <InstancedMesh ref="treesHigh" :count="amount" receive-shadow cast-shadow>
-    <ConeGeometry :radial-segments="4" />
-    <StandardMaterial color="#9fcf88" :props="{ flatShading: true }" />
-  </InstancedMesh>
+  <!-- <AnimatedInstances is-animated scaleY :delay="90"> -->
+    <InstancedMesh ref="treesHigh" :count="amount" receive-shadow cast-shadow>
+      <ConeGeometry :radial-segments="4" />
+      <StandardMaterial color="#9fcf88" :props="{ flatShading: true }" />
+    </InstancedMesh>
+  <!-- </AnimatedInstances> -->
 </template>
 
 <script setup>
@@ -23,6 +29,8 @@ import { Object3D, Color, Vector3, Euler } from 'three'
 
 import useAmount from '#composables/use-prop-amount'
 import useExcludes from '#composables/use-prop-excludes'
+
+import AnimatedInstances from '#components/animated-instances.vue'
 
 const props = defineProps({
   ...useAmount(),

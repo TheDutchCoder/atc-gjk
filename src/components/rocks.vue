@@ -1,8 +1,10 @@
 <template>
-  <InstancedMesh ref="rocks" :count="amount" receive-shadow cast-shadow :props="{ name: 'Rock' }">
-    <DodecahedronGeometry :radius="0.5" />
-    <StandardMaterial :props="{ flatShading: true }" />
-  </InstancedMesh>
+  <!-- <AnimatedInstances is-animated scale-all :delay="100"> -->
+    <InstancedMesh ref="rocks" :count="amount" receive-shadow cast-shadow :props="{ name: 'Rock' }">
+      <DodecahedronGeometry :radius="0.5" />
+      <StandardMaterial :props="{ flatShading: true }" />
+    </InstancedMesh>
+  <!-- </AnimatedInstances> -->
 </template>
 
 <script setup>
@@ -14,6 +16,8 @@ import { randomRoundNumber, randomNumber } from '#tools'
 import useAmount from '#composables/use-prop-amount'
 import useExcludes from '#composables/use-prop-excludes'
 
+import AnimatedInstances from '#components/animated-instances.vue'
+
 const props = defineProps({
   ...useAmount(),
   ...useExcludes(),
@@ -23,7 +27,7 @@ const { amount, excludes } = toRefs(props)
 
 const rocks = ref()
 
-const colors = [new Color('#919ba4'), new Color('#b8b6a6'), new Color('#acb7b5')]
+const colors = [new Color('#919ba4'), new Color('#b8b6a6'), new Color('#acb7b5'), new Color('#d2d5cc')]
 
 onMounted(() => {
   const rocksMesh = rocks.value.mesh
@@ -39,7 +43,7 @@ onMounted(() => {
     dummy.position.set(positionX, 0, positionY)
     dummy.scale.set(scale, scale, scale)
     dummy.rotation.set(rotation, rotation, rotation)
-    dummy.updateMatrixWorld()
+    dummy.updateMatrix()
 
     rocksMesh.setMatrixAt(i, dummy.matrix)
     rocksMesh.setColorAt(i, color)

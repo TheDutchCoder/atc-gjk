@@ -1,6 +1,6 @@
 <template>
   <Group>
-    <component :is="selectedComponent"></component>
+    <component :is="selectedComponent" selected is-ghost></component>
   </Group>
 </template>
 
@@ -12,6 +12,7 @@ import ForestTile from '#tiles/forest'
 import Airplane from '#components/airplane.vue'
 
 import TestButton from '#components/test-button.vue'
+import Rocks from '#components/rocks.vue'
 
-const selectedComponent = GrassTile
+const selectedComponent = Airplane
 </script>

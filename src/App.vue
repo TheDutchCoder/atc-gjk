@@ -11,7 +11,7 @@
       leave-to-class="transform scale-95 opacity-0"
     >
       <div v-if="state.matches('idle')">
-      <div class="stage">
+      <div class="stage pointer-events-none">
         <div class="layer"></div>
         <div class="layer"></div>
         <div class="layer"></div>
@@ -604,16 +604,18 @@ canvas {
 }
 
 .layer:nth-child(n+11):after {
-  -webkit-text-stroke: 15px #0891b2;
-  text-shadow: 6px 0 6px #00366b, 5px 5px 5px #002951, 0 6px 6px #00366b;
+  -webkit-text-stroke: 15px #0ea5e9;
+  /* text-shadow: 6px 0 6px rgba(0, 0, 0, 0.8); */
+  /* text-shadow: 6px 0 6px #00366b, 5px 5px 5px #002951, 0 6px 6px #00366b; */
 }
 
 .layer:nth-child(n+12):after {
-  -webkit-text-stroke: 15px #0077ea;
+  -webkit-text-stroke: 15px #0369a1;
 }
 
 .layer:last-child:after {
   -webkit-text-stroke: 17px rgba(0, 0, 0, 0.1);
+  text-shadow: 0px 5px 26px rgba(3, 105, 161, 1);
 }
 
 .layer:first-child:after {
