@@ -1,15 +1,15 @@
 <template>
   <Group>
-    <Animated is-animated scale-all>
-      <component :is="randomTile"></component>
-    </Animated>
-
-    <Animated is-animated scale-all :delay="90">
-      <Airplane :position="{ x: 0, y: 0 }" :altitude="1"></Airplane>
-    </Animated>
-
-    <Animated is-animated scaleY :delay="60">
+    <Animated :speed="60" :delay="60">
       <Clouds :altitude="1.8"></Clouds>
+    </Animated>
+
+    <Animated :speed="60" :delay="30">
+      <Airplane :position="{ x: 0, y: 0 }" :altitude="1" @select="selectPlane" :selected="planeIsSelected"></Airplane>
+    </Animated>
+
+    <Animated :speed="60" :delay="0">
+      <component :is="randomTile"></component>
     </Animated>
   </Group>
 </template>
@@ -18,6 +18,8 @@
 import { Group } from 'troisjs'
 import { Fog, Color } from 'three'
 import { randomItemFromArray } from '#tools'
+
+import WhatVue from '#components/what.vue'
 
 import Airplane from '#components/airplane.vue'
 import Clouds from '#components/clouds.vue'
@@ -30,9 +32,17 @@ import AirportTile from '#tiles/airport'
 import TrainTracksTile from '#tiles/train-tracks'
 
 import useScene from '#composables/use-scene'
-import { onBeforeUnmount, onMounted } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 const { scene } = useScene()
+
+/**
+ * Plane selection
+ */
+const planeIsSelected = ref(false)
+
+const selectPlane = () => planeIsSelected.value = true
+
 
 onMounted(() => {
   const fog = new Fog(new Color(0x9bc8e9), 15, 30)
@@ -47,10 +57,10 @@ onBeforeUnmount(() => {
 
 const tiles = [
   // GrassTile,
-  // FarmTile,
+  FarmTile,
   ForestTile,
-  // AirportTile,
-  // TrainTracksTile,
+  AirportTile,
+  TrainTracksTile,
 ]
 
 const randomTile = randomItemFromArray(tiles)

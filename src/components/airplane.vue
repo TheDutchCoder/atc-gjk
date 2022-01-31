@@ -5,9 +5,15 @@
     :rotation="{ x: pitch, y: angle, z: 0 }"
     :props="{ transparent: true, opacity: 0.5 }"
   >
+
+    <!-- Selected triangle -->
+    <Cone ref="cone" v-if="selected" :radius="0.75" :height="1.25" :radial-segments="3" :position="{ x: 0, y: 2, z: 0 }" :rotation="{ x: Math.PI, y: 0, z: 0 }">
+      <StandardMaterial :color="isGhost ? '#eeeeee' : '#00ff00'" :props="{ flatShading: true, transparent: true, opacity: 0.75 }" />
+    </Cone>
+
     <Group ref="animation">
       <Box
-        @click="selectAirplane"
+        @click.self="selectAirplane"
         ref="hull"
         :width="1"
         :height="1"
@@ -15,11 +21,11 @@
         :position="{ x: 0, y: 0, z: 0 }"
         cast-shadow
       >
-        <StandardMaterial :color="currentColor" :props="{ flatShading: true }" />
+        <StandardMaterial :color="currentColor" :props="{ flatShading: true, transparent: isGhost, opacity: isGhost ? 0.75 : 1 }" />
       </Box>
 
       <Box
-        @click="selectAirplane"
+        @click.self="selectAirplane"
         ref="screen"
         :width="0.7"
         :height="0.4"
@@ -31,7 +37,7 @@
       </Box>
 
       <Box
-        @click="selectAirplane"
+        @click.self="selectAirplane"
         ref="engine"
         :width="1"
         :height="1"
@@ -39,7 +45,7 @@
         :position="{ x: 0, y: 0, z: -1.25 }"
         cast-shadow
       >
-        <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
+        <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true, transparent: isGhost, opacity: isGhost ? 0.75 : 1 }" />
       </Box>
 
       <Group
@@ -48,7 +54,7 @@
         :rotation="{ x: -0.05, y: 0, z: 0 }"
       >
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="pipeRight1"
           :width="0.1"
           :height="0.1"
@@ -60,7 +66,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="pipeRight2"
           :width="0.1"
           :height="0.1"
@@ -74,7 +80,7 @@
 
       <Group ref="smokeLeft" :position="{ x: 0, y: 0, z: -0.25 }">
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="smokeLeft1"
           :width="0.1"
           :height="0.1"
@@ -84,7 +90,7 @@
           <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="smokeLeft2"
           :width="0.1"
           :height="0.1"
@@ -94,7 +100,7 @@
           <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="smokeLeft3"
           :width="0.1"
           :height="0.1"
@@ -107,7 +113,7 @@
 
       <Group ref="smokeRight" :position="{ x: 0, y: 0, z: -0.25 }">
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="smokeRight1"
           :width="0.1"
           :height="0.1"
@@ -117,7 +123,7 @@
           <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="smokeRight2"
           :width="0.1"
           :height="0.1"
@@ -127,7 +133,7 @@
           <StandardMaterial :color="COLORS.WHITE" :props="{ flatShading: true }" />
         </Box>
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="smokeRight3"
           :width="0.1"
           :height="0.1"
@@ -144,7 +150,7 @@
         :rotation="{ x: -0.05, y: 0, z: 0 }"
       >
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="pipeLeft1"
           :width="0.1"
           :height="0.1"
@@ -156,7 +162,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="pipeLeft2"
           :width="0.1"
           :height="0.1"
@@ -169,7 +175,7 @@
       </Group>
 
       <Box
-        @click="selectAirplane"
+        @click.self="selectAirplane"
         ref="nut"
         :width="0.2"
         :height="0.2"
@@ -181,7 +187,7 @@
       </Box>
 
       <Box
-        @click="selectAirplane"
+        @click.self="selectAirplane"
         ref="prop1"
         :width="0.15"
         :height="1.5"
@@ -194,7 +200,7 @@
       </Box>
 
       <Box
-        @click="selectAirplane"
+        @click.self="selectAirplane"
         ref="prop2"
         :width="0.15"
         :height="1.5"
@@ -206,7 +212,7 @@
       </Box>
 
       <Box
-        @click="selectAirplane"
+        @click.self="selectAirplane"
         ref="wings"
         :width="3"
         :height="0.1"
@@ -214,11 +220,11 @@
         :position="{ x: 0, y: 0, z: -0.25 }"
         cast-shadow
       >
-        <StandardMaterial :color="currentColor" :props="{ flatShading: true }" />
+        <StandardMaterial :color="currentColor" :props="{ flatShading: true, transparent: isGhost, opacity: isGhost ? 0.75 : 1 }" />
       </Box>
 
       <Box
-        @click="selectAirplane"
+        @click.self="selectAirplane"
         ref="rudder"
         :width="0.1"
         :height="0.75"
@@ -226,12 +232,12 @@
         :position="{ x: 0, y: 0.5, z: 0.95 }"
         cast-shadow
       >
-        <StandardMaterial :color="currentColor" :props="{ flatShading: true }" />
+        <StandardMaterial :color="currentColor" :props="{ flatShading: true, transparent: isGhost, opacity: isGhost ? 0.75 : 1 }" />
       </Box>
 
       <Group ref="rightWheel" :position="{ x: -0.3, y: 0, z: -1.4 }">
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="rightWheel-base"
           :width="0.4"
           :height="0.5"
@@ -239,11 +245,11 @@
           :position="{ x: 0, y: -0.3, z: 0.75 }"
           cast-shadow
         >
-          <StandardMaterial :color="currentColor" :props="{ flatShading: true }" />
+          <StandardMaterial :color="currentColor" :props="{ flatShading: true, transparent: isGhost, opacity: isGhost ? 0.75 : 1 }" />
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="rightWheel-nut"
           :width="0.34"
           :height="0.2"
@@ -255,7 +261,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="rightWheel-tire"
           :width="0.2"
           :height="0.4"
@@ -269,7 +275,7 @@
 
       <Group ref="leftWheel" :position="{ x: 0.3, y: 0, z: -1.4 }">
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="leftWheel-base"
           :width="0.4"
           :height="0.5"
@@ -277,11 +283,11 @@
           :position="{ x: 0, y: -0.3, z: 0.75 }"
           cast-shadow
         >
-          <StandardMaterial :color="currentColor" :props="{ flatShading: true }" />
+          <StandardMaterial :color="currentColor" :props="{ flatShading: true, transparent: isGhost, opacity: isGhost ? 0.75 : 1 }" />
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="leftWheel-nut"
           :width="0.34"
           :height="0.2"
@@ -293,7 +299,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="leftWheel-tire"
           :width="0.2"
           :height="0.4"
@@ -307,7 +313,7 @@
 
       <Group ref="rearWheel">
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="rearWheel-base"
           :width="0.3"
           :height="0.5"
@@ -316,11 +322,11 @@
           :rotation="{ x: -0.2, y: 0, z: 0 }"
           cast-shadow
         >
-          <StandardMaterial :color="currentColor" :props="{ flatShading: true }" />
+          <StandardMaterial :color="currentColor" :props="{ flatShading: true, transparent: isGhost, opacity: isGhost ? 0.75 : 1 }" />
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="rearWheel-nut"
           :width="0.2"
           :height="0.2"
@@ -332,7 +338,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="rearWheel-tire"
           :width="0.15"
           :height="0.4"
@@ -346,18 +352,18 @@
 
       <Group ref="pilot">
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="body"
           :width="0.3"
           :height="0.3"
           :depth="0.3"
           :position="{ x: 0, y: 0.4, z: 0 }"
         >
-          <StandardMaterial color="#9d795a" :props="{ flatShading: true }" />
+          <StandardMaterial :color="isGhost ? '#eeeeee' : '#9d795a'" :props="{ flatShading: true }" />
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="head"
           :width="0.2"
           :height="0.2"
@@ -368,7 +374,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="earRight"
           :width="0.05"
           :height="0.07"
@@ -379,7 +385,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="earLeft"
           :width="0.05"
           :height="0.07"
@@ -390,7 +396,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="goggleStrap"
           :width="0.22"
           :height="0.02"
@@ -401,7 +407,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="goggleLeft"
           :width="0.07"
           :height="0.07"
@@ -412,7 +418,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="goggleRight"
           :width="0.07"
           :height="0.07"
@@ -423,7 +429,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="hair1"
           :width="0.2"
           :height="0.05"
@@ -434,7 +440,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="hair2"
           :width="0.22"
           :height="0.05"
@@ -450,7 +456,7 @@
 
         <!-- Lights -->
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="lightGreen"
           :width="0.1"
           :height="0.1"
@@ -461,7 +467,7 @@
         </Box>
 
         <Box
-          @click="selectAirplane"
+          @click.self="selectAirplane"
           ref="lightRed"
           :width="0.1"
           :height="0.1"
@@ -491,13 +497,17 @@
 </template>
 
 <script setup>
-import { StandardMaterial, Group, Box, PointLight } from 'troisjs'
+import { StandardMaterial, Group, Box, PointLight, Cone } from 'troisjs'
+import { Color } from 'three'
 import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, toRefs, watch } from 'vue'
 import { setPoint } from '#tools'
 import * as COLORS from '#/colors'
 
 import useDebugger from '#composables/use-debugger'
 import useRenderer from '#composables/use-renderer'
+import useAnimate from '#composables/use-animate'
+
+import { randomRoundNumber } from '../tools'
 
 const { debugging } = useDebugger()
 const { rendererRef } = useRenderer()
@@ -521,13 +531,16 @@ const props = defineProps({
     default: 0,
   },
 
-  ghost: Boolean,
+  isGhost: Boolean,
   selected: Boolean,
 })
 
 const emit = defineEmits(['select'])
 
-const { altitude, direction, position, selected } = toRefs(props)
+const { altitude, direction, position, selected, isGhost } = toRefs(props)
+
+const colors = ['#A80000', '#FB6400', '#FFC400', '#62BA27', '#3342C4', '#9362C4']
+const color = colors[randomRoundNumber(0, colors.length - 1)]
 
 const currentColor = computed(() => {
   if (isGhost.value) {
@@ -535,10 +548,10 @@ const currentColor = computed(() => {
   }
 
   if (selected.value) {
-    return COLORS.BLUE
+    return COLORS.BLACK
   }
 
-  return COLORS.RED
+  return color
 })
 
 const isFlying = computed(() => altitude.value > 0)
@@ -586,12 +599,14 @@ const lightGreenLight = ref()
 const lightRed = ref()
 const lightRedLight = ref()
 
-const isGhost = computed(() => {
-  return position.value.x < -5 ||
-    position.value.x > 5 ||
-    position.value.y < -5 ||
-    position.value.y > 5
-})
+const cone = ref()
+
+// const isGhost = computed(() => {
+//   return position.value.x < -5 ||
+//     position.value.x > 5 ||
+//     position.value.y < -5 ||
+//     position.value.y > 5
+// })
 
 const selectAirplane = () => {
   if (!isGhost.value) {
@@ -733,6 +748,11 @@ onMounted(() => {
 
       prop1Mesh.rotation.z = rotation
       prop2Mesh.rotation.z = rotation + propelerOffset
+
+      if (cone.value) {
+        cone.value.o3d.position.y = -bob + 2
+        cone.value.o3d.rotation.y = i / 100
+      }
 
       if (animation.value) {
         animation.value.o3d.position.y = isFlying.value ? bob : 0

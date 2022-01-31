@@ -7,7 +7,7 @@
     <Trees :amount="6" :excludes="{ x: [-5, 0], y: [-5, 0] }"></Trees>
 
     <!-- Fences should be instances! -->
-    <Group ref="pigs">
+    <!-- <Group ref="pigs">
       <Fence :position="{ x: -4, y: -4 }" :direction="0"></Fence>
       <Fence :position="{ x: -4, y: -3 }" :direction="0"></Fence>
       <Fence :position="{ x: -4, y: -2 }" :direction="0"></Fence>
@@ -57,7 +57,7 @@
       <Sheep :position="{ x: 4, y: -4 }" :direction="2"></Sheep>
       <Sheep :position="{ x: 3, y: -2 }"></Sheep>
       <Sheep :position="{ x: 2, y: -3 }"></Sheep>
-    </Group>
+    </Group> -->
   </Group>
 </template>
 
