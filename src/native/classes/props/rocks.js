@@ -18,7 +18,7 @@ import {
   defaultMaterial,
 } from '#materials'
 
-import { dodecahedronGeometry } from '#geometries'
+import { boxGeometry } from '#geometries'
 import { randomRoundNumber, randomCoordinate } from '#/tools'
 
 const colors = [ROCK_1, ROCK_2, ROCK_3, ROCK_4]
@@ -96,7 +96,7 @@ export default class Rocks extends Instance {
     })
 
     this._rocks = new Group()
-    this._rock = new InstancedMesh(dodecahedronGeometry, defaultMaterial, amounts)
+    this._rock = new InstancedMesh(boxGeometry, defaultMaterial, amounts)
     this._rock.castShadow = true
     this._rock.receiveShadow = true
 
