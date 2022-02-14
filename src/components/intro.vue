@@ -1,17 +1,5 @@
 <template>
-  <Group>
-    <Animated :speed="60" :delay="60">
-      <Clouds :altitude="1.8"></Clouds>
-    </Animated>
-
-    <Animated :speed="60" :delay="30">
-      <Airplane :position="{ x: 0, y: 0 }" :altitude="1" @select="selectPlane" :selected="planeIsSelected"></Airplane>
-    </Animated>
-
-    <Animated :speed="60" :delay="0">
-      <component :is="randomTile"></component>
-    </Animated>
-  </Group>
+  <AP></AP>
 </template>
 
 <script setup>
@@ -19,7 +7,7 @@ import { Group } from 'troisjs'
 import { Fog, Color } from 'three'
 import { randomItemFromArray } from '#tools'
 
-import WhatVue from '#components/what.vue'
+import AP from '#components/ap.vue'
 
 import Airplane from '#components/airplane.vue'
 import Clouds from '#components/clouds.vue'

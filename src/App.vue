@@ -434,9 +434,9 @@ onMounted(() => {
     stats.begin()
     // rendererRef.value.renderer.shadowMap.needsUpdate = shouldShadowsUpdate
 
-    if (state.value.matches('idle') && !debugging.value) {
-      pivot2.rotation.y = i / 300
-    }
+    // if (state.value.matches('idle') && !debugging.value) {
+    //   pivot2.rotation.y = i / 300
+    // }
 
     i++
   }

@@ -4,18 +4,30 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
       href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@900&family=Dongle:wght@700&family=Carter+One&family=Roboto:ital,wght@1,100&display=swap"
-      rel="stylesheet">
+      rel="stylesheet"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Air Traffic Control - GJK</title>
+
+    <style>
+      html {
+        min-height: 100vh;
+        min-width: 100vw;
+        background: radial-gradient(#ecfeff, #7dd3fc);
+      }
+    </style>
   </head>
 
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+    <button id="stats" class="fixed bottom-1 left-1 rounded py-3 px-5 bg-white font-bold">Stats</button>
+    <button id="doink" class="fixed bottom-1 right-1 rounded py-3 px-5 bg-white font-bold">Doink</button>
+    <button id="play" class="fixed top-1 right-1 rounded py-3 px-5 bg-white font-bold">Play</button>
+    <button id="edit" class="fixed top-1 right-24 rounded py-3 px-5 bg-white font-bold">Editor</button>
+    <script type="module" src="/src/main2.js"></script>
   </body>
 
 </html>

@@ -477,7 +477,8 @@
           <StandardMaterial :color="COLORS.RED" :props="{ flatShading: true, transparent: true, opacity: 0.85 }" />
         </Box>
 
-        <PointLight
+        <!-- High perf impact -->
+        <!-- <PointLight
           ref="lightGreenLight"
           :position="{ x: 1.6, y: 0, z: -0.8 }"
           :intensity="1"
@@ -490,7 +491,7 @@
           :intensity="1"
           :color="COLORS.RED"
           :distance="10"
-        ></PointLight>
+        ></PointLight> -->
       </Group>
     </Group>
   </Group>
@@ -618,54 +619,54 @@ let animate
 
 onMounted(() => {
   // Hull.
-  setPoint(0, hull, -0.2, -0.1)
-  setPoint(2, hull, -0.2, 0.3)
-  setPoint(4, hull, 0.2, -0.1)
-  setPoint(6, hull, 0.2, 0.3)
+  // setPoint(0, hull, -0.2, -0.1)
+  // setPoint(2, hull, -0.2, 0.3)
+  // setPoint(4, hull, 0.2, -0.1)
+  // setPoint(6, hull, 0.2, 0.3)
 
-  // Engine.
-  setPoint(1, engine, -0.1, -0.1)
-  setPoint(3, engine, -0.1, 0.1)
-  setPoint(5, engine, 0.1, -0.1)
-  setPoint(7, engine, 0.1, 0.1)
+  // // Engine.
+  // setPoint(1, engine, -0.1, -0.1)
+  // setPoint(3, engine, -0.1, 0.1)
+  // setPoint(5, engine, 0.1, -0.1)
+  // setPoint(7, engine, 0.1, 0.1)
 
-  // Propeller nut.
-  setPoint(0, nut, 0.07, 0.07)
-  setPoint(2, nut, 0.07, -0.07)
-  setPoint(4, nut, -0.07, 0.07)
-  setPoint(6, nut, -0.07, -0.07)
+  // // Propeller nut.
+  // setPoint(0, nut, 0.07, 0.07)
+  // setPoint(2, nut, 0.07, -0.07)
+  // setPoint(4, nut, -0.07, 0.07)
+  // setPoint(6, nut, -0.07, -0.07)
 
-  // Wings.
-  setPoint(1, wings, 0.2, 0.05)
-  setPoint(3, wings, 0.2, -0.05)
-  setPoint(5, wings, -0.2, 0.05)
-  setPoint(7, wings, -0.2, -0.05)
+  // // Wings.
+  // setPoint(1, wings, 0.2, 0.05)
+  // setPoint(3, wings, 0.2, -0.05)
+  // setPoint(5, wings, -0.2, 0.05)
+  // setPoint(7, wings, -0.2, -0.05)
 
-  // Rudder.
-  setPoint(0, rudder, -0.04, 0.05)
-  setPoint(2, rudder, -0.04)
-  setPoint(3, rudder, 0, -0.05)
-  setPoint(4, rudder, 0.04, 0.05)
-  setPoint(6, rudder, 0.04)
-  setPoint(7, rudder, 0, -0.05)
+  // // Rudder.
+  // setPoint(0, rudder, -0.04, 0.05)
+  // setPoint(2, rudder, -0.04)
+  // setPoint(3, rudder, 0, -0.05)
+  // setPoint(4, rudder, 0.04, 0.05)
+  // setPoint(6, rudder, 0.04)
+  // setPoint(7, rudder, 0, -0.05)
 
-  // Screen.
-  setPoint(0, screen, -0.05)
-  setPoint(1, screen, -0.05)
-  setPoint(4, screen, 0.05)
-  setPoint(5, screen, 0.05)
+  // // Screen.
+  // setPoint(0, screen, -0.05)
+  // setPoint(1, screen, -0.05)
+  // setPoint(4, screen, 0.05)
+  // setPoint(5, screen, 0.05)
 
-  // Exhaust pipe left.
-  setPoint(4, pipeLeft1, null, null, 0.01)
-  setPoint(1, pipeLeft2, null, null, -0.009)
-  setPoint(5, pipeLeft2, null, null, -0.009)
-  setPoint(7, pipeLeft2, null, null, -0.01)
+  // // Exhaust pipe left.
+  // setPoint(4, pipeLeft1, null, null, 0.01)
+  // setPoint(1, pipeLeft2, null, null, -0.009)
+  // setPoint(5, pipeLeft2, null, null, -0.009)
+  // setPoint(7, pipeLeft2, null, null, -0.01)
 
-  // Exhaust pipe right.
-  setPoint(2, pipeRight1, null, null, 0.01)
-  setPoint(1, pipeRight2, null, null, -0.005)
-  setPoint(3, pipeRight2, null, null, -0.01)
-  setPoint(7, pipeRight2, null, null, -0.005)
+  // // Exhaust pipe right.
+  // setPoint(2, pipeRight1, null, null, 0.01)
+  // setPoint(1, pipeRight2, null, null, -0.005)
+  // setPoint(3, pipeRight2, null, null, -0.01)
+  // setPoint(7, pipeRight2, null, null, -0.005)
 
   // Loop.
   let i = 0
@@ -778,7 +779,7 @@ onMounted(() => {
     }
   }
 
-  rendererRef.value?.onBeforeRender(animate)
+  // rendererRef.value?.onBeforeRender(animate)
 })
 
 onBeforeUnmount(() => {

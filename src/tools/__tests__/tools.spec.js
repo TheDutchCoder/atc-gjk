@@ -1,5 +1,11 @@
 import { suite, expect, test } from 'vitest'
-import { checkForAvailableSpots, randomItemFromArray, randomRoundNumber, randomNumber } from '#tools'
+import {
+  checkForAvailableSpots,
+  randomItemFromArray,
+  randomRoundNumber,
+  randomNumber,
+  randomCoordinate,
+} from '#tools'
 
 suite('tools', () => {
   test('checkForAvailableSpots', () => {
@@ -57,5 +63,23 @@ suite('tools', () => {
       expect(result).toBeGreaterThanOrEqual(-10)
       expect(result).toBeLessThanOrEqual(3)
     }
+  })
+
+  test('randomNumber with exlcusions', () => {
+    const min = -10
+    const max = 3
+    const exclusions = {
+      min: -8,
+      max: 1,
+    }
+
+    const results = []
+
+    for (let i = 0; i < 1000; i++) {
+      results.push(randomNumber(min, max, exclusions))
+    }
+
+    expect(results.length).toBe(1000)
+    expect(results.filter(number => number > -8 && number < 1).length).toBe(0)
   })
 })

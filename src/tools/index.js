@@ -1,4 +1,4 @@
-export const setPoint = (point, obj, x, y, z, relative = true) => {
+export const setPoint = (point, geometry, x, y, z, relative = true) => {
   /**
    * Geometry reference:
    *
@@ -25,9 +25,9 @@ export const setPoint = (point, obj, x, y, z, relative = true) => {
     let newY
     let newZ
 
-    let oldX = obj.value.geometry.attributes.position.getX(vertex)
-    let oldY = obj.value.geometry.attributes.position.getY(vertex)
-    let oldZ = obj.value.geometry.attributes.position.getZ(vertex)
+    let oldX = geometry.attributes.position.getX(vertex)
+    let oldY = geometry.attributes.position.getY(vertex)
+    let oldZ = geometry.attributes.position.getZ(vertex)
 
     if (relative) {
       newX = x ? oldX + x : oldX
@@ -39,20 +39,20 @@ export const setPoint = (point, obj, x, y, z, relative = true) => {
       newZ = z ? z : oldZ
     }
 
-    obj.value.geometry.attributes.position.setXYZ(vertex, newX, newY, newZ)
+    geometry.attributes.position.setXYZ(vertex, newX, newY, newZ)
   })
 
-  obj.value.geometry.attributes.position.needsUpdate = true
+  geometry.attributes.position.needsUpdate = true
 }
 
 /**
  * Generates a random float number between a min and max value.
  */
-export const randomNumber = (min, max, excludes) => {
+export const randomNumber = (min, max, exclusions) => {
   const number = Math.round(Math.random() * ((max * 100000) - (min * 100000)) + (min * 100000)) / 100000
 
-  if (excludes && number >= excludes[0] && number <= excludes[1]) {
-    return randomNumber(min, max, excludes)
+  if (exclusions && number >= exclusions.min && number <= exclusions.max) {
+    return randomNumber(min, max, exclusions)
   } else {
     return number
   }
@@ -143,4 +143,46 @@ const CubicBezierP3 = (t, p) => {
 export const CubicBezier = (t, p0, p1, p2, p3) => {
   return CubicBezierP0(t, p0) + CubicBezierP1(t, p1) + CubicBezierP2(t, p2) +
     CubicBezierP3(t, p3)
+}
+
+/**
+ * Trust me on this one :D
+ * @param {*} min
+ * @param {*} max
+ * @param {*} excludes
+ * @returns
+ */
+export const randomCoordinate = (min, max, excludes) => {
+  const { width, direction } = excludes
+  const offset = width / 2
+
+  let funcX
+  let funcZ
+  let x = randomNumber(min, max)
+  let y = 0
+  let z = randomNumber(min, max)
+
+  if (direction === 0 || direction == 4) {
+    funcX = (x) => (x > offset) || (x < -offset)
+    funcZ = (_x, _z) => true
+  } else if (direction === 3 || direction == 7) {
+    funcX = (_x) => true
+    funcZ = (x, z) => (z > (x + offset)) || (z < (x - offset))
+  } else if (direction === 2 || direction == 6) {
+    funcX = (_x) => true
+    funcZ = (_x, z) => (z > offset) || (z < -offset)
+  } else if (direction === 1 || direction == 5) {
+    funcX = (_x) => true
+    funcZ = (x, z) => (z > (-x + offset)) || (z < (-x - offset))
+  }
+
+  while (!funcX(x)) {
+    x = randomNumber(min, max)
+  }
+
+  while (!funcZ(x, z)) {
+    z = randomNumber(min, max)
+  }
+
+  return { x, y, z }
 }
