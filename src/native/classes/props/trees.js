@@ -33,6 +33,18 @@ const dummy = new Object3D()
  */
 export default class Trees extends Instance {
 
+  _tiles = [
+    { x: -1, y: 0, z: -1 },
+    { x: 0, y: 0, z: -1 },
+    { x: 1, y: 0, z: -1 },
+    { x: -1, y: 0, z: 0 },
+    { x: 0, y: 0, z: 0 },
+    { x: 1, y: 0, z: 0 },
+    { x: -1, y: 0, z: 1 },
+    { x: 0, y: 0, z: 1 },
+    { x: 1, y: 0, z: 1 },
+  ]
+
   /**
    * Local instances for the trunks.
    */
@@ -63,7 +75,30 @@ export default class Trees extends Instance {
   create() {
     this._trees = new Group()
 
-    this._trunk = new InstancedMesh(coneGeometry.clone(), defaultMaterial, this._amount)
+    let amounts = 0
+
+    // Test
+    this._tiles.forEach(tile => {
+      const amount = randomRoundNumber(20, 30)
+      amounts += amount
+
+      for (let i = 0; i < amount; i++) {
+        this._instances.push({
+          pos: randomCoordinate(-4.75, 4.75, this._exclude),
+          rot: {
+            x: randomNumber(-0.12, 0.12),
+            y: randomNumber(-0.12, 0.12),
+            z: 0,
+          },
+          scale: 0.5 + (Math.random() * 0.75),
+          color: colors[randomRoundNumber(0, colors.length - 1)],
+          mesh: dummy,
+          tile,
+        })
+      }
+    })
+
+    this._trunk = new InstancedMesh(coneGeometry.clone(), defaultMaterial, amounts)
     this._trunk.castShadow = true
 
     const bottomLayer = coneGeometry.clone()
@@ -75,7 +110,7 @@ export default class Trees extends Instance {
     topLayer.translate(0, 1.1, 0)
 
     const mergedGeometries = mergeBufferGeometries([bottomLayer, topLayer])
-    this._foliage = new InstancedMesh(mergedGeometries, defaultMaterial, this._amount)
+    this._foliage = new InstancedMesh(mergedGeometries, defaultMaterial, amounts)
     this._foliage.castShadow = true
     this._foliage.receiveShadow = true
 
@@ -86,35 +121,36 @@ export default class Trees extends Instance {
     this._foliage.geometry.translate(0, this._foliage.geometry.boundingBox.min.y * -1, 0)
     this._foliage.geometry.translate(0, 0.3, 0)
 
-    for (let i = 0; i < this._amount; i++) {
-      this._instances.push({
-        pos: randomCoordinate(-4.75, 4.75, this._exclude),
-        rot: {
-          x: randomNumber(-0.12, 0.12),
-          y: randomNumber(-0.12, 0.12),
-          z: 0,
-        },
-        scale: 0.5 + (Math.random() * 0.75),
-        color: colors[randomRoundNumber(0, colors.length - 1)],
-        mesh: dummy
-      })
-    }
+    // for (let i = 0; i < this._amount; i++) {
+    //   this._instances.push({
+    //     pos: randomCoordinate(-4.75, 4.75, this._exclude),
+    //     rot: {
+    //       x: randomNumber(-0.12, 0.12),
+    //       y: randomNumber(-0.12, 0.12),
+    //       z: 0,
+    //     },
+    //     scale: 0.5 + (Math.random() * 0.75),
+    //     color: colors[randomRoundNumber(0, colors.length - 1)],
+    //     mesh: dummy
+    //   })
+    // }
 
     this._trees.add(this._trunk, this._foliage)
 
-    this._trees.position.x = this._position.x * 10
-    this._trees.position.z = this._position.z * 10
+    // this._trees.position.x = this._position.x * 10
+    // this._trees.position.z = this._position.z * 10
   }
 
 
 
   updateInstance(instance, index, from) {
-    const { pos, rot, scale, color, mesh } = instance
+    // console.log('hm')
+    const { pos, rot, scale, color, mesh, tile } = instance
     const { x: posX, y: posY, z: posZ } = pos
     const { x: rotX, y: rotY, z: rotZ } = rot
     const euler = new Euler(rotX, rotY, rotZ, 'XYZ')
 
-    mesh.position.set(posX, posY * scale, posZ)
+    mesh.position.set(posX + (tile.x * 10), (posY + (tile.y * 5)) * scale, posZ + (tile.z * 10))
     mesh.setRotationFromEuler(euler)
     mesh.scale.set(from.x, from.y, from.z)
     mesh.updateMatrixWorld(true)
@@ -127,10 +163,10 @@ export default class Trees extends Instance {
     this._foliage.setMatrixAt(index, mesh.matrixWorld)
     this._foliage.setColorAt(index, color)
 
-    // this._trunk.instanceMatrix.needsUpdate = true
-    // this._trunk.instanceColor.needsUpdate = true
-    // this._foliage.instanceMatrix.needsUpdate = true
-    // this._foliage.instanceColor.needsUpdate = true
+    this._trunk.instanceMatrix.needsUpdate = true
+    this._trunk.instanceColor.needsUpdate = true
+    this._foliage.instanceMatrix.needsUpdate = true
+    this._foliage.instanceColor.needsUpdate = true
   }
 
   animateIn() {
@@ -139,14 +175,14 @@ export default class Trees extends Instance {
       const from = { x: 0, y: 0, z: 0 }
       const to = { x: scale, y: scale, z: scale }
 
-      this.updateInstance(instance, index, to)
+      this.updateInstance(instance, index, from)
 
-      // new TWEEN.Tween(from)
-      //   .to(to, 500)
-      //   .easing(TWEEN.Easing.Elastic.InOut)
-      //   .onUpdate(() => this.#updateInstance(instance, index, from))
-      //   .delay(randomRoundNumber(750, 1000))
-      //   .start()
+      new TWEEN.Tween(from)
+        .to(to, 500)
+        .easing(TWEEN.Easing.Elastic.InOut)
+        .onUpdate(() => this.updateInstance(instance, index, from))
+        .delay(randomRoundNumber(750, 1000))
+        .start()
     })
 
     this._trunk.instanceMatrix.needsUpdate = true

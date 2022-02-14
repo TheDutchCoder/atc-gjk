@@ -4,7 +4,7 @@ import {
 
 import GameTile from '#native/classes/base/game-tile'
 
-import BaseTile from '#native/classes/tiles/base'
+import Grass from '#native/classes/tiles/grass'
 import Trees from '#native/classes/props/trees'
 import Rocks from '#native/classes/props/rocks'
 
@@ -34,7 +34,7 @@ export default class Forest extends GameTile {
    */
   #create() {
     const forest = new Group()
-    const tile = new BaseTile()
+    const grass = new Grass()
     const trees = new Trees()
     const rocks = new Rocks()
 
@@ -42,7 +42,7 @@ export default class Forest extends GameTile {
     // this._things = [tile, trees, rocks]
 
     forest.add(
-      tile,
+      grass,
       trees,
       rocks,
     )

@@ -1,6 +1,6 @@
 import css from './index.css'
 import { service } from '#native/state-machines/main'
-// import TWEEN from '@tweenjs/tween.js'
+import TWEEN from '@tweenjs/tween.js'
 
 // import scene from '#native/scene'
 import camera from '#native/camera'
@@ -85,7 +85,7 @@ renderer.setAnimationLoop(async (_) => {
   // }
 
   controls.update()
-  // TWEEN.update(_)
+  TWEEN.update(_)
 
   stats.end()
 })

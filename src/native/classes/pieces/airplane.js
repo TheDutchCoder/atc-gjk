@@ -300,6 +300,8 @@ export default class Airplane extends GamePiece {
 
     this.#create()
     this.animateIn()
+
+    return this._model
   }
 
   #create() {
@@ -381,7 +383,7 @@ export default class Airplane extends GamePiece {
     this.model = airplane
   }
 
-  #update(from) {
+  update(from) {
     this._model.scale.set(from.scale, from.scale, from.scale)
     this._model.position.x = from.x * 10
     this._model.position.y = from.y * 5
@@ -392,14 +394,14 @@ export default class Airplane extends GamePiece {
     const from = { x: this._position.x, y: this.position.y + 1, z: this._position.z + 1, scale: 0 }
     const to = { x: this._position.x, y: this._position.y, z: this._position.z, scale: 1 }
 
-    this.#update(from)
+    this.update(to)
 
-    new TWEEN.Tween(from)
-      .to(to, 500)
-      .easing(TWEEN.Easing.Elastic.Out)
-      .onUpdate(() => this.#update(from))
-      .delay(1250)
-      .start()
+    // new TWEEN.Tween(from)
+    //   .to(to, 500)
+    //   .easing(TWEEN.Easing.Elastic.Out)
+    //   .onUpdate(() => this.update(from))
+    //   .delay(1250)
+    //   .start()
   }
 
   animateOut() {
@@ -409,7 +411,7 @@ export default class Airplane extends GamePiece {
     new TWEEN.Tween(from)
       .to(to, 500)
       .easing(TWEEN.Easing.Elastic.In)
-      .onUpdate(() => this.#update(from))
+      .onUpdate(() => this.update(from))
       .start()
   }
 

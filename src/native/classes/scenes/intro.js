@@ -58,14 +58,12 @@ dirLight1.shadow.camera.right = 90
 
 const h = new DirectionalLightHelper(dirLight1, 3)
 
-pivot2.rotation.y = Math.PI / -3
+pivot2.rotation.y = Math.PI / -1.5
 
 
 // introScene._scene.add(pivot2)
-// introScene._scene.add(h)
+introScene._scene.add(h)
 // introScene.addModel(l._model)
-
-console.log(introScene)
 
 // setInterval(() => {
 //   pivot2.rotation.y += 0.01 * (Math.PI / 4)
@@ -84,19 +82,19 @@ pivot.position.y = 2.5
 controls.target = pivot.position
 
 introScene.addLight(hemiLight)
-// introScene.addLight(pivot2)
-introScene.addLight(dirLight1)
+introScene.addLight(pivot2)
+// introScene.addLight(dirLight1)
 introScene.addLight(dirLight2)
 // introScene.addFog(fog)
 
-const clouds = new Clouds({ position: { x: 0, y: 2, z: 0 } })
-introScene.addModel(clouds)
+// const clouds = new Clouds({ position: { x: 0, y: 2, z: 0 } })
+// introScene.addModel(clouds)
 
 const forest = new Forest()
 introScene.addModel(forest)
 
 const airplane = new Airplane({ position: { x: 0, y: 1, z: 0 } })
-introScene.addModel(airplane.model)
+introScene.addModel(airplane)
 
 /**
  * Debug
