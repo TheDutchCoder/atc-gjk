@@ -1,11 +1,12 @@
-import GameTile from '#native/classes/base/game-tile'
 import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils'
+import TWEEN from '@tweenjs/tween.js'
 
 import {
   MeshPhongMaterial,
   BoxGeometry,
   Mesh,
   Vector3,
+  Object3D,
 } from 'three'
 
 import { randomRoundNumber } from '#tools'
@@ -47,52 +48,70 @@ const randomizeGeometry = (geometry) => {
  * tile. This way, instead of having 11x11 geometries, we can have 1 geometry
  * and save _a lot_ on draw calls.
  */
-export default class Grass extends GameTile {
+class Grass {
 
-  _tiles = [
-    { x: -1, y: 0, z: -1 },
-    { x: 0, y: 0, z: -1 },
-    { x: 1, y: 0, z: -1 },
-    { x: -1, y: 0, z: 0 },
-    { x: 0, y: 0, z: 0 },
-    { x: 1, y: 0, z: 0 },
-    { x: -1, y: 0, z: 1 },
-    { x: 0, y: 0, z: 1 },
-    { x: 1, y: 0, z: 1 },
-  ]
+  _tiles = []
+
+  _grass = new Object3D()
 
   /**
    * Initialize the tile.
    *
    * @param {Object} position - The position of the tile.
    */
-  constructor({ position = { x: 0, y: 0, z: 0 } } = {}) {
-    super({ position })
+  constructor() { }
 
-    return this.create()
+  add(options) {
+    this._tiles.push(options)
   }
 
   /**
    * Creates the tile.
    */
   create() {
-    const grasses = []
+    const geometries = []
 
     this._tiles.forEach(tile => {
       const geo = new BoxGeometry(10, 1, 10, WIDTH_SEGMENTS, HEIGHT_SEGMENTS, DEPTH_SEGMENTS)
       randomizeGeometry(geo)
       geo.rotateY((randomRoundNumber(0, 4) * 2) * (-Math.PI / 4))
-      geo.translate(tile.x * 10, -0.5 + (tile.y * 5), tile.z * 10)
+      geo.translate(tile.position.x * 10, -0.5 + (tile.position.y * 5), tile.position.z * 10)
 
-      grasses.push(geo)
+      geometries.push(geo)
     })
 
-    const all = mergeBufferGeometries(grasses)
+    if (this._tiles.length) {
+      const mergedGeometries = mergeBufferGeometries(geometries)
 
-    const grass = new Mesh(all, grassMaterial)
-    grass.receiveShadow = true
+      this._grass = new Mesh(mergedGeometries, grassMaterial)
+      this._grass.receiveShadow = true
 
-    return grass
+      this.animateIn()
+    }
+
+    return this._grass
+  }
+
+  animateIn() {
+    const from = { scale: 0 }
+    const to = { scale: 1 }
+
+    this.animateUpdate(from)
+
+    new TWEEN.Tween(from)
+      .to(to, 500)
+      .easing(TWEEN.Easing.Elastic.InOut)
+      .onUpdate(() => this.animateUpdate(from))
+      .delay(250)
+      .start()
+  }
+
+  animateUpdate(from) {
+    this._grass.scale.setScalar(from.scale)
   }
 
 }
+
+const grass = new Grass()
+
+export default grass

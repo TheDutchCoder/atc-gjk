@@ -1,63 +1,46 @@
-import {
-  Group,
-} from 'three'
+import GameTile from '#native/classes/base/game-tile'
 
-import {
-  randomRoundNumber,
-} from '#tools'
-
-import Tile from '#native/classes/tiles/base'
+import Grass from '#native/classes/tiles/grass'
 import Trees from '#native/classes/props/trees'
 import Rocks from '#native/classes/props/rocks'
-import Beams from '#native/classes/props/beams'
-import Rails from '#native/classes/props/rails'
+import Tracks from '#native/classes/props/tracks'
 
 /**
  * TrainTracks tile.
  */
-export default class TrainTracks extends Tile {
-
-  _direction = 0
-
-  _things = []
+export default class TrainTracks extends GameTile {
 
   /**
-   * Initialize the tile.
+   * All the tiles that are train tracks.
+   */
+  _tiles = []
+
+  /**
+   * The direction the train tracks are facing.
+   */
+  _direction = 0
+
+  /**
+   * Initialize the train tracks tile.
    *
-   * @param {Object} position - The position of the tile.
-   * @param {Number} direction - The direction the tile is facing (0-3).
+   * @param {Object} options - The options for this tile.
    */
   constructor({ position = { x: 0, y: 0, z: 0 }, direction = 0 } = {}) {
     super({ position })
 
     this._direction = direction
 
-    this.#create()
+    this.create()
   }
 
   /**
-   * Creates the tile.
+   * Create the train tracks by combining different assets.
    */
-  #create() {
-    const trainTracks = new Group()
-    const tile = new Tile()
-    const trees = new Trees({ amount: randomRoundNumber(10, 20), exclude: { width: 3, direction: this._direction } })
-    const rocks = new Rocks({ exclude: { width: 3, direction: this._direction } })
-    const beams = new Beams()
-    const rails = new Rails()
-
-    this._things = [tile]
-    // this._things = [tile, trees, rocks, beams, rails]
-
-    trainTracks.add(
-      tile._model,
-      // trees.model,
-      // // rocks.model,
-      // beams.model,
-      // rails.model,
-    )
-
-    this.model = trainTracks
+  create() {
+    Grass.add({ position: this._position })
+    Trees.add({ position: this._position, exclude: { width: 3, direction: this._direction } })
+    Rocks.add({ position: this._position, exclude: { width: 3, direction: this._direction } })
+    Tracks.add({ position: this._position, direction: this._direction })
   }
 
 }

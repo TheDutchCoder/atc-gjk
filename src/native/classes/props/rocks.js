@@ -18,7 +18,7 @@ import {
   defaultMaterial,
 } from '#materials'
 
-import { boxGeometry } from '#geometries'
+import { dodecahedronGeometry } from '#geometries'
 import { randomRoundNumber, randomCoordinate } from '#/tools'
 
 const colors = [ROCK_1, ROCK_2, ROCK_3, ROCK_4]
@@ -33,25 +33,15 @@ const dummy = new Object3D()
  *
  * DO the same for any other instanced objects, like trees.
  */
-export default class Rocks extends Instance {
+class Rocks {
 
-  _tiles = [
-    { x: -1, y: 0, z: -1 },
-    { x: 0, y: 0, z: -1 },
-    { x: 1, y: 0, z: -1 },
-    { x: -1, y: 0, z: 0 },
-    { x: 0, y: 0, z: 0 },
-    { x: 1, y: 0, z: 0 },
-    { x: -1, y: 0, z: 1 },
-    { x: 0, y: 0, z: 1 },
-    { x: 1, y: 0, z: 1 },
-  ]
+  _tiles = []
 
   /**
    * Local instances for the rocks.
    */
   _rocks = null
-  _rock = null
+  _rock = new Object3D()
 
   _instances = []
 
@@ -60,13 +50,17 @@ export default class Rocks extends Instance {
   /**
    * Initialize the rocks.
    */
-  constructor({ position = { x: 0, y: 0, z: 0 }, amount = randomRoundNumber(6, 12), exclude = { width: 0, direction: 0 } } = {}) {
-    super({ position, amount, exclude })
+  constructor() {
+    // super({ position, amount, exclude })
 
-    this.create()
-    this.animateIn()
+    // this.create()
+    // this.animateIn()
 
-    return this._rocks
+    // return this._rocks
+  }
+
+  add(options) {
+    this._tiles.push(options)
   }
 
   /**
@@ -82,7 +76,7 @@ export default class Rocks extends Instance {
 
       for (let i = 0; i < amount; i++) {
         this._instances.push({
-          pos: randomCoordinate(-4.5, 4.5, this._exclude),
+          pos: randomCoordinate(-4.5, 4.5, tile.exclude),
           rot: {
             x: -0.1 + (Math.random() * 0.2),
             y: (Math.PI / 2) * Math.random(),
@@ -95,26 +89,32 @@ export default class Rocks extends Instance {
       }
     })
 
-    this._rocks = new Group()
-    this._rock = new InstancedMesh(boxGeometry, defaultMaterial, amounts)
-    this._rock.castShadow = true
-    this._rock.receiveShadow = true
+    if (this._tiles.length) {
 
-    // for (let i = 0; i < this._amount; i++) {
-    //   this._instances.push({
-    //     pos: randomCoordinate(-4.5, 4.5, this._exclude),
-    //     rot: {
-    //       x: -0.1 + (Math.random() * 0.2),
-    //       y: (Math.PI / 2) * Math.random(),
-    //       z: -0.1 + (Math.random() * 0.2),
-    //     },
-    //     scale: 0.1 + (Math.random() * 0.3),
-    //     color: colors[randomRoundNumber(0, colors.length - 1)],
-    //     mesh: dummy
-    //   })
-    // }
+      this._rock = new InstancedMesh(dodecahedronGeometry, defaultMaterial, amounts)
+      this._rock.castShadow = true
+      this._rock.receiveShadow = true
 
-    this._rocks.add(this._rock)
+      // for (let i = 0; i < this._amount; i++) {
+      //   this._instances.push({
+      //     pos: randomCoordinate(-4.5, 4.5, this._exclude),
+      //     rot: {
+      //       x: -0.1 + (Math.random() * 0.2),
+      //       y: (Math.PI / 2) * Math.random(),
+      //       z: -0.1 + (Math.random() * 0.2),
+      //     },
+      //     scale: 0.1 + (Math.random() * 0.3),
+      //     color: colors[randomRoundNumber(0, colors.length - 1)],
+      //     mesh: dummy
+      //   })
+      // }
+
+      // this._rocks.add(this._rock)
+
+      this.animateIn()
+    }
+
+    return this._rock
 
     // this._rocks.position.x = this._position.x * 10
     // this._rocks.position.z = this._position.z * 10
@@ -125,7 +125,7 @@ export default class Rocks extends Instance {
     const { x: posX, y: posY, z: posZ } = pos
     const { x: rotX, y: rotY, z: rotZ } = rot
 
-    dummy.position.set(posX + (tile.x * 10), (posY + tile.y + from.y) * scale, posZ + (tile.z * 10))
+    dummy.position.set(posX + (tile.position.x * 10), (posY + tile.position.y + from.y) * scale, posZ + (tile.position.z * 10))
     dummy.rotation.set(rotX, rotY, rotZ)
     dummy.scale.set(from.x, from.y, from.z)
     dummy.updateMatrixWorld(true)
@@ -149,7 +149,7 @@ export default class Rocks extends Instance {
         .to(to, 500)
         .easing(TWEEN.Easing.Elastic.Out)
         .onUpdate(() => this.updateInstance(instance, index, from))
-        .delay(randomRoundNumber(750, 1000))
+        .delay(randomRoundNumber(750, 1250))
         .start()
     })
   }
@@ -170,3 +170,7 @@ export default class Rocks extends Instance {
   // }
 
 }
+
+const rocks = new Rocks()
+
+export default rocks

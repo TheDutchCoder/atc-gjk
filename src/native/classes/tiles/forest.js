@@ -1,7 +1,3 @@
-import {
-  Group,
-} from 'three'
-
 import GameTile from '#native/classes/base/game-tile'
 
 import Grass from '#native/classes/tiles/grass'
@@ -13,8 +9,6 @@ import Rocks from '#native/classes/props/rocks'
  */
 export default class Forest extends GameTile {
 
-  _things = []
-
   /**
    * Initialize the tile.
    *
@@ -24,33 +18,16 @@ export default class Forest extends GameTile {
   constructor({ position = { x: 0, y: 0, z: 0 } } = {}) {
     super({ position })
 
-    this.#create()
-
-    return this.model
+    this.create()
   }
 
   /**
-   * Creates the tile.
+   * Creates the tile by adding elements to their repective classes.
    */
-  #create() {
-    const forest = new Group()
-    const grass = new Grass()
-    const trees = new Trees()
-    const rocks = new Rocks()
-
-    // this._things = [tile, trees, rocks]
-    // this._things = [tile, trees, rocks]
-
-    forest.add(
-      grass,
-      trees,
-      rocks,
-    )
-
-    forest.position.x = this._position.x * 10
-    forest.position.z = this._position.z * 10
-
-    this.model = forest
+  create() {
+    Grass.add({ position: this._position })
+    Trees.add({ position: this._position })
+    Rocks.add({ position: this._position })
   }
 
 }

@@ -16,7 +16,7 @@ const renderer = new WebGLRenderer({
   antialias: true,
   alpha: true,
   shadow: true,
-  // powerPreference: 'high-performance', // This messes up dodacehedrons for some reason
+  // powerPreference: 'default', // This messes up dodacehedrons for some reason
 })
 
 renderer.setSize(window.innerWidth, window.innerHeight)

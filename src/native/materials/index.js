@@ -1,6 +1,5 @@
 import {
   MeshPhongMaterial,
-  Color,
 } from 'three'
 
 export const defaultMaterial = new MeshPhongMaterial({ flatShading: true })

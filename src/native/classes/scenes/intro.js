@@ -16,15 +16,17 @@ import {
 } from '#tools'
 
 import Forest from '#native/classes/tiles/forest'
+// import { dirt } from '../tiles/dirt'
+import Dirt from '#native/classes/tiles/dirt'
 import TrainTracks from '#native/classes/tiles/train-tracks'
 import Airfield from '#native/classes/tiles/airfield'
 import Clouds from '#native/classes/pieces/clouds'
-import Airplane from '#native/classes/pieces/airplane'
+// import Airplane from '#native/classes/pieces/airplane'
 import controls from '../../controls'
-import { updatables } from '../../renderer'
+// import { updatables } from '../../renderer'
 
-const tiles = [Forest, Airfield, TrainTracks]
-const tile = randomItemFromArray(tiles)
+// const tiles = [Forest, Airfield, TrainTracks]
+// const tile = randomItemFromArray(tiles)
 
 const introScene = new GameScene()
 
@@ -42,9 +44,10 @@ pivot2.rotation.x = Math.PI / -3
 const dirLight1 = new DirectionalLight(0xffffff, 0.3)
 pivot2.add(dirLight1)
 
-pivot2.rotation.y = 0.1
+// pivot2.rotation.y = 0.1
 
 dirLight1.position.set(60, 0, 0)
+// dirLight1.lookAt(0, 0, 0)
 dirLight1.lookAt(pivot2.position)
 dirLight1.castShadow = true
 dirLight1.shadow.mapSize.width = 2048
@@ -75,8 +78,6 @@ introScene._scene.add(h)
 const dirLight2 = new DirectionalLight(0xb0e1ed, 0.2)
 dirLight2.position.set(-20, 25, -10)
 
-const fog = new Fog(new Color(0x9bc8e9), 15, 30)
-
 const pivot = new Object3D()
 pivot.position.y = 2.5
 controls.target = pivot.position
@@ -89,12 +90,32 @@ introScene.addLight(dirLight2)
 
 // const clouds = new Clouds({ position: { x: 0, y: 2, z: 0 } })
 // introScene.addModel(clouds)
+// introScene.addModel(forest)
 
-const forest = new Forest()
-introScene.addModel(forest)
+// DEBUG
+// const fog = new Fog(new Color(0x9bc8e9), 15, 250)
+// for (let x = -5; x <= 5; x++) {
+//   for (let z = -5; z <= 5; z++) {
+//     new TrainTracks({ position: { x, y: 0, z }, direction: 0 })
+//   }
+// }
 
-const airplane = new Airplane({ position: { x: 0, y: 1, z: 0 } })
-introScene.addModel(airplane)
+// Dirt.add({ scale: { x: 11, y: 1, z: 11 } })
+// DEBUG
+
+// DEBUG2
+const fog = new Fog(new Color(0x9bc8e9), 15, 30)
+new TrainTracks()
+
+Dirt.add()
+Clouds.add({ position: { x: 0, y: 2, z: 0 } })
+// DEBUG2
+
+introScene.addFog(fog)
+introScene.render()
+
+// const airplane = new Airplane({ position: { x: 0, y: 1, z: 0 } })
+// introScene.addModel(airplane)
 
 /**
  * Debug

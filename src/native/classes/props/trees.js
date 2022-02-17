@@ -31,19 +31,9 @@ const dummy = new Object3D()
 /**
  * Trees instance.
  */
-export default class Trees extends Instance {
+class Trees {
 
-  _tiles = [
-    { x: -1, y: 0, z: -1 },
-    { x: 0, y: 0, z: -1 },
-    { x: 1, y: 0, z: -1 },
-    { x: -1, y: 0, z: 0 },
-    { x: 0, y: 0, z: 0 },
-    { x: 1, y: 0, z: 0 },
-    { x: -1, y: 0, z: 1 },
-    { x: 0, y: 0, z: 1 },
-    { x: 1, y: 0, z: 1 },
-  ]
+  _tiles = []
 
   /**
    * Local instances for the trunks.
@@ -55,18 +45,17 @@ export default class Trees extends Instance {
    */
   _foliage = null
 
-  _trees = null
+  _trees = new Object3D()
+
+  _instances = []
 
   /**
    * Initialize the trees.
    */
-  constructor({ position = { x: 0, y: 0, z: 0 }, amount = randomRoundNumber(20, 30), exclude = { width: 0, direction: 0 } } = {}) {
-    super({ position, amount, exclude })
+  constructor() { }
 
-    this.create()
-    this.animateIn()
-
-    return this._trees
+  add(options) {
+    this._tiles.push(options)
   }
 
   /**
@@ -84,7 +73,7 @@ export default class Trees extends Instance {
 
       for (let i = 0; i < amount; i++) {
         this._instances.push({
-          pos: randomCoordinate(-4.75, 4.75, this._exclude),
+          pos: randomCoordinate(-4.75, 4.75, tile.exclude),
           rot: {
             x: randomNumber(-0.12, 0.12),
             y: randomNumber(-0.12, 0.12),
@@ -98,59 +87,48 @@ export default class Trees extends Instance {
       }
     })
 
-    this._trunk = new InstancedMesh(coneGeometry.clone(), defaultMaterial, amounts)
-    this._trunk.castShadow = true
+    if (this._tiles.length) {
 
-    const bottomLayer = coneGeometry.clone()
-    bottomLayer.scale(1.3, 1.3, 1.3)
-    bottomLayer.translate(0, 0.5, 0)
+      this._trunk = new InstancedMesh(coneGeometry.clone(), defaultMaterial, amounts)
+      this._trunk.castShadow = true
 
-    const topLayer = coneGeometry.clone()
-    topLayer.scale(1.1, 1.1, 1.1)
-    topLayer.translate(0, 1.1, 0)
+      const bottomLayer = coneGeometry.clone()
+      bottomLayer.scale(1.3, 1.3, 1.3)
+      bottomLayer.translate(0, 0.5, 0)
 
-    const mergedGeometries = mergeBufferGeometries([bottomLayer, topLayer])
-    this._foliage = new InstancedMesh(mergedGeometries, defaultMaterial, amounts)
-    this._foliage.castShadow = true
-    this._foliage.receiveShadow = true
+      const topLayer = coneGeometry.clone()
+      topLayer.scale(1.1, 1.1, 1.1)
+      topLayer.translate(0, 1.1, 0)
 
-    this._trunk.geometry.computeBoundingBox()
-    this._foliage.geometry.computeBoundingBox()
+      const mergedGeometries = mergeBufferGeometries([bottomLayer, topLayer])
+      this._foliage = new InstancedMesh(mergedGeometries, defaultMaterial, amounts)
+      this._foliage.castShadow = true
+      this._foliage.receiveShadow = true
 
-    this._trunk.geometry.translate(0, this._trunk.geometry.boundingBox.min.y * -1, 0)
-    this._foliage.geometry.translate(0, this._foliage.geometry.boundingBox.min.y * -1, 0)
-    this._foliage.geometry.translate(0, 0.3, 0)
+      this._trunk.geometry.computeBoundingBox()
+      this._foliage.geometry.computeBoundingBox()
 
-    // for (let i = 0; i < this._amount; i++) {
-    //   this._instances.push({
-    //     pos: randomCoordinate(-4.75, 4.75, this._exclude),
-    //     rot: {
-    //       x: randomNumber(-0.12, 0.12),
-    //       y: randomNumber(-0.12, 0.12),
-    //       z: 0,
-    //     },
-    //     scale: 0.5 + (Math.random() * 0.75),
-    //     color: colors[randomRoundNumber(0, colors.length - 1)],
-    //     mesh: dummy
-    //   })
-    // }
+      this._trunk.geometry.translate(0, this._trunk.geometry.boundingBox.min.y * -1, 0)
+      this._foliage.geometry.translate(0, this._foliage.geometry.boundingBox.min.y * -1, 0)
+      this._foliage.geometry.translate(0, 0.3, 0)
 
-    this._trees.add(this._trunk, this._foliage)
+      this._trees.add(this._trunk, this._foliage)
 
-    // this._trees.position.x = this._position.x * 10
-    // this._trees.position.z = this._position.z * 10
+      this.animateIn()
+    }
+
+    return this._trees
   }
 
 
 
   updateInstance(instance, index, from) {
-    // console.log('hm')
     const { pos, rot, scale, color, mesh, tile } = instance
     const { x: posX, y: posY, z: posZ } = pos
     const { x: rotX, y: rotY, z: rotZ } = rot
     const euler = new Euler(rotX, rotY, rotZ, 'XYZ')
 
-    mesh.position.set(posX + (tile.x * 10), (posY + (tile.y * 5)) * scale, posZ + (tile.z * 10))
+    mesh.position.set(posX + (tile.position.x * 10), (posY + (tile.position.y * 5)) * scale, posZ + (tile.position.z * 10))
     mesh.setRotationFromEuler(euler)
     mesh.scale.set(from.x, from.y, from.z)
     mesh.updateMatrixWorld(true)
@@ -179,9 +157,9 @@ export default class Trees extends Instance {
 
       new TWEEN.Tween(from)
         .to(to, 500)
-        .easing(TWEEN.Easing.Elastic.InOut)
+        .easing(TWEEN.Easing.Elastic.Out)
         .onUpdate(() => this.updateInstance(instance, index, from))
-        .delay(randomRoundNumber(750, 1000))
+        .delay(randomRoundNumber(750, 1250))
         .start()
     })
 
@@ -207,3 +185,7 @@ export default class Trees extends Instance {
   // }
 
 }
+
+const trees = new Trees()
+
+export default trees

@@ -6,7 +6,34 @@
   },
   "compilerOptions": {
     "target": "es6",
-    "module": "es6"
+    "module": "es6",
+    "baseUrl": ".",
+    "paths": {
+      "#": [
+        "./src"
+      ],
+      "#native": [
+        "./src/native"
+      ],
+      "#blocks": [
+        "./src/native/blocks"
+      ],
+      "#elements": [
+        "./src/native/elements"
+      ],
+      "#instances": [
+        "./src/native/instances"
+      ],
+      "#geometries": [
+        "./src/native/geometries"
+      ],
+      "#materials": [
+        "./src/native/materials"
+      ],
+      "#tools": [
+        "./src/tools"
+      ],
+    }
   },
   "exclude": [
     "node_modules"

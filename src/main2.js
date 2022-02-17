@@ -8,8 +8,8 @@ import renderer, { stats, updatables } from '#native/renderer'
 import controls from '#native/controls'
 
 // import Base from '#native/classes/tiles/base'
-import Trees from '#native/classes/props/trees'
-import Rocks from '#native/classes/props/rocks'
+// import Trees from '#native/classes/props/trees'
+// import Rocks from '#native/classes/props/rocks'
 
 // import GameScene from '#native/classes/base/scene'
 import IntroScene from '#native/classes/scenes/intro'

@@ -152,7 +152,7 @@ export const CubicBezier = (t, p0, p1, p2, p3) => {
  * @param {*} excludes
  * @returns
  */
-export const randomCoordinate = (min, max, excludes) => {
+export const randomCoordinate = (min, max, excludes = { width: 0, direction: 0 }) => {
   const { width, direction } = excludes
   const offset = width / 2
 

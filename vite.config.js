@@ -8,9 +8,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '#': path.resolve(__dirname, './src'),
-      '#components': path.resolve(__dirname, './src/components'),
-      '#composables': path.resolve(__dirname, './src/composables'),
-      '#tiles': path.resolve(__dirname, './src/tiles'),
       '#native': path.resolve(__dirname, './src/native'),
       '#blocks': path.resolve(__dirname, './src/native/blocks'),
       '#elements': path.resolve(__dirname, './src/native/elements'),
