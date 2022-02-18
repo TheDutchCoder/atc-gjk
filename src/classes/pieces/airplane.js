@@ -1,17 +1,17 @@
-import GamePiece from '#native/classes/base/game-piece'
+import GamePiece from '#/classes/base/game-piece'
 import TWEEN from '@tweenjs/tween.js'
 
 import { Mesh, Group, Color, Object3D, InstancedMesh } from 'three'
 import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils'
 
-import { boxGeometry, dodecahedronGeometry } from '#native/geometries'
-import { defaultMaterial, glassMaterial } from '#native/materials'
+import { boxGeometry, dodecahedronGeometry } from '#/geometries'
+import { defaultMaterial, glassMaterial } from '#/materials'
 
 import {
   PLANE_1,
   PLANE_2,
   PLANE_3,
-} from '#/colors'
+} from '#colors'
 
 import { setPoint, randomItemFromArray } from '#tools'
 
@@ -281,6 +281,9 @@ const materials = [
  */
 export default class Airplane extends GamePiece {
 
+  /**
+   * The smoke particles.
+   */
   _smoke = null
 
   /**
@@ -298,13 +301,13 @@ export default class Airplane extends GamePiece {
     this._hasAnimations = true
     this._isAnimating = true
 
-    this.#create()
+    this.create()
     this.animateIn()
 
     return this._model
   }
 
-  #create() {
+  create() {
     const airplane = defaultPlane.clone()
     const material = randomItemFromArray(materials)
 
@@ -339,46 +342,46 @@ export default class Airplane extends GamePiece {
     /**
      * The animations for the this._clouds.
      */
-    airplane.tick = () => {
-      /**
-       * Bob & pitch the airplane.
-       */
-      const bob = Math.sin(this._tick / 10 / Math.PI) / 10
-      const pitchZ = Math.sin(this._tick / 15 / Math.PI) / 10
-      const pitchX = Math.sin(this._tick / 20 / Math.PI) / 20
+    // airplane.tick = () => {
+    //   /**
+    //    * Bob & pitch the airplane.
+    //    */
+    //   const bob = Math.sin(this._tick / 10 / Math.PI) / 10
+    //   const pitchZ = Math.sin(this._tick / 15 / Math.PI) / 10
+    //   const pitchX = Math.sin(this._tick / 20 / Math.PI) / 20
 
-      airplane.position.y = (this._position.y + bob) * 5
-      airplane.rotation.z = pitchZ
-      airplane.rotation.x = pitchX
+    //   airplane.position.y = (this._position.y + bob) * 5
+    //   airplane.rotation.z = pitchZ
+    //   airplane.rotation.x = pitchX
 
-      /**
-       * Rotate the propellers.
-       */
-      airplane.children.forEach(child => {
-        if (child.name === 'props') {
-          child.rotation.z += 0.3
-        }
-      })
+    //   /**
+    //    * Rotate the propellers.
+    //    */
+    //   airplane.children.forEach(child => {
+    //     if (child.name === 'props') {
+    //       child.rotation.z += 0.3
+    //     }
+    //   })
 
-      /**
-       * Animate the smoke particles.
-       */
-      for (let i = 0; i < 6; i++) {
-        if (i < 3) {
-          dummy.position.set(-0.55, 0.2, getSmokePosition(this._tick, (i * 15)))
-        } else {
-          dummy.position.set(0.55, 0.2, getSmokePosition(this._tick, (i * 15)))
-        }
-        dummy.rotation.set(0, getSmokeRotation(this._tick), getSmokeRotation(this._tick))
-        dummy.scale.setScalar(getSmokeScale(this._tick, ((i * 15))))
-        dummy.updateMatrixWorld(true)
+    //   /**
+    //    * Animate the smoke particles.
+    //    */
+    //   for (let i = 0; i < 6; i++) {
+    //     if (i < 3) {
+    //       dummy.position.set(-0.55, 0.2, getSmokePosition(this._tick, (i * 15)))
+    //     } else {
+    //       dummy.position.set(0.55, 0.2, getSmokePosition(this._tick, (i * 15)))
+    //     }
+    //     dummy.rotation.set(0, getSmokeRotation(this._tick), getSmokeRotation(this._tick))
+    //     dummy.scale.setScalar(getSmokeScale(this._tick, ((i * 15))))
+    //     dummy.updateMatrixWorld(true)
 
-        this._smoke.setMatrixAt(i, dummy.matrixWorld)
-        this._smoke.instanceMatrix.needsUpdate = true
-      }
+    //     this._smoke.setMatrixAt(i, dummy.matrixWorld)
+    //     this._smoke.instanceMatrix.needsUpdate = true
+    //   }
 
-      this._tick++
-    }
+    //   this._tick++
+    // }
 
     this.model = airplane
   }

@@ -65,6 +65,11 @@ class Grass {
     this._tiles.push(options)
   }
 
+  reset() {
+    this._tiles = []
+    this._grass = new Object3D()
+  }
+
   /**
    * Creates the tile.
    */
@@ -85,25 +90,50 @@ class Grass {
 
       this._grass = new Mesh(mergedGeometries, grassMaterial)
       this._grass.receiveShadow = true
-
-      this.animateIn()
+      this._grass.scale.setScalar(0)
     }
 
     return this._grass
   }
 
   animateIn() {
-    const from = { scale: 0 }
-    const to = { scale: 1 }
+    if (!this._tiles.length) {
+      return Promise.resolve()
+    }
 
-    this.animateUpdate(from)
+    return new Promise((resolve) => {
+      const from = { scale: 0 }
+      const to = { scale: 1 }
 
-    new TWEEN.Tween(from)
-      .to(to, 500)
-      .easing(TWEEN.Easing.Elastic.InOut)
-      .onUpdate(() => this.animateUpdate(from))
-      .delay(250)
-      .start()
+      this.animateUpdate(from)
+
+      new TWEEN.Tween(from)
+        .to(to, 500)
+        .easing(TWEEN.Easing.Elastic.InOut)
+        .onUpdate(() => this.animateUpdate(from))
+        .onComplete(resolve)
+        .delay(250)
+        .start()
+    })
+  }
+
+  animateOut() {
+    if (!this._tiles.length) {
+      return Promise.resolve()
+    }
+
+    return new Promise((resolve) => {
+      const from = { scale: 1 }
+      const to = { scale: 0 }
+
+      new TWEEN.Tween(from)
+        .to(to, 500)
+        .easing(TWEEN.Easing.Elastic.InOut)
+        .onUpdate(() => this.animateUpdate(from))
+        .onComplete(resolve)
+        .delay(1000)
+        .start()
+    })
   }
 
   animateUpdate(from) {

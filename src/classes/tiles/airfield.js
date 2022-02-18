@@ -1,9 +1,9 @@
-import GameTile from '#native/classes/base/game-tile'
+import GameTile from '#/classes/base/game-tile'
 
-import Grass from '#native/classes/tiles/grass'
-import Trees from '#native/classes/props/trees'
-import Rocks from '#native/classes/props/rocks'
-import Airstrip from '#native/classes/props/airstrip'
+import Grass from '#/classes/tiles/grass'
+import Trees from '#/classes/props/trees'
+import Rocks from '#/classes/props/rocks'
+import Airstrip from '#/classes/props/airstrip'
 
 /**
  * Airfield tile.

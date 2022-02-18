@@ -1,4 +1,3 @@
-import Instance from '#native/classes/base/instance'
 import TWEEN from '@tweenjs/tween.js'
 
 import {
@@ -14,15 +13,25 @@ import {
   TREE_2,
   TREE_3,
   TREE_4,
-} from '#/colors'
+} from '#colors'
 
 import {
   defaultMaterial,
 } from '#materials'
 
-import { coneGeometry } from '#geometries'
-import { randomRoundNumber, randomNumber, randomCoordinate } from '#/tools'
-import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils'
+import {
+  coneGeometry,
+} from '#geometries'
+
+import {
+  randomRoundNumber,
+  randomNumber,
+  randomCoordinate,
+} from '#tools'
+
+import {
+  mergeBufferGeometries,
+} from 'three/examples/jsm/utils/BufferGeometryUtils'
 
 const colors = [TREE_1, TREE_2, TREE_3, TREE_4]
 const dummy = new Object3D()
@@ -33,6 +42,9 @@ const dummy = new Object3D()
  */
 class Trees {
 
+  /**
+   * The tiles with trees.
+   */
   _tiles = []
 
   /**
@@ -45,8 +57,14 @@ class Trees {
    */
   _foliage = null
 
-  _trees = new Object3D()
+  /**
+   * The group that represents an individual tree.
+   */
+  _trees = new Group()
 
+  /**
+   * Configurations for each instance.
+   */
   _instances = []
 
   /**
@@ -54,19 +72,27 @@ class Trees {
    */
   constructor() { }
 
+  /**
+   * Adds trees to a tile.
+   */
   add(options) {
     this._tiles.push(options)
+  }
+
+  reset() {
+    this._tiles = []
+    this._trunk = null
+    this._foliage = null
+    this._trees = new Group()
+    this._instances = []
   }
 
   /**
    * Populates the instances.
    */
   create() {
-    this._trees = new Group()
-
     let amounts = 0
 
-    // Test
     this._tiles.forEach(tile => {
       const amount = randomRoundNumber(20, 30)
       amounts += amount
@@ -81,14 +107,12 @@ class Trees {
           },
           scale: 0.5 + (Math.random() * 0.75),
           color: colors[randomRoundNumber(0, colors.length - 1)],
-          mesh: dummy,
           tile,
         })
       }
     })
 
     if (this._tiles.length) {
-
       this._trunk = new InstancedMesh(coneGeometry.clone(), defaultMaterial, amounts)
       this._trunk.castShadow = true
 
@@ -113,32 +137,31 @@ class Trees {
       this._foliage.geometry.translate(0, 0.3, 0)
 
       this._trees.add(this._trunk, this._foliage)
-
-      this.animateIn()
     }
 
     return this._trees
   }
 
-
-
+  /**
+   * Updates the animation.
+   */
   updateInstance(instance, index, from) {
-    const { pos, rot, scale, color, mesh, tile } = instance
+    const { pos, rot, scale, color, tile } = instance
     const { x: posX, y: posY, z: posZ } = pos
     const { x: rotX, y: rotY, z: rotZ } = rot
     const euler = new Euler(rotX, rotY, rotZ, 'XYZ')
 
-    mesh.position.set(posX + (tile.position.x * 10), (posY + (tile.position.y * 5)) * scale, posZ + (tile.position.z * 10))
-    mesh.setRotationFromEuler(euler)
-    mesh.scale.set(from.x, from.y, from.z)
-    mesh.updateMatrixWorld(true)
+    dummy.position.set(posX + (tile.position.x * 10), (posY + (tile.position.y * 5)) * scale, posZ + (tile.position.z * 10))
+    dummy.setRotationFromEuler(euler)
+    dummy.scale.set(from.x, from.y, from.z)
+    dummy.updateMatrixWorld(true)
 
-    this._trunk.setMatrixAt(index, mesh.matrixWorld)
+    this._trunk.setMatrixAt(index, dummy.matrixWorld)
     this._trunk.setColorAt(index, TREE_BASE)
 
-    mesh.updateMatrixWorld(true)
+    dummy.updateMatrixWorld(true)
 
-    this._foliage.setMatrixAt(index, mesh.matrixWorld)
+    this._foliage.setMatrixAt(index, dummy.matrixWorld)
     this._foliage.setColorAt(index, color)
 
     this._trunk.instanceMatrix.needsUpdate = true
@@ -147,43 +170,54 @@ class Trees {
     this._foliage.instanceColor.needsUpdate = true
   }
 
+  /**
+   * Starts animating the trees.
+   */
   animateIn() {
-    this._instances.forEach((instance, index) => {
-      const { scale } = instance
-      const from = { x: 0, y: 0, z: 0 }
-      const to = { x: scale, y: scale, z: scale }
+    if (!this._tiles.length) {
+      return Promise.resolve()
+    }
 
-      this.updateInstance(instance, index, from)
+    return new Promise((resolve) => {
+      this._instances.forEach((instance, index) => {
+        const { scale } = instance
+        const from = { x: 0, y: 0, z: 0 }
+        const to = { x: scale, y: scale, z: scale }
 
-      new TWEEN.Tween(from)
-        .to(to, 500)
-        .easing(TWEEN.Easing.Elastic.Out)
-        .onUpdate(() => this.updateInstance(instance, index, from))
-        .delay(randomRoundNumber(750, 1250))
-        .start()
+        this.updateInstance(instance, index, from)
+
+        new TWEEN.Tween(from)
+          .to(to, 500)
+          .easing(TWEEN.Easing.Elastic.Out)
+          .onUpdate(() => this.updateInstance(instance, index, from))
+          .onComplete(resolve)
+          .delay(randomRoundNumber(500, 1000))
+          .start()
+      })
     })
-
-    this._trunk.instanceMatrix.needsUpdate = true
-    this._trunk.instanceColor.needsUpdate = true
-    this._foliage.instanceMatrix.needsUpdate = true
-    this._foliage.instanceColor.needsUpdate = true
   }
 
-  // animateOut() {
-  //   this._instances.forEach((instance, index) => {
-  //     const { scale } = instance
-  //     const from = { x: scale, y: scale, z: scale }
-  //     const to = { x: 0, y: 0, z: 0 }
+  animateOut() {
+    if (!this._tiles.length) {
+      return Promise.resolve()
+    }
 
-  //     new TWEEN.Tween(from)
-  //       .to(to, 500)
-  //       .easing(TWEEN.Easing.Elastic.In)
-  //       .onUpdate(() => this.#updateInstance(instance, index, from))
-  //       .delay(randomRoundNumber(250, 500))
-  //       .start()
-  //   })
-  // }
+    return new Promise((resolve) => {
+      this._instances.forEach((instance, index) => {
+        const { scale } = instance
+        const from = { x: scale, y: scale, z: scale }
+        const to = { x: 0, y: 0, z: 0 }
 
+        new TWEEN.Tween(from)
+          .to(to, 500)
+          .easing(TWEEN.Easing.Elastic.In)
+          .onUpdate(() => this.updateInstance(instance, index, from))
+          .onComplete(resolve)
+          .delay(randomRoundNumber(500, 750))
+          .start()
+      })
+    })
+  }
 }
 
 const trees = new Trees()

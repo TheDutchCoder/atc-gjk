@@ -1,4 +1,4 @@
-import { updatables } from '#native/renderer'
+import { updatables } from '#/renderer'
 
 /**
  * Basic class for any game piece.

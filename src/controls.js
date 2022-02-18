@@ -1,6 +1,6 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import camera from '#native/camera'
-import renderer from '#native/renderer'
+import camera from '#/camera'
+import renderer from '#/renderer'
 
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true

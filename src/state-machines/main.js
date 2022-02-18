@@ -2,7 +2,7 @@ import { createMachine, interpret } from 'xstate'
 
 const machine = createMachine({
   id: 'main',
-  initial: 'introIdle',
+  initial: 'loading',
   states: {
     loading: {
       on: {
@@ -30,7 +30,7 @@ const machine = createMachine({
     gameIn: {
       tags: 'board',
       on: {
-        DONE: 'gamePlaying'
+        DONE: 'gamePlaying',
       },
     },
     gamePlaying: {

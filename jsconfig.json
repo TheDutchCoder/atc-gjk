@@ -12,27 +12,27 @@
       "#": [
         "./src"
       ],
-      "#native": [
-        "./src/native"
-      ],
       "#blocks": [
-        "./src/native/blocks"
+        "./src/blocks"
       ],
       "#elements": [
-        "./src/native/elements"
+        "./src/elements"
       ],
       "#instances": [
-        "./src/native/instances"
+        "./src/instances"
       ],
       "#geometries": [
-        "./src/native/geometries"
+        "./src/geometries"
       ],
       "#materials": [
-        "./src/native/materials"
+        "./src/materials"
+      ],
+      "#colors": [
+        "./src/colors"
       ],
       "#tools": [
         "./src/tools"
-      ],
+      ]
     }
   },
   "exclude": [

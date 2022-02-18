@@ -8,12 +8,12 @@ export default defineConfig({
   resolve: {
     alias: {
       '#': path.resolve(__dirname, './src'),
-      '#native': path.resolve(__dirname, './src/native'),
-      '#blocks': path.resolve(__dirname, './src/native/blocks'),
-      '#elements': path.resolve(__dirname, './src/native/elements'),
-      '#instances': path.resolve(__dirname, './src/native/instances'),
-      '#geometries': path.resolve(__dirname, './src/native/geometries'),
-      '#materials': path.resolve(__dirname, './src/native/materials'),
+      '#blocks': path.resolve(__dirname, './src/blocks'),
+      '#elements': path.resolve(__dirname, './src/elements'),
+      '#instances': path.resolve(__dirname, './src/instances'),
+      '#geometries': path.resolve(__dirname, './src/geometries'),
+      '#materials': path.resolve(__dirname, './src/materials'),
+      '#colors': path.resolve(__dirname, './src/colors'),
       '#tools': path.resolve(__dirname, './src/tools'),
     },
   },

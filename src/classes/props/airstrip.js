@@ -11,7 +11,7 @@ import {
   STRIPE,
   GREEN_LIGHT,
   RED_LIGHT,
-} from '#/colors'
+} from '#colors'
 
 import {
   defaultMaterial,
@@ -46,6 +46,9 @@ class AirStrip {
    */
   _tiles = []
 
+  /**
+   * The group of meshes that makes up the airstrip.
+   */
   _airstrip = null
 
   /**
@@ -58,7 +61,15 @@ class AirStrip {
    */
   _stripes = null
 
-  _lights = null
+  /**
+   * The mesh for the green lights.
+   */
+  _greenLights = null
+
+  /**
+   * The mesh for the red lights.
+   */
+  _redLights = null
 
   /**
    * Initialize the trees.
@@ -70,6 +81,15 @@ class AirStrip {
    */
   add(options) {
     this._tiles.push(options)
+  }
+
+  reset() {
+    this._tiles = []
+    this._airstrip = null
+    this._strips = null
+    this._stripes = null
+    this._greenLights = null
+    this._redLights = null
   }
 
   /**
@@ -131,8 +151,6 @@ class AirStrip {
       this._redLights.position.y = 0.2
 
       this._airstrip.add(this._strips, this._stripes, this._greenLights, this._redLights)
-
-      this.animateIn()
     }
 
     return this._airstrip
@@ -142,17 +160,43 @@ class AirStrip {
    * Animates the landing strip in.
    */
   animateIn() {
-    const from = { scale: 0 }
-    const to = { scale: 1 }
+    if (!this._tiles.length) {
+      return Promise.resolve()
+    }
 
-    this.animateUpdate(from)
+    return new Promise((resolve) => {
+      const from = { scale: 0 }
+      const to = { scale: 1 }
 
-    new TWEEN.Tween(from)
-      .to(to, 500)
-      .easing(TWEEN.Easing.Elastic.InOut)
-      .onUpdate(() => this.animateUpdate(from))
-      .delay(1000)
-      .start()
+      this.animateUpdate(from)
+
+      new TWEEN.Tween(from)
+        .to(to, 500)
+        .easing(TWEEN.Easing.Elastic.InOut)
+        .onUpdate(() => this.animateUpdate(from))
+        .onComplete(resolve)
+        .delay(1000)
+        .start()
+    })
+  }
+
+  animateOut() {
+    if (!this._tiles.length) {
+      return Promise.resolve()
+    }
+
+    return new Promise((resolve) => {
+      const from = { scale: 1 }
+      const to = { scale: 0 }
+
+      new TWEEN.Tween(from)
+        .to(to, 500)
+        .easing(TWEEN.Easing.Elastic.InOut)
+        .onUpdate(() => this.animateUpdate(from))
+        .onComplete(resolve)
+        .delay(1000)
+        .start()
+    })
   }
 
   /**

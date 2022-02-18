@@ -1,8 +1,11 @@
-import Forest from '#native/classes/tiles/forest'
-import Airfield from '#native/classes/tiles/airfield'
-import TrainTracks from '#native/classes/tiles/train-tracks'
-import Clouds from '#native/classes/pieces/clouds'
-import { randomRoundNumber } from '#tools/index'
+import Forest from '#/classes/tiles/forest'
+import Airfield from '#/classes/tiles/airfield'
+import TrainTracks from '#/classes/tiles/train-tracks'
+import Clouds from '#/classes/pieces/clouds'
+
+import {
+  randomRoundNumber,
+} from '#tools/index'
 
 /**
  * Basic class for any game board.
@@ -16,7 +19,6 @@ export default class GameBoard {
 
   /**
    * All the clouds on this board.
-   * @todo might expand this to obstacles.
    */
   _clouds = []
 
@@ -24,10 +26,13 @@ export default class GameBoard {
    * Initialize the game board.
    */
   constructor() {
-    this.#generate()
+    this.generate()
   }
 
-  #generate() {
+  /**
+   * Generates the board.
+   */
+  generate() {
     for (let x = -5; x <= 5; x++) {
       const row = []
       for (let z = -5; z <= 5; z++) {
