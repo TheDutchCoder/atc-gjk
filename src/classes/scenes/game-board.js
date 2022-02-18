@@ -1,4 +1,5 @@
 import GameScene from '#/classes/base/scene'
+import GameBoard from '#/classes/base/game-board'
 
 import {
   HemisphereLight,
@@ -30,6 +31,7 @@ import airplanes from '../pieces/airplanes'
 // const tile = randomItemFromArray(tiles)
 
 const boardScene = new GameScene()
+const board = new GameBoard()
 
 boardScene.start = () => {
   const hemiLight = new HemisphereLight(0xffffff, 0x080802, 0.7)
@@ -71,14 +73,16 @@ boardScene.start = () => {
 
   // DEBUG
   const fog = new Fog(new Color(0x9bc8e9), 15, 250)
-  for (let x = -5; x <= 5; x++) {
-    for (let z = -5; z <= 5; z++) {
-      new TrainTracks({ position: { x, y: 0, z }, direction: 0 })
-      Clouds.add({ position: { x, z } })
-    }
-  }
 
-  Airplanes.add({ position: { x: 0, y: 2, z: 0 }, direction: 1 })
+  board.generate()
+  // for (let x = -5; x <= 5; x++) {
+  //   for (let z = -5; z <= 5; z++) {
+  //     new TrainTracks({ position: { x, y: 0, z }, direction: 0 })
+  //     Clouds.add({ position: { x, z } })
+  //   }
+  // }
+
+  // Airplanes.add({ position: { x: 0, y: 2, z: 0 }, direction: 1 })
 
   Dirt.add({ scale: { x: 11, y: 1, z: 11 } })
   // DEBUG
