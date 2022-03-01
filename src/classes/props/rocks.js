@@ -51,16 +51,16 @@ class Rocks {
   /**
    * Initialize the rocks.
    */
-  constructor() { }
+  constructor () { }
 
   /**
    * Adds a tile.
    */
-  add(options) {
+  add (options) {
     this._tiles.push(options)
   }
 
-  reset() {
+  reset () {
     this._tiles = []
     this._rock = new Object3D()
     this._instances = []
@@ -69,7 +69,7 @@ class Rocks {
   /**
    * Populates the instances.
    */
-  create() {
+  create () {
     let amounts = 0
 
     this._tiles.forEach(tile => {
@@ -100,7 +100,7 @@ class Rocks {
     return this._rock
   }
 
-  updateInstance(instance, index, from) {
+  updateInstance (instance, index, from) {
     const { pos, rot, scale, color, tile } = instance
     const { x: posX, y: posY, z: posZ } = pos
     const { x: rotX, y: rotY, z: rotZ } = rot
@@ -117,7 +117,7 @@ class Rocks {
     this._rock.instanceColor.needsUpdate = true
   }
 
-  animateIn() {
+  animateIn () {
     if (!this._tiles.length) {
       return Promise.resolve()
     }
@@ -141,7 +141,7 @@ class Rocks {
     })
   }
 
-  animateOut() {
+  animateOut () {
     if (!this._tiles.length) {
       return Promise.resolve()
     }

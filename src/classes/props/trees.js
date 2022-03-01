@@ -70,16 +70,16 @@ class Trees {
   /**
    * Initialize the trees.
    */
-  constructor() { }
+  constructor () { }
 
   /**
    * Adds trees to a tile.
    */
-  add(options) {
+  add (options) {
     this._tiles.push(options)
   }
 
-  reset() {
+  reset () {
     this._tiles = []
     this._trunk = null
     this._foliage = null
@@ -90,7 +90,7 @@ class Trees {
   /**
    * Populates the instances.
    */
-  create() {
+  create () {
     let amounts = 0
 
     this._tiles.forEach(tile => {
@@ -145,7 +145,7 @@ class Trees {
   /**
    * Updates the animation.
    */
-  updateInstance(instance, index, from) {
+  updateInstance (instance, index, from) {
     const { pos, rot, scale, color, tile } = instance
     const { x: posX, y: posY, z: posZ } = pos
     const { x: rotX, y: rotY, z: rotZ } = rot
@@ -173,7 +173,7 @@ class Trees {
   /**
    * Starts animating the trees.
    */
-  animateIn() {
+  animateIn () {
     if (!this._tiles.length) {
       return Promise.resolve()
     }
@@ -197,7 +197,7 @@ class Trees {
     })
   }
 
-  animateOut() {
+  animateOut () {
     if (!this._tiles.length) {
       return Promise.resolve()
     }

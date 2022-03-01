@@ -1,37 +1,30 @@
-import GamePiece from '#/classes/base/game-piece'
 import TWEEN from '@tweenjs/tween.js'
 
-import { Mesh, Group, Color, Object3D, InstancedMesh } from 'three'
-import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils'
-
-import { boxGeometry, dodecahedronGeometry } from '#/geometries'
-import { defaultMaterial, glassMaterial } from '#/materials'
+import {
+  mergeBufferGeometries,
+} from 'three/examples/jsm/utils/BufferGeometryUtils'
 
 import {
-  PLANE_1,
-  PLANE_2,
-  PLANE_3,
-} from '#colors'
+  Mesh,
+  Group,
+  Color,
+} from 'three'
 
-import { setPoint, randomItemFromArray } from '#tools'
+import {
+  defaultMaterial,
+  glassMaterial,
+} from '#materials'
 
-const dummy = new Object3D()
+import {
+  boxGeometry,
+} from '#geometries'
 
-const getSmokePosition = (count, delay = 0) => {
-  return (((count + delay) % 100) / 100) - 0.2
-}
+import {
+  setPoint,
+  getPrevPosition,
+  getNextPosition,
+} from '#tools'
 
-const getSmokeRotation = (count, delay = 0) => {
-  return (count + delay) / 50
-}
-
-const getSmokeScale = (count, delay = 0) => {
-  return Math.sin((((count + delay) % 100) / 100) * Math.PI) * 0.1
-}
-
-/**
- * Creates the default plane shape.
- */
 const createDefaultPlane = () => {
   const hullGeometry = boxGeometry.clone()
   hullGeometry.scale(1, 1, 2)
@@ -253,169 +246,333 @@ const createDefaultPlane = () => {
     metalMesh,
     blackStaticMesh,
     blackDynamicMesh,
-    brownMesh,
+    brownMesh
   )
 
   return plane
 }
 
-const defaultPlane = createDefaultPlane()
-
-const material1 = defaultMaterial.clone()
-material1.color.set(PLANE_1)
-
-const material2 = defaultMaterial.clone()
-material2.color.set(PLANE_2)
-
-const material3 = defaultMaterial.clone()
-material3.color.set(PLANE_3)
-
-const materials = [
-  material1,
-  material2,
-  material3,
-]
-
 /**
- * Airplane game piece.
+ * @todo when plane is on the ground, tilt it slightly and stop the
+ * bobbing/pitching.
+ *
+ * @todo initial direction is wrong :D when z: -6
  */
-export default class Airplane extends GamePiece {
+export default class Airplane {
 
   /**
-   * The smoke particles.
+   * The current position of the airplane.
    */
-  _smoke = null
+  _position = { x: 0, y: 0, z: 0 }
 
   /**
-   * Initialize the airplane.
+   * The current direction/heading of the airplane.
+   */
+  _direction = 0
+
+  /**
+   * The altitude modifier for the next move.
    *
-   * @param {Object} position - The position of the airplane.
-   * @param {Number} direction - The direction the airplane is facing.
-   * @param {Object} destination - The position of the airplane's destination.
+   * > 0: go up
+   *   0: stay level
+   * < 0: go down
    */
-  constructor({ position, direction, destination = { x: 0, y: 0, z: 0 } } = {}) {
-    super({ position, direction })
+  _targetAltitude = 0
 
-    this.destination = destination
+  /**
+   * The direction modifier for the airplane.
+   *
+   * > 0: turn right
+   *   0: straight
+   * < 0: turn left
+   */
+  _targetDirection = 0
 
-    this._hasAnimations = true
-    this._isAnimating = true
+  /**
+   * The destination for the airplane.
+   * This can either be a coordinate on the edge of the board, or an airfield.
+   */
+  _endPosition = { x: 0, y: 0, z: 0 }
+
+  /**
+   * The direction the airplane has to exit or land with.
+   */
+  _endDirection = 0
+
+  /**
+   * Whether the airplane has spawned on the game board.
+   */
+  _spawned = false
+
+  /**
+   * Whether the airplane is currently uncontrollable.
+   */
+  _isGhost = false
+
+  /**
+   * Whether the airplane is currently selected.
+   */
+  _isSelected = false
+
+  /**
+   * The name/flight-number of the airplane.
+   */
+  _name = ''
+
+  /**
+   * The unique ID for the airplane.
+   */
+  _id = 0
+
+  /**
+   * The color of this airplane.
+   */
+  _color = null
+
+  /**
+   * The model of the airplane.
+   */
+  _model = null
+
+  /**
+   * The tick used for animating the airplane.
+   */
+  _tick = 0
+
+  /**
+   * AnimateIn
+   * AnimateOut
+   * AnimateIdle
+   */
+  constructor (position, direction, endPosition, endDirection, index) {
+    this._position = position
+    this._direction = direction
+    this._endPosition = endPosition
+    this._endDirection = endDirection
+    this._targetAltitude = this._position.y
+    this._name = `GJK-${index.toString().padStart(2, '0')}`
+    this._id = index
+    this._color = new Color(Math.random() * 0xffffff)
 
     this.create()
-    this.animateIn()
 
-    return this._model
+    return this
   }
 
-  create() {
-    const airplane = defaultPlane.clone()
-    const material = randomItemFromArray(materials)
+  select = () => {
+    this._isSelected = true
+  }
 
-    airplane.children.forEach(child => {
-      if (child.material.name === 'base') {
-        child.material = material
+  unSelect = () => {
+    this._isSelected = false
+  }
+
+  animate = () => this.animateIdle()
+
+  updateAnimation (plane, from) {
+    plane.position.x = from.position.x * 10
+    plane.position.z = from.position.z * 10
+
+    if (this._position.y === 0) {
+      plane.position.y = 0.8
+    } else {
+      plane.position.y = from.position.y * 5
+    }
+
+    plane.scale.setScalar(from.scale)
+  }
+
+  /**
+   * Animates the airplane into the scene.
+   */
+  animateIn (delay = 1250, speed = 500) {
+    return new Promise((resolve) => {
+      const { _position, _direction } = this
+      const from = { position: getPrevPosition(_position, _direction), direction: this._direction, scale: 0 }
+      const to = { position: _position, direction: this._direction, scale: 1 }
+
+      this.updateAnimation(this._model, from)
+
+      new TWEEN.Tween(from)
+        .to(to, speed)
+        .easing(TWEEN.Easing.Elastic.Out)
+        .onUpdate(() => this.updateAnimation(this._model, from))
+        .onComplete(resolve)
+        .delay(delay)
+        .start()
+    })
+  }
+
+  /**
+   * Animates the airplane into the scene.
+   */
+  animateOut (delay = 0, speed = 500) {
+    return new Promise((resolve) => {
+      const { _position, _direction } = this
+      const from = { position: { x: this._model.position.x / 10, y: this._model.position.y / 5, z: this._model.position.z / 10 }, direction: this._direction, scale: 1 }
+      const to = { position: getNextPosition(_position, _direction), direction: this._direction, scale: 0 }
+
+      this.updateAnimation(this._model, from)
+
+      new TWEEN.Tween(from)
+        .to(to, speed)
+        .easing(TWEEN.Easing.Elastic.In)
+        .onUpdate(() => this.updateAnimation(this._model, from))
+        .onComplete(resolve)
+        .delay(delay)
+        .start()
+    })
+  }
+
+  /**
+   * Animates the plane and its parts while idle.
+   */
+  animateIdle () {
+    const bob = Math.sin(this._tick / 10 / Math.PI) / 100
+    const pitchZ = Math.sin(this._tick / 15 / Math.PI) / 10
+    const pitchX = Math.sin(this._tick / 20 / Math.PI) / 20
+
+    if (this._position.y !== 0) {
+      this._model.position.y += bob
+      this._model.rotation.z = pitchZ
+      this._model.rotation.x = pitchX
+    }
+
+    this._model.children.forEach(child => {
+      if (child.name === 'props') {
+        child.rotation.z += 0.3
       }
     })
 
-    /**
-     * Smoke.
-     */
-    this._smoke = new InstancedMesh(dodecahedronGeometry, defaultMaterial.clone(), 10)
+    this._tick++
+  }
 
-    for (let i = 0; i < 6; i++) {
-      if (i < 3) {
-        dummy.position.set(-0.55, 0.2, (i % 5) / 3)
-      } else {
-        dummy.position.set(0.55, 0.2, (i % 5) / 3)
-      }
-      dummy.rotation.set(0, 0.1, 0)
-      dummy.scale.setScalar(0.1)
-      dummy.updateMatrixWorld(true)
+  /**
+   * Creates the airplane at the start position and direction.
+   *
+   * @todo create at airfield.
+   * @todo add updatePosition?
+   */
+  create () {
+    this._spawned = true
 
-      this._smoke.setMatrixAt(i, dummy.matrixWorld)
+    const plane = createDefaultPlane()
+
+    plane.position.x = this._position.x * 10
+    plane.position.z = this._position.z * 10
+
+    plane.rotation.y = this._direction * (Math.PI / -4)
+
+    if (plane.position > 0) {
+      plane.position.y = this._position.y * 5
+    } else {
+      plane.rotateX(0.1)
+      plane.position.y = 0.8
     }
 
-    this._smoke.instanceMatrix.needsUpdate = true
+    this._model = plane
 
-    airplane.add(this._smoke)
-
-    /**
-     * The animations for the this._clouds.
-     */
-    // airplane.tick = () => {
-    //   /**
-    //    * Bob & pitch the airplane.
-    //    */
-    //   const bob = Math.sin(this._tick / 10 / Math.PI) / 10
-    //   const pitchZ = Math.sin(this._tick / 15 / Math.PI) / 10
-    //   const pitchX = Math.sin(this._tick / 20 / Math.PI) / 20
-
-    //   airplane.position.y = (this._position.y + bob) * 5
-    //   airplane.rotation.z = pitchZ
-    //   airplane.rotation.x = pitchX
-
-    //   /**
-    //    * Rotate the propellers.
-    //    */
-    //   airplane.children.forEach(child => {
-    //     if (child.name === 'props') {
-    //       child.rotation.z += 0.3
-    //     }
-    //   })
-
-    //   /**
-    //    * Animate the smoke particles.
-    //    */
-    //   for (let i = 0; i < 6; i++) {
-    //     if (i < 3) {
-    //       dummy.position.set(-0.55, 0.2, getSmokePosition(this._tick, (i * 15)))
-    //     } else {
-    //       dummy.position.set(0.55, 0.2, getSmokePosition(this._tick, (i * 15)))
-    //     }
-    //     dummy.rotation.set(0, getSmokeRotation(this._tick), getSmokeRotation(this._tick))
-    //     dummy.scale.setScalar(getSmokeScale(this._tick, ((i * 15))))
-    //     dummy.updateMatrixWorld(true)
-
-    //     this._smoke.setMatrixAt(i, dummy.matrixWorld)
-    //     this._smoke.instanceMatrix.needsUpdate = true
-    //   }
-
-    //   this._tick++
-    // }
-
-    this.model = airplane
+    this.setGhost()
   }
 
-  update(from) {
-    this._model.scale.set(from.scale, from.scale, from.scale)
-    this._model.position.x = from.x * 10
-    this._model.position.y = from.y * 5
-    this._model.position.z = from.z * 10
+  /**
+   * Moves the plane to its next position.
+   *
+   * 1. Move plane to new posiiton
+   * 2. Update altitude (if needed)
+   * 3. Update direction (if needed)
+   */
+  async next (delay = 0, scale = 1) {
+    const nextPosition = getNextPosition(this._position, this._direction)
+    let altMod = 0
+    let dirMod = 0
+
+    if (this._targetAltitude > this._position.y) {
+      altMod = 1
+    } else if (this._targetAltitude < this._position.y) {
+      altMod = -1
+    }
+
+    if (this._targetDirection > 0) {
+      this._targetDirection--
+      dirMod = 1
+    } else if (this._targetDirection < 0) {
+      this._targetDirection++
+      dirMod = -1
+    }
+
+    // Move the model on the board (this should be animated).
+    // this.unsetGhost()
+    await this.animateNext(altMod, dirMod, delay, scale)
+
+    // Update the plane's new position.
+    nextPosition.y += altMod
+    this._position = nextPosition
+
+    // Update the plane's new direction.
+    this._direction = (8 + (this._direction + dirMod)) % 8
+    this._model.rotation.y = this._direction * Math.PI / -4
+
+    // Check if the plane is currently a ghost.
+    // this.checkGhost(false)
+
+    // Check if the plane has crashed into something (ground, obstacle, airplane)
+    // this.checkForCrashes()
+
+    // Check if the plane has reached its destination with poor man's deep equal.
+    if (
+      JSON.stringify(this._position) === JSON.stringify(this._endPosition) &&
+      this._direction === this._endDirection
+    ) {
+      console.log('yay, plane landed at target!')
+    }
   }
 
-  animateIn() {
-    const from = { x: this._position.x, y: this.position.y + 1, z: this._position.z + 1, scale: 0 }
-    const to = { x: this._position.x, y: this._position.y, z: this._position.z, scale: 1 }
+  async animateNext (nextAlt, nextDir, delay = 0, scale = 1) {
+    return new Promise((resolve) => {
+      const from = { position: { x: this._model.position.x / 10, y: this._model.position.y / 5, z: this._model.position.z / 10 }, direction: this._model.rotation.y, scale }
+      const p = getNextPosition(this._position, this._direction)
+      p.y += nextAlt
+      const to = { position: p, direction: this._model.rotation.y + (nextDir * Math.PI / -4), scale: 1 }
 
-    this.update(to)
-
-    // new TWEEN.Tween(from)
-    //   .to(to, 500)
-    //   .easing(TWEEN.Easing.Elastic.Out)
-    //   .onUpdate(() => this.update(from))
-    //   .delay(1250)
-    //   .start()
+      new TWEEN.Tween(from)
+        .to(to, 1000)
+        .easing(TWEEN.Easing.Cubic.InOut)
+        .onUpdate(() => this.updateAnimation(this._model, from, this._targetDirection > 0))
+        .onComplete(resolve)
+        .delay(delay)
+        .start()
+    })
   }
 
-  animateOut() {
-    const to = { x: this._position.x, y: this._position.y + 1, z: this._position.z - 1, scale: 0 }
-    const from = { x: this._position.x, y: this._position.y, z: this._position.z, scale: 1 }
+  setGhost () {
+    this._isGhost = true
 
-    new TWEEN.Tween(from)
-      .to(to, 500)
-      .easing(TWEEN.Easing.Elastic.In)
-      .onUpdate(() => this.update(from))
-      .start()
+    this._model.children.forEach(child => {
+      if (child.material.name === 'base') {
+        child.material.color.set(new Color(0xffffff))
+      }
+
+      if (child.material) {
+        child.material.transparent = true
+        child.material.opacity = 0.75
+        child.material.needsUpdate = true
+      }
+    })
   }
 
+  unsetGhost () {
+    this._isGhost = false
+
+    this._model.children.forEach(child => {
+      if (child.material.name === 'base') {
+        child.material.color.set(this._color)
+      }
+
+      if (child.material) {
+        child.material.transparent = false
+        child.material.opacity = 1
+      }
+    })
+  }
 }

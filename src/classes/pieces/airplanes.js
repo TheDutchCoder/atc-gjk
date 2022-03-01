@@ -5,7 +5,6 @@ import {
 } from 'three/examples/jsm/utils/BufferGeometryUtils'
 
 import {
-  Object3D,
   Mesh,
   Group,
   Color,
@@ -21,8 +20,9 @@ import {
 } from '#geometries'
 
 import {
-  randomRoundNumber,
   setPoint,
+  getPrevPosition,
+  getNextPosition,
 } from '#tools'
 
 const createDefaultPlane = () => {
@@ -246,7 +246,7 @@ const createDefaultPlane = () => {
     metalMesh,
     blackStaticMesh,
     blackDynamicMesh,
-    brownMesh,
+    brownMesh
   )
 
   return plane
@@ -257,6 +257,9 @@ const defaultPlane = createDefaultPlane()
 
 /**
  * Airplanes instance.
+ *
+ * @todo each airplane should probably be its own class as well, to track
+ * information against?
  */
 class Airplanes {
 
@@ -276,16 +279,16 @@ class Airplanes {
   /**
    * Initialize the airplanes.
    */
-  constructor() { }
+  constructor () { }
 
   /**
    * Adds airplanes to a tile.
    */
-  add(options) {
+  add (options) {
     this._tiles.push(options)
   }
 
-  reset() {
+  reset () {
     this._tiles = []
     this._models = []
     this._airplanes = new Group()
@@ -296,7 +299,7 @@ class Airplanes {
   /**
    * Populates the instances.
    */
-  create() {
+  create () {
     this._tiles.forEach(tile => {
       const plane = defaultPlane.clone()
 
@@ -331,7 +334,7 @@ class Airplanes {
   /**
    * Animates the plane and its parts.
    */
-  animatePlane(plane) {
+  animatePlane (plane) {
     const bob = Math.sin(this._tick / 10 / Math.PI) / 100
     const pitchZ = Math.sin(this._tick / 15 / Math.PI) / 10
     const pitchX = Math.sin(this._tick / 20 / Math.PI) / 20
@@ -350,7 +353,7 @@ class Airplanes {
   /**
    * Updates the animation.
    */
-  updateAnimation(plane, from) {
+  updateAnimation (plane, from) {
     plane.position.x = from.position.x * 10
     plane.position.y = from.position.y * 5
     plane.position.z = from.position.z * 10
@@ -361,15 +364,16 @@ class Airplanes {
   /**
    * Shows the airplanes with an animation.
    */
-  animateIn() {
+  animateIn () {
     if (!this._tiles.length) {
       return Promise.resolve()
     }
 
     return new Promise((resolve) => {
-      this._models.forEach(plane => {
-        const from = { position: { x: -1, y: 1, z: 1 }, scale: 0 }
-        const to = { position: { x: 0, y: 1, z: 0 }, scale: 1 }
+      this._models.forEach((plane, i) => {
+        const { position } = this._tiles[i]
+        const from = { position: getPrevPosition(this._tiles[i]), scale: 0 }
+        const to = { position, scale: 1 }
 
         this.updateAnimation(plane, from)
 
@@ -387,17 +391,15 @@ class Airplanes {
   /**
    * Hides the airplanes with an animation.
    */
-  animateOut() {
+  animateOut () {
     if (!this._tiles.length) {
       return Promise.resolve()
     }
 
     return new Promise((resolve) => {
-      this._models.forEach(plane => {
-        const { x: posX, y: posY, z: posZ } = plane.position
-
-        const from = { position: { x: posX / 10, y: posY / 5, z: posZ / 10 }, scale: 1 }
-        const to = { position: { x: 1, y: 1, z: -1 }, scale: 0 }
+      this._models.forEach((plane, i) => {
+        const from = { position: this._tiles[i].position, scale: 1 }
+        const to = { position: getNextPosition(this._tiles[i]), scale: 0 }
 
         new TWEEN.Tween(from)
           .to(to, 500)

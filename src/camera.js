@@ -1,4 +1,4 @@
-import { PerspectiveCamera } from "three"
+import { PerspectiveCamera } from 'three'
 
 const camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000)
 // camera.position.set(0, 110, 0)

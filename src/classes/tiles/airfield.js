@@ -25,7 +25,7 @@ export default class Airfield extends GameTile {
    *
    * @param {Object} options - The options for this tile.
    */
-  constructor({ position = { x: 0, y: 0, z: 0 }, direction = 0 } = {}) {
+  constructor ({ position = { x: 0, y: 0, z: 0 }, direction = 0 } = {}) {
     super({ position })
 
     this._direction = direction
@@ -36,7 +36,7 @@ export default class Airfield extends GameTile {
   /**
    * Create the airfield by combining different assets.
    */
-  create() {
+  create () {
     Grass.add({ position: this._position })
     Trees.add({ position: this._position, exclude: { width: 5.5, direction: this._direction } })
     Rocks.add({ position: this._position, exclude: { width: 5.5, direction: this._direction } })

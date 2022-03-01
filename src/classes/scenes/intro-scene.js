@@ -6,9 +6,6 @@ import {
   Fog,
   Color,
   Object3D,
-  ArrowHelper,
-  Vector3,
-  DirectionalLightHelper,
 } from 'three'
 
 import {
@@ -20,7 +17,7 @@ import Forest from '#/classes/tiles/forest'
 import TrainTracks from '#/classes/tiles/train-tracks'
 import Airfield from '#/classes/tiles/airfield'
 import Clouds from '#/classes/pieces/clouds'
-import Airplanes from '#/classes/pieces/airplanes'
+import Airplane from '#/classes/pieces/airplane'
 import controls from '../../controls'
 
 const introScene = new GameScene()
@@ -60,10 +57,17 @@ introScene.start = () => {
   introScene.addLight(pivot2)
   introScene.addLight(dirLight2)
 
+  // Create a random tile.
   new RandomTile()
-  Airplanes.add({ position: { x: 0, y: 1, z: 0 }, direction: 1 })
 
+  // Add an airplane.
+  const airplane = new Airplane({ x: 0, y: 1, z: 0 }, 1, { x: 0, y: 0, z: 0 }, 1, 0)
+  introScene.addAirplane(airplane)
+
+  // Add the dirt base.
   Dirt.add()
+
+  // Add some clouds.
   Clouds.add({ position: { x: 0, y: 2, z: 0 } })
 
   // Fog.

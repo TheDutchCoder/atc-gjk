@@ -62,8 +62,14 @@ export const randomNumber = (min, max, exclusions) => {
 /**
  * Generates a random whole number between a min and max value.
  */
-export const randomRoundNumber = (min, max) => {
-  return Math.round(Math.random() * (max - min) + min)
+export const randomRoundNumber = (min, max, exclude) => {
+  let number = Math.round(Math.random() * (max - min) + min)
+
+  if (number === exclude) {
+    number = randomRoundNumber(min, max, exclude)
+  }
+
+  return number
 }
 
 
@@ -91,7 +97,7 @@ export const lerpColor = (a, b, amount) => {
     rg = ag + amount * (bg - ag),
     rb = ab + amount * (bb - ab)
 
-  return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
+  return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1)
 }
 
 export const displayTime = (number) => {
@@ -113,6 +119,47 @@ export const checkForAvailableSpots = (board) => {
   }))
 
   return b
+}
+
+
+export const getRandomTile = (board, width, depth, offset = 0) => {
+
+  // Exit early if no spots are available at all.
+  // This needs to take into account the offset as well.
+  const newBoard = JSON.parse(JSON.stringify(board))
+  const tmpBoard = JSON.parse(JSON.stringify(board))
+
+  if (offset > 0) {
+    tmpBoard.splice(-offset)
+    tmpBoard.splice(0, offset)
+    tmpBoard.forEach(row => {
+      row.splice(-offset)
+      row.splice(0, offset)
+    })
+  }
+
+  if (tmpBoard.flat(2).every(tile => !!tile)) {
+    return null
+  }
+
+  const minX = 0 - Math.floor(((width) / 2))
+  const minZ = 0 - Math.floor(((depth) / 2))
+
+  let x
+  let z
+
+  do {
+    x = randomRoundNumber(offset, (width - (offset)) - 1)
+    z = randomRoundNumber(offset, (depth - (offset)) - 1)
+  } while (newBoard[z][x])
+
+  const tile = { x: x + minX, y: 0, z: z + minZ }
+
+  return {
+    tile,
+    x: x,
+    z: z,
+  }
 }
 
 
@@ -164,15 +211,15 @@ export const randomCoordinate = (min, max, excludes = { width: 0, direction: 0 }
 
   if (direction === 0 || direction == 4) {
     funcX = (x) => (x > offset) || (x < -offset)
-    funcZ = (_x, _z) => true
+    funcZ = () => true
   } else if (direction === 3 || direction == 7) {
-    funcX = (_x) => true
+    funcX = () => true
     funcZ = (x, z) => (z > (x + offset)) || (z < (x - offset))
   } else if (direction === 2 || direction == 6) {
-    funcX = (_x) => true
+    funcX = () => true
     funcZ = (_x, z) => (z > offset) || (z < -offset)
   } else if (direction === 1 || direction == 5) {
-    funcX = (_x) => true
+    funcX = () => true
     funcZ = (x, z) => (z > (-x + offset)) || (z < (-x - offset))
   }
 
@@ -185,4 +232,116 @@ export const randomCoordinate = (min, max, excludes = { width: 0, direction: 0 }
   }
 
   return { x, y, z }
+}
+
+// 3     4     5
+//   ┌───────┐
+// 2 │       │ 6
+//   └───────┘
+// 1     0     7
+/**
+ * Returns the start direction of a plane for a given position.
+ *
+ * Airplanes always start 1 block outside of the playing area, so for a 3x3
+ * area, the top left corner is { -1, -1 }, but a plane would start at { -2. -2
+ * }.
+ * @param {*} position
+ * @param {*} width
+ * @param {*} depth
+ * @returns
+ */
+export const getStartDirection = (position, width, depth) => {
+  const minX = Math.ceil(0 - (width / 2))
+  const maxX = Math.abs(minX)
+  const minZ = Math.ceil(0 - (depth / 2))
+  const maxZ = Math.abs(minZ)
+
+  const { x, z } = position
+
+  if (x === minX - 1) {
+    if (z === minZ - 1) {
+      return 3
+    } else if (z === maxZ + 1) {
+      return 1
+    } else {
+      return 2
+    }
+  } else if (x === maxX + 1) {
+    if (z === minZ - 1) {
+      return 5
+    } else if (z === maxZ + 1) {
+      return 7
+    } else {
+      return 6
+    }
+  } else {
+    if (z === minZ - 1) {
+      return 4
+    } else {
+      return 0
+    }
+  }
+}
+
+export const getNextPosition = (position, direction) => {
+  let { x, y, z } = position
+
+  if (direction === 0) {
+    z--
+  } else if (direction === 1) {
+    x++
+    z--
+  } else if (direction === 2) {
+    x++
+  } else if (direction === 3) {
+    x++
+    z++
+  } else if (direction === 4) {
+    z++
+  } else if (direction === 5) {
+    x--
+    z++
+  } else if (direction === 6) {
+    x--
+  } else if (direction === 7) {
+    x--
+    z--
+  }
+
+  return { x, y, z }
+}
+
+export const getPrevPosition = (position, direction) => {
+  let { x, y, z } = position
+
+  if (direction === 0) {
+    z++
+  } else if (direction === 1) {
+    x--
+    z++
+  } else if (direction === 2) {
+    x--
+  } else if (direction === 3) {
+    x--
+    z--
+  } else if (direction === 4) {
+    z--
+  } else if (direction === 5) {
+    x++
+    z--
+  } else if (direction === 6) {
+    x++
+  } else if (direction === 7) {
+    x++
+    z++
+  }
+
+  return { x, y, z }
+}
+
+export const formatTime = (tick) => {
+  const hours = (Math.floor(tick / 4)).toString()
+  const quarters = ((tick % 4) * 15).toString()
+
+  return `${hours.padStart(2, '0')}:${quarters.padStart(2, '0')}`
 }

@@ -74,16 +74,16 @@ class AirStrip {
   /**
    * Initialize the trees.
    */
-  constructor() { }
+  constructor () { }
 
   /**
    * Adds a tile where the landing strip should be rendered.
    */
-  add(options) {
+  add (options) {
     this._tiles.push(options)
   }
 
-  reset() {
+  reset () {
     this._tiles = []
     this._airstrip = null
     this._strips = null
@@ -95,7 +95,7 @@ class AirStrip {
   /**
    * Populates the instances.
    */
-  create() {
+  create () {
     this._airstrip = new Group()
 
     const stripsGeometries = []
@@ -159,7 +159,7 @@ class AirStrip {
   /**
    * Animates the landing strip in.
    */
-  animateIn() {
+  animateIn () {
     if (!this._tiles.length) {
       return Promise.resolve()
     }
@@ -180,7 +180,7 @@ class AirStrip {
     })
   }
 
-  animateOut() {
+  animateOut () {
     if (!this._tiles.length) {
       return Promise.resolve()
     }
@@ -202,7 +202,7 @@ class AirStrip {
   /**
    * Updates the animation.
    */
-  animateUpdate(from) {
+  animateUpdate (from) {
     this._airstrip.scale.setScalar(from.scale)
   }
 

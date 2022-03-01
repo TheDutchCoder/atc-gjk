@@ -26,13 +26,13 @@ class Dirt {
    *
    * @param {Object} position - The position of the tile.
    */
-  constructor() { }
+  constructor () { }
 
-  add(options = { scale: { x: 1, y: 1, z: 1 } }) {
+  add (options = { scale: { x: 1, y: 1, z: 1 } }) {
     this._tile = options
   }
 
-  reset() {
+  reset () {
     this._tile = null
     this._dirt = null
   }
@@ -40,7 +40,7 @@ class Dirt {
   /**
    * Creates the tile.
    */
-  create() {
+  create () {
     const dirtGeometry = new BoxGeometry(10, 3, 10)
     dirtGeometry.translate(0, -2.5, 0)
     dirtGeometry.scale(this._tile.scale.x, this._tile.scale.y, this._tile.scale.z)
@@ -51,7 +51,7 @@ class Dirt {
     return this._dirt
   }
 
-  animateIn() {
+  animateIn () {
     if (!this._tile) {
       return Promise.resolve()
     }
@@ -73,7 +73,7 @@ class Dirt {
     })
   }
 
-  animateOut() {
+  animateOut () {
     if (!this._tile) {
       return Promise.resolve()
     }
@@ -92,7 +92,7 @@ class Dirt {
     })
   }
 
-  animateUpdate(from) {
+  animateUpdate (from) {
     this._dirt.scale.setScalar(from.scale)
   }
 

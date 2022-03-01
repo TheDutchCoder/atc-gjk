@@ -61,16 +61,16 @@ class Clouds {
   /**
    * Initialize the clouds.
    */
-  constructor() { }
+  constructor () { }
 
   /**
    * Adds clouds to a tile.
    */
-  add(options) {
+  add (options) {
     this._tiles.push(options)
   }
 
-  reset() {
+  reset () {
     this._tiles = []
     this._clouds = new Object3D()
     this._animate = () => { }
@@ -81,7 +81,7 @@ class Clouds {
   /**
    * Populates the instances.
    */
-  create() {
+  create () {
     let amounts = 0
 
     this._tiles.forEach(tile => {
@@ -136,7 +136,7 @@ class Clouds {
   /**
    * Updates the animation.
    */
-  updateInstance(instance, index, from) {
+  updateInstance (instance, index, from) {
     const { pos, rot, scale, color, animation, tile, altitude } = instance
     const { x: posX, y: posY, z: posZ } = pos
     const { x: rotX, y: rotY, z: rotZ } = rot
@@ -165,7 +165,7 @@ class Clouds {
   /**
    * Shows the clouds with an animation.
    */
-  animateIn() {
+  animateIn () {
     if (!this._tiles.length) {
       return Promise.resolve()
     }
@@ -195,7 +195,7 @@ class Clouds {
   /**
    * Hides the clouds with an animation.
    */
-  animateOut() {
+  animateOut () {
     if (!this._tiles.length) {
       return Promise.resolve()
     }

@@ -51,25 +51,25 @@ export default class GamePiece {
    * @param {Object} position - The position of the game piece.
    * @param {Number} direction - The direction the game piece is facing.
    */
-  constructor({ position = { x: 0, y: 0, z: 0 }, direction = 0 } = {}) {
+  constructor ({ position = { x: 0, y: 0, z: 0 }, direction = 0 } = {}) {
     this._position = position
     this._direction = direction
   }
 
-  updatePosition() {
+  updatePosition () {
     this._model.position.x = this._position.x * 10
     this._model.position.y = this._position.y * 5
     this._model.position.z = this._position.z * 10
   }
 
-  updateDirection() {
+  updateDirection () {
     this._model.rotation.y = this._direction * (Math.PI / -4)
   }
 
   /**
    * Get the current posiiton of the game piece.
    */
-  get position() {
+  get position () {
     return this._position
   }
 
@@ -77,7 +77,7 @@ export default class GamePiece {
    * Set the ne wposition of the game piece and update the model's physical
    * position on the board.
    */
-  set position(position) {
+  set position (position) {
     this._position = position
     this.updatePosition()
   }
@@ -85,7 +85,7 @@ export default class GamePiece {
   /**
    * Get the current direction the game piece is facing.
    */
-  get direction() {
+  get direction () {
     return this._direction
   }
 
@@ -93,7 +93,7 @@ export default class GamePiece {
    * Set the new direction of the game piece and update the model's physical
    * rotation on the board.
    */
-  set direction(direction) {
+  set direction (direction) {
     this._direction = direction
     this.updateDirection()
   }
@@ -101,11 +101,11 @@ export default class GamePiece {
   /**
    * Get the current direction the game piece is facing.
    */
-  get model() {
+  get model () {
     return this._model
   }
 
-  set model(model) {
+  set model (model) {
     this._model = model
 
     this.updatePosition()
@@ -116,11 +116,11 @@ export default class GamePiece {
     }
   }
 
-  get isAnimating() {
+  get isAnimating () {
     return this._isAnimating
   }
 
-  set isAnimating(value) {
+  set isAnimating (value) {
     this._isAnimating = value
   }
 

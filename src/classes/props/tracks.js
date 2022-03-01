@@ -56,16 +56,16 @@ class Tracks {
   /**
    * Initialize the beams.
    */
-  constructor() { }
+  constructor () { }
 
   /**
    * Adds a train tracks tile.
    */
-  add(options) {
+  add (options) {
     this._tiles.push(options)
   }
 
-  reset() {
+  reset () {
     this._tiles = []
     this._beams = null
     this._rails = null
@@ -76,7 +76,7 @@ class Tracks {
   /**
    * Populates the instances.
    */
-  create() {
+  create () {
     const tracks = new Group()
     let beamAmounts = 0
     let railAmounts = 0
@@ -144,7 +144,7 @@ class Tracks {
     return tracks
   }
 
-  updateBeamInstance(instance, index, from) {
+  updateBeamInstance (instance, index, from) {
     const { pos, rot, color, tile } = instance
     const { x: posX, y: posY, z: posZ } = pos
     const { x: rotX, y: rotY, z: rotZ } = rot
@@ -161,7 +161,7 @@ class Tracks {
     this._beams.instanceColor.needsUpdate = true
   }
 
-  updateRailInstance(instance, index, from) {
+  updateRailInstance (instance, index, from) {
     const { pos, rot, color, tile } = instance
     const { x: posX, y: posY, z: posZ } = pos
     const { x: rotX, y: rotY, z: rotZ } = rot
@@ -178,7 +178,7 @@ class Tracks {
     this._rails.instanceColor.needsUpdate = true
   }
 
-  animateIn() {
+  animateIn () {
     if (!this._tiles.length) {
       return Promise.resolve()
     }
@@ -215,7 +215,7 @@ class Tracks {
     })
   }
 
-  animateOut() {
+  animateOut () {
     if (!this._tiles.length) {
       return Promise.resolve()
     }

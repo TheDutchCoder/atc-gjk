@@ -15,7 +15,7 @@ export default class Forest extends GameTile {
    * @param {Object} position - The position of the tile.
    * @param {Number} direction - The direction the tile is facing (0-3).
    */
-  constructor({ position = { x: 0, y: 0, z: 0 } } = {}) {
+  constructor ({ position = { x: 0, y: 0, z: 0 } } = {}) {
     super({ position })
 
     this.create()
@@ -24,7 +24,7 @@ export default class Forest extends GameTile {
   /**
    * Creates the tile by adding elements to their repective classes.
    */
-  create() {
+  create () {
     Grass.add({ position: this._position })
     Trees.add({ position: this._position })
     Rocks.add({ position: this._position })

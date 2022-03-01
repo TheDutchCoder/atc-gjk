@@ -1,13 +1,14 @@
-import { createMachine, interpret } from 'xstate'
+import { createMachine } from 'xstate'
+import { gameMachine } from './game'
 
-const machine = createMachine({
+export const mainMachine = createMachine({
   id: 'main',
   initial: 'loading',
   states: {
     loading: {
       on: {
         INTRO_IN: 'introIn',
-      }
+      },
     },
     introIn: {
       tags: 'intro',
@@ -35,17 +36,21 @@ const machine = createMachine({
     },
     gamePlaying: {
       tags: 'board',
-      on: {
-        GAME_OUT: 'gamePlaying'
+      invoke: {
+        src: gameMachine,
+        onDone: 'gameOut',
       },
+      // on: {
+      //   GAME_OUT: 'gameOut'
+      // },
     },
     gameOut: {
       tags: 'board',
       on: {
-        DONE: 'introIn'
+        DONE: 'introIn',
       },
     },
   },
 })
 
-export const service = interpret(machine).start()
+// export const service = interpret(mainMachine).start()
