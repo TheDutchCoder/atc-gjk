@@ -1,5 +1,15 @@
 import { suite, expect, test } from 'vitest'
-import { checkForAvailableSpots, randomItemFromArray, randomRoundNumber, randomNumber } from '#tools'
+import {
+  checkForAvailableSpots,
+  randomItemFromArray,
+  randomRoundNumber,
+  randomNumber,
+  getRandomTile,
+  getStartDirection,
+  getNextPosition,
+  getPrevPosition,
+  formatTime,
+} from '#tools'
 
 suite('tools', () => {
   test('checkForAvailableSpots', () => {
@@ -48,6 +58,18 @@ suite('tools', () => {
     }
   })
 
+  test('randomRoundNumber with exclusion', () => {
+    const min = -8
+    const max = 10
+
+    for (let i = 0; i < 1000; i++) {
+      const result = randomRoundNumber(min, max, 2)
+      expect(result).toBeGreaterThanOrEqual(-8)
+      expect(result).toBeLessThanOrEqual(10)
+      expect(result).not.toBe(2)
+    }
+  })
+
   test('randomNumber', () => {
     const min = -10
     const max = 3
@@ -57,5 +79,206 @@ suite('tools', () => {
       expect(result).toBeGreaterThanOrEqual(-10)
       expect(result).toBeLessThanOrEqual(3)
     }
+  })
+
+  test('randomNumber with exclusions', () => {
+    const min = -10
+    const max = 3
+    const exclusions = {
+      min: -8,
+      max: 1,
+    }
+
+    const results = []
+
+    for (let i = 0; i < 1000; i++) {
+      results.push(randomNumber(min, max, exclusions))
+    }
+
+    expect(results.length).toBe(1000)
+    expect(results.filter(number => number > -8 && number < 1).length).toBe(0)
+  })
+
+  test('getRandomTile, 1 space', () => {
+    let board = [
+      [null],
+    ]
+
+    const result = getRandomTile(board, 1, 1)
+
+    expect(result.x).toBe(0)
+    expect(result.z).toBe(0)
+    expect(result.tile).toEqual({ x: 0, y: 0, z: 0 })
+  })
+
+  test('getRandomTile, 3 spaces', () => {
+    let board = [
+      [{}, null, {}],
+      [{}, {}, {}],
+      [null, null, {}],
+    ]
+
+    const newBoard = [
+      [{}, { x: 0, y: 0, z: -1 }, {}],
+      [{}, {}, {}],
+      [{ x: -1, y: 0, z: 1 }, { x: 0, y: 0, z: 1 }, {}],
+    ]
+
+    let result = getRandomTile(board, 3, 3)
+    board[result.z][result.x] = result.tile
+
+    result = getRandomTile(board, 3, 3)
+    board[result.z][result.x] = result.tile
+
+    result = getRandomTile(board, 3, 3)
+    board[result.z][result.x] = result.tile
+
+    expect(board).toEqual(newBoard)
+  })
+
+  test('getRandomTile, impossible', () => {
+    let board = [
+      [null, null, null],
+      [{}, {}, {}],
+      [null, null, null],
+    ]
+
+    let result = getRandomTile(board, 3, 3, 1)
+    expect(result).toBe(null)
+  })
+
+  test('getRandomTile, 0 spaces', () => {
+    let board = [
+      [{}, {}, {}],
+      [{}, {}, {}],
+      [{}, {}, {}],
+    ]
+
+    let result = getRandomTile(board, 3, 3)
+    expect(result).toBe(null)
+  })
+
+  test('getRandomTile, 9 spaces, offset 1', () => {
+    let board = [
+      [null, null, null],
+      [null, null, null],
+      [null, null, null],
+    ]
+
+    let result = getRandomTile(board, 3, 3, 1)
+    expect(result.x).toBe(1)
+    expect(result.z).toBe(1)
+    expect(result.tile).toEqual({ x: 0, y: 0, z: 0 })
+
+    board = [
+      [null, null, null, null, null],
+      [null, null, null, null, null],
+      [null, null, null, null, null],
+      [null, null, null, null, null],
+      [null, null, null, null, null],
+    ]
+
+    result = getRandomTile(board, 5, 5, 2)
+    expect(result.x).toBe(2)
+    expect(result.z).toBe(2)
+    expect(result.tile).toEqual({ x: 0, y: 0, z: 0 })
+  })
+
+  test.skip('getRandomTile, 9 spaces, no touch', () => {
+    const board = [
+      ['00', '00', '00', '00', '00'],
+      ['00', null, null, null, '00'],
+      ['00', null, null, null, '00'],
+      ['00', null, null, null, '00'],
+      ['00', '00', '00', '00', '00'],
+    ]
+
+    const results = []
+
+    for (let i = 0; i < 100; i++) {
+      results.push(getRandomTile(board, 5, 5, 0, true))
+    }
+
+    expect(results.length).toBe(100)
+    expect(results.filter(result => result.x === 2 && result.z === 2).length).toBe(100)
+  })
+
+  test('getStartDirection', () => {
+    const pos1 = { x: -2, y: 0, z: -2 }
+    const pos2 = { x: 0, y: 0, z: -2 }
+    const pos3 = { x: 2, y: 0, z: -2 }
+    const pos4 = { x: 2, y: 0, z: 0 }
+    const pos5 = { x: 2, y: 0, z: 2 }
+    const pos6 = { x: 0, y: 0, z: 2 }
+    const pos7 = { x: -2, y: 0, z: 2 }
+    const pos8 = { x: -2, y: 0, z: 0 }
+
+    const result1 = getStartDirection(pos1, 3, 3)
+    const result2 = getStartDirection(pos2, 3, 3)
+    const result3 = getStartDirection(pos3, 3, 3)
+    const result4 = getStartDirection(pos4, 3, 3)
+    const result5 = getStartDirection(pos5, 3, 3)
+    const result6 = getStartDirection(pos6, 3, 3)
+    const result7 = getStartDirection(pos7, 3, 3)
+    const result8 = getStartDirection(pos8, 3, 3)
+
+    expect(result1).toBe(3)
+    expect(result2).toBe(4)
+    expect(result3).toBe(5)
+    expect(result4).toBe(6)
+    expect(result5).toBe(7)
+    expect(result6).toBe(0)
+    expect(result7).toBe(1)
+    expect(result8).toBe(2)
+  })
+
+  test('getNextPosition', () => {
+    const result1 = getNextPosition({ x: 0, y: 0, z: 0 }, 0)
+    const result2 = getNextPosition({ x: 0, y: 0, z: 0 }, 1)
+    const result3 = getNextPosition({ x: 0, y: 0, z: 0 }, 2)
+    const result4 = getNextPosition({ x: 0, y: 0, z: 0 }, 3)
+    const result5 = getNextPosition({ x: 0, y: 0, z: 0 }, 4)
+    const result6 = getNextPosition({ x: 0, y: 0, z: 0 }, 5)
+    const result7 = getNextPosition({ x: 0, y: 0, z: 0 }, 6)
+    const result8 = getNextPosition({ x: 0, y: 0, z: 0 }, 7)
+
+    expect(result1).toEqual({ x: 0, y: 0, z: -1 })
+    expect(result2).toEqual({ x: 1, y: 0, z: -1 })
+    expect(result3).toEqual({ x: 1, y: 0, z: 0 })
+    expect(result4).toEqual({ x: 1, y: 0, z: 1 })
+    expect(result5).toEqual({ x: 0, y: 0, z: 1 })
+    expect(result6).toEqual({ x: -1, y: 0, z: 1 })
+    expect(result7).toEqual({ x: -1, y: 0, z: 0 })
+    expect(result8).toEqual({ x: -1, y: 0, z: -1 })
+  })
+
+  test('getPrevPosition', () => {
+    const result1 = getPrevPosition({ x: 0, y: 0, z: 0 }, 0)
+    const result2 = getPrevPosition({ x: 0, y: 0, z: 0 }, 1)
+    const result3 = getPrevPosition({ x: 0, y: 0, z: 0 }, 2)
+    const result4 = getPrevPosition({ x: 0, y: 0, z: 0 }, 3)
+    const result5 = getPrevPosition({ x: 0, y: 0, z: 0 }, 4)
+    const result6 = getPrevPosition({ x: 0, y: 0, z: 0 }, 5)
+    const result7 = getPrevPosition({ x: 0, y: 0, z: 0 }, 6)
+    const result8 = getPrevPosition({ x: 0, y: 0, z: 0 }, 7)
+
+    expect(result1).toEqual({ x: 0, y: 0, z: 1 })
+    expect(result2).toEqual({ x: -1, y: 0, z: 1 })
+    expect(result3).toEqual({ x: -1, y: 0, z: 0 })
+    expect(result4).toEqual({ x: -1, y: 0, z: -1 })
+    expect(result5).toEqual({ x: 0, y: 0, z: -1 })
+    expect(result6).toEqual({ x: 1, y: 0, z: -1 })
+    expect(result7).toEqual({ x: 1, y: 0, z: 0 })
+    expect(result8).toEqual({ x: 1, y: 0, z: 1 })
+  })
+
+  test('formatTime', () => {
+    const time1 = 0
+    const time2 = 33
+    const time3 = 95
+
+    expect(formatTime(time1)).toBe('00:00')
+    expect(formatTime(time2)).toBe('08:15')
+    expect(formatTime(time3)).toBe('23:45')
   })
 })

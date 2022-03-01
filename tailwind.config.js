@@ -16,15 +16,15 @@ const rotateY = plugin(function ({ addUtilities }) {
     },
     '.rotate-y-20': {
       transform: 'rotateY(20deg) scale(1.1)',
-    }
+    },
   })
 })
 
 // Commit
 module.exports = {
   content: [
-    "./index.html",
-    "./src/**/*.{vue,js,ts,jsx,tsx}",
+    './index.html',
+    './src/**/*.{vue,js,ts,jsx,tsx}',
   ],
   theme: {
     fontFamily: {
@@ -34,7 +34,7 @@ module.exports = {
     // extend: {
     transitionTimingFunction: {
       'boing': 'cubic-bezier(.7,-1.82,.47,2.84)',
-    }
+    },
     // },
   },
   plugins: [
