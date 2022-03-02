@@ -8,6 +8,7 @@ import {
   Mesh,
   Group,
   Color,
+  Euler,
 } from 'three'
 
 import {
@@ -461,14 +462,13 @@ export default class Airplane {
     plane.position.x = this._position.x * 10
     plane.position.z = this._position.z * 10
 
-    plane.rotation.y = this._direction * (Math.PI / -4)
-
     if (plane.position > 0) {
       plane.position.y = this._position.y * 5
     } else {
-      plane.rotateX(0.1)
       plane.position.y = 0.8
     }
+
+    plane.rotation.y = this._direction * (Math.PI / -4)
 
     this._model = plane
 
@@ -511,7 +511,7 @@ export default class Airplane {
 
     // Update the plane's new direction.
     this._direction = (8 + (this._direction + dirMod)) % 8
-    this._model.rotation.y = this._direction * Math.PI / -4
+    this._model.rotation.y = this._direction * (Math.PI / -4)
 
     // Check if the plane is currently a ghost.
     // this.checkGhost(false)
@@ -536,7 +536,7 @@ export default class Airplane {
       const to = { position: p, direction: this._model.rotation.y + (nextDir * Math.PI / -4), scale: 1 }
 
       new TWEEN.Tween(from)
-        .to(to, 1000)
+        .to(to, 500)
         .easing(TWEEN.Easing.Cubic.InOut)
         .onUpdate(() => this.updateAnimation(this._model, from, this._targetDirection > 0))
         .onComplete(resolve)

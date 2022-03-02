@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { Scene } from 'three'
 
 import Dirt from '#/classes/tiles/dirt'
@@ -67,7 +68,7 @@ export default class GameScene {
    */
   _board = null
 
-  _tick = -1
+  _tick = ref(-1)
 
   /**
    * Animates objects in the scene.

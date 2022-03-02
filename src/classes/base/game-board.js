@@ -201,8 +201,8 @@ export default class GameBoard {
     this._airplanesQueue.push({
       index: 1000,
       start: {
-        position: { x: -5, y: 1, z: 0 },
-        direction: 2,
+        position: { x: 3, y: 1, z: -6 },
+        direction: 4,
       },
       end: {
         position: { x: -5, y: 1, z: 0 },
