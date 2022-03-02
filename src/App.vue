@@ -61,6 +61,10 @@
         Tick
       </button>
 
+      <div class="fixed top-1 left-1/2 transform -translate-x-1/2 bg-white rounded px-4 py-2 font-bold w-20 text-center">
+        {{ time }}
+      </div>
+
       <div class="fixed bottom-2 right-2 bg-white rounded-lg text-sm shadow-lg overflow-hidden">
         <h2 class="font-bold p-4">
           Flight Schedule
@@ -132,7 +136,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import TWEEN from '@tweenjs/tween.js'
 import { mainMachine } from '#/state-machines/main'
 import { useMachine } from '@xstate/vue'
@@ -151,6 +155,8 @@ const { state, send, service } = useMachine(mainMachine)
 
 const scheduleOpen = ref(true)
 const schedule = computed(() => BoardScene._board._airplanesQueue)
+
+const time = computed(() => formatTime(BoardScene._tick.value))
 
 onMounted(() => {
   initRenderer()
@@ -260,7 +266,10 @@ onMounted(() => {
       }
     } else if (service.state.hasTag('board') && BoardScene._scene) {
       renderer.render(BoardScene._scene, camera)
-      BoardScene._animate()
+
+      if (delta > interval) {
+        BoardScene._animate()
+      }
     }
 
     controls.update()
