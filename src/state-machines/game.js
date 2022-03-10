@@ -1,7 +1,7 @@
 import { createMachine, interpret } from 'xstate'
 
 export const gameMachine = createMachine({
-  id: 'game',
+  id: 'gameMachine',
   initial: 'playing',
   states: {
     playing: {
@@ -9,11 +9,12 @@ export const gameMachine = createMachine({
         TICK: 'tick',
         LOSE: 'lose',
         WIN: 'win',
+        QUIT: 'finished',
       },
     },
     tick: {
       on: {
-        DONe: 'playing',
+        DONE: 'playing',
       },
     },
     win: {
@@ -35,5 +36,5 @@ export const gameMachine = createMachine({
 export const gameService = interpret(gameMachine)
 
 gameService.onTransition(state => {
-  console.log(state)
+  console.log('hm', state)
 })

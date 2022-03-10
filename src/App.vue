@@ -55,11 +55,53 @@
     <!-- Game UI -->
     <template v-if="state.hasTag('board')">
       <button
-        class="fixed top-1 right-1 bg-white rounded px-4 py-2 font-bold"
+        class="fixed top-1 right-20 bg-white rounded px-4 py-2 font-bold"
         @click="nextTick"
       >
         Tick
       </button>
+
+      <button
+        class="fixed top-1 right-1 bg-white rounded px-4 py-2 font-bold"
+        @click="quit"
+      >
+        Quit
+      </button>
+
+      <transition
+        enter-active-class="transition duration-100 ease-out"
+        enter-from-class="transform scale-95 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-75 ease-in"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-95 opacity-0"
+      >
+        <div
+          v-if="showQuit"
+          class="fixed z-50 inset-0 flex items-center justify-center"
+        >
+          <div class="absolute inset-0 bg-sky-800 bg-opacity-80" />
+          <div class="relative z-10 p-4 rounded bg-white shadow-xl">
+            <h2 class="text-lg font-bold">
+              Are you sure you want to quit?
+            </h2>
+            <div class="flex space-x-4 items-center justify-center mt-4">
+              <button
+                class="rounded py-2 px-6 bg-gray-200"
+                @click="showQuit = false"
+              >
+                No
+              </button>
+              <button
+                class="rounded py-2 px-6 bg-sky-700 text-white"
+                @click="quit2"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      </transition>
 
       <div class="fixed top-1 left-1/2 transform -translate-x-1/2 bg-white rounded px-4 py-2 font-bold w-20 text-center">
         {{ time }}
@@ -141,6 +183,8 @@ import TWEEN from '@tweenjs/tween.js'
 import { mainMachine } from '#/state-machines/main'
 import { useMachine } from '@xstate/vue'
 
+import { gameService } from '#/state-machines/game'
+
 import renderer, { initRenderer, initStats, stats } from '#/renderer'
 import controls from '#/controls'
 import camera from '#/camera'
@@ -167,7 +211,7 @@ onMounted(() => {
 
   // Refactor
   service.onTransition(async (state) => {
-    console.log('service transition')
+    console.log('service transition', state)
 
     /**
      * The intro should animate in.
@@ -301,6 +345,17 @@ const logStats = () => {
 
 const nextTick = () => {
   BoardScene.nextTick()
+}
+
+const showQuit = ref(false)
+const quit = () => {
+  showQuit.value = true
+}
+
+const quit2 = () => {
+  console.log('quit')
+  showQuit.value = false
+  send('GAME_OUT')
 }
 
 const selectPlane = (id) => {
