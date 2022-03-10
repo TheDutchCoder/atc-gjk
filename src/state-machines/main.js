@@ -36,13 +36,14 @@ export const mainMachine = createMachine({
     },
     gamePlaying: {
       tags: 'board',
-      invoke: {
-        src: gameMachine,
-        onDone: 'gameOut',
-      },
-      // on: {
-      //   GAME_OUT: 'gameOut'
+      // invoke: {
+      //   id: 'gameMachine',
+      //   src: gameMachine,
+      //   onDone: 'gameOut',
       // },
+      on: {
+        GAME_OUT: 'gameOut',
+      },
     },
     gameOut: {
       tags: 'board',
