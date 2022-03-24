@@ -148,7 +148,6 @@ export default class GameScene {
    * Triggers all the "in" animations for the game elements.
    */
   async animateIn () {
-    this._airplanes.forEach(plane => plane.unsetGhost()) // TMP
     await Promise.all([...this._elements, ...this._airplanes].map(prop => prop.animateIn()))
 
     return Promise.resolve()

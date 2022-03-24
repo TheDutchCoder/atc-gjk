@@ -143,7 +143,7 @@
                 :key="plane.index"
                 :class="index % 2 === 0 ? 'bg-slate-50': ''"
                 class="cursor-pointer hover:bg-slate-100 transition-colors"
-                @click="selectPlane(plane.index)"
+                @click="selectPlane(plane._id)"
               >
                 <td class="py-1 px-2">
                   <div class="inline-block bg-green-100 rounded-full border border-green-300 px-2 text-green-700">
@@ -198,7 +198,9 @@ import BoardScene from '#/classes/scenes/board-scene'
 const { state, send, service } = useMachine(mainMachine)
 
 const scheduleOpen = ref(true)
-const schedule = computed(() => BoardScene._board._airplanesQueue)
+const schedule = computed(() => BoardScene._board._airplanesQueue.sort((a, b) => {
+  return a.startTime < b.startTime ? -1 : a.startTime > b.startTime ? 1 : 0
+}))
 
 const time = computed(() => formatTime(BoardScene._tick.value))
 

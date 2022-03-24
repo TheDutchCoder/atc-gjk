@@ -148,10 +148,10 @@ boardScene.checkCollisions = () => {
 
 boardScene.selectPlane = (id) => {
   boardScene._airplanes.forEach(plane => {
-    plane.unSelect()
+    plane.unsetSelected()
 
     if (plane._id === id) {
-      plane.select()
+      plane.setSelected()
     }
   })
 }
