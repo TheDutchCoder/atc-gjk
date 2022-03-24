@@ -8,7 +8,6 @@ import {
   Mesh,
   Group,
   Color,
-  Euler,
 } from 'three'
 
 import {
@@ -18,6 +17,7 @@ import {
 
 import {
   boxGeometry,
+  coneGeometry,
 } from '#geometries'
 
 import {
@@ -26,7 +26,7 @@ import {
   getNextPosition,
 } from '#tools'
 
-const createDefaultPlane = () => {
+const createDefaultPlane = (color) => {
   const hullGeometry = boxGeometry.clone()
   hullGeometry.scale(1, 1, 2)
   setPoint(0, hullGeometry, -0.2, -0.1)
@@ -210,28 +210,42 @@ const createDefaultPlane = () => {
   ])
 
 
+  const selectorGeometry = coneGeometry.clone()
+  selectorGeometry.scale(1, 0.35, 1)
+  selectorGeometry.rotateX(Math.PI)
+  selectorGeometry.translate(0, 2, 0)
+
+  const selectorGeometries = mergeBufferGeometries([
+    selectorGeometry,
+  ])
+
+
   const plane = new Group()
 
   /**
    * Assign materials to the eshes.
    */
   const baseMaterial = defaultMaterial.clone()
+  baseMaterial.color.set(color)
   baseMaterial.name = 'base'
 
   const screenMaterial = glassMaterial.clone()
   const engineMaterial = defaultMaterial.clone()
   const nutMaterial = defaultMaterial.clone()
   const propMaterial = defaultMaterial.clone()
+  const selectorMaterial = defaultMaterial.clone()
 
   const screenColor = new Color(0xe2eff4)
   const propColor = new Color(0x000000)
   const nutColor = new Color(0x99684a)
   const engineColor = new Color(0xffffff)
+  const selectorColor = new Color(0x00ff00)
 
   screenMaterial.color.set(screenColor)
   engineMaterial.color.set(engineColor)
   nutMaterial.color.set(nutColor)
   propMaterial.color.set(propColor)
+  selectorMaterial.color.set(selectorColor)
 
   const baseMesh = new Mesh(baseGeometries, baseMaterial)
   const glassMesh = new Mesh(glassGeometries, screenMaterial)
@@ -240,6 +254,9 @@ const createDefaultPlane = () => {
   const blackDynamicMesh = new Mesh(blackDynamicGeometries, propMaterial)
   blackDynamicMesh.name = 'props'
   const brownMesh = new Mesh(brownGeometries, nutMaterial)
+  const selectorMesh = new Mesh(selectorGeometries, selectorMaterial)
+  selectorMesh.name = 'selector'
+  selectorMesh.visible = false
 
   plane.add(
     baseMesh,
@@ -247,7 +264,8 @@ const createDefaultPlane = () => {
     metalMesh,
     blackStaticMesh,
     blackDynamicMesh,
-    brownMesh
+    brownMesh,
+    selectorMesh
   )
 
   return plane
@@ -360,14 +378,6 @@ export default class Airplane {
     return this
   }
 
-  select = () => {
-    this._isSelected = true
-  }
-
-  unSelect = () => {
-    this._isSelected = false
-  }
-
   animate = () => this.animateIdle()
 
   updateAnimation (plane, from) {
@@ -443,6 +453,11 @@ export default class Airplane {
       if (child.name === 'props') {
         child.rotation.z += 0.3
       }
+
+      if (child.name === 'selector') {
+        child.rotation.y += 0.01
+        child.position.y += bob
+      }
     })
 
     this._tick++
@@ -457,7 +472,7 @@ export default class Airplane {
   create () {
     this._spawned = true
 
-    const plane = createDefaultPlane()
+    const plane = createDefaultPlane(this._color)
 
     plane.position.x = this._position.x * 10
     plane.position.z = this._position.z * 10
@@ -471,8 +486,6 @@ export default class Airplane {
     plane.rotation.y = this._direction * (Math.PI / -4)
 
     this._model = plane
-
-    this.setGhost()
   }
 
   /**
@@ -553,7 +566,7 @@ export default class Airplane {
         child.material.color.set(new Color(0xffffff))
       }
 
-      if (child.material) {
+      if (child.material && child.material.name !== 'selector') {
         child.material.transparent = true
         child.material.opacity = 0.75
         child.material.needsUpdate = true
@@ -569,9 +582,30 @@ export default class Airplane {
         child.material.color.set(this._color)
       }
 
-      if (child.material) {
+      if (child.material && child.material.name !== 'selector') {
         child.material.transparent = false
         child.material.opacity = 1
+        child.material.needsUpdate = true
+      }
+    })
+  }
+
+  setSelected () {
+    this._isSelected = true
+
+    this._model.children.forEach(child => {
+      if (child.name === 'selector') {
+        child.visible = false
+      }
+    })
+  }
+
+  unsetSelected () {
+    this._isSelected = false
+
+    this._model.children.forEach(child => {
+      if (child.name === 'selector') {
+        child.visible = true
       }
     })
   }
