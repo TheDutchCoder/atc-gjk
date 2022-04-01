@@ -28,6 +28,8 @@ import {
   getNextPosition,
 } from '#tools'
 
+const ghostColor = new Color(0xffffff)
+
 const createDefaultPlane = (color) => {
   const hullGeometry = boxGeometry.clone()
   hullGeometry.scale(1, 1, 2)
@@ -393,7 +395,7 @@ export default class Airplane {
       isGhost => {
         this._model.children.forEach(child => {
           if (child.material.name === 'base') {
-            child.material.color.set(new Color(0xffffff))
+            child.material.color.set(isGhost ? ghostColor : this._color)
           }
 
           if (child.material && child.material.name !== 'selector') {
