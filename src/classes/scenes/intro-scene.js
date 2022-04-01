@@ -63,6 +63,7 @@ introScene.start = () => {
   // Add an airplane.
   const airplane = new Airplane({ x: 0, y: 1, z: 0 }, 1, { x: 0, y: 0, z: 0 }, 1, 0)
   introScene.addAirplane(airplane)
+  console.log(airplane)
 
   // Add the dirt base.
   Dirt.add()

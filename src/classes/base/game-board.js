@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid'
+
 import Dirt from '#/classes/tiles/dirt'
 import Forest from '#/classes/tiles/forest'
 import Airfield from '#/classes/tiles/airfield'
@@ -45,6 +47,8 @@ export default class GameBoard {
    * The amount of airplanes.
    */
   _airplanes = 0
+
+  _p = []
 
   /**
    * The complete queue of all airplanes during the game.
@@ -182,7 +186,7 @@ export default class GameBoard {
 
       // Add airplanes to the queue
       this._airplanesQueue.push({
-        index: i,
+        id: new uuidv4(),
         start: {
           position: startPosition,
           direction: startDirection,
@@ -226,7 +230,9 @@ export default class GameBoard {
     // DEBUG
 
     // Sort the planes by startTime
-    this._airplanesQueue.sort((plane1, plane2) => plane1.startTime > plane2.startTime)
+    this._airplanesQueue.sort((plane1, plane2) => {
+      return plane1.startTime < plane2.startTime ? -1 : plane1.startTime > plane2.startTime ? 1 : 0
+    })
 
     // const schedule = document.querySelector('#schedule tbody')
 
