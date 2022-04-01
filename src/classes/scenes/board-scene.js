@@ -147,14 +147,22 @@ boardScene.checkCollisions = () => {
 }
 
 boardScene.selectPlane = (id) => {
+  let selected
+
   boardScene._airplanes.forEach(plane => {
     plane.unsetSelected()
 
     if (plane._id === id) {
       console.log('select', id)
       plane.setSelected()
+
+      selected = plane
     }
   })
+
+  console.log(selected)
+
+  return selected
 }
 
 export default boardScene

@@ -300,7 +300,7 @@ export default class Airplane {
    *   0: stay level
    * < 0: go down
    */
-  _targetAltitude = 0
+  _targetAltitude = ref(0)
 
   /**
    * The direction modifier for the airplane.
@@ -372,7 +372,7 @@ export default class Airplane {
     this._direction = direction
     this._endPosition = endPosition
     this._endDirection = endDirection
-    this._targetAltitude = this._position.y
+    this._targetAltitude.value = this._position.y
     this._id = id
     this._name = `GJK`
     this._color = new Color(Math.random() * 0xffffff)
@@ -532,9 +532,9 @@ export default class Airplane {
     let altMod = 0
     let dirMod = 0
 
-    if (this._targetAltitude > this._position.y) {
+    if (this._targetAltitude.value > this._position.y) {
       altMod = 1
-    } else if (this._targetAltitude < this._position.y) {
+    } else if (this._targetAltitude.value < this._position.y) {
       altMod = -1
     }
 
@@ -604,5 +604,9 @@ export default class Airplane {
 
   unsetSelected () {
     this._isSelected.value = false
+  }
+
+  setHeight (height) {
+    this._targetAltitude = height
   }
 }
