@@ -140,10 +140,10 @@
             <tbody class="text-xs">
               <tr
                 v-for="(plane, index) in schedule"
-                :key="plane.index"
-                :class="index % 2 === 0 ? 'bg-slate-50': ''"
-                class="cursor-pointer hover:bg-slate-100 transition-colors"
-                @click="selectPlane(plane._id)"
+                :key="plane.id"
+                :class="selectedPlane === index ? 'bg-sky-500' : index % 2 === 0 ? 'bg-slate-50 hover:bg-slate-100' : 'hover:bg-slate-100'"
+                class="cursor-pointer transition-colors"
+                @click="selectPlane(plane.id, index)"
               >
                 <td class="py-1 px-2">
                   <div class="inline-block bg-green-100 rounded-full border border-green-300 px-2 text-green-700">
@@ -152,7 +152,7 @@
                 </td>
                 <td class="py-1 px-2">
                   <div class="p-2 font-bold">
-                    GJK-{{ (plane.index).toString().padStart(3, '0') }}
+                    GJK
                   </div>
                 </td>
                 <td class="py-1 px-2">
@@ -178,12 +178,10 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed, watch } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import TWEEN from '@tweenjs/tween.js'
 import { mainMachine } from '#/state-machines/main'
 import { useMachine } from '@xstate/vue'
-
-import { gameService } from '#/state-machines/game'
 
 import renderer, { initRenderer, initStats, stats } from '#/renderer'
 import controls from '#/controls'
@@ -198,9 +196,7 @@ import BoardScene from '#/classes/scenes/board-scene'
 const { state, send, service } = useMachine(mainMachine)
 
 const scheduleOpen = ref(true)
-const schedule = computed(() => BoardScene._board._airplanesQueue.sort((a, b) => {
-  return a.startTime < b.startTime ? -1 : a.startTime > b.startTime ? 1 : 0
-}))
+const schedule = computed(() => BoardScene._board._airplanesQueue)
 
 const time = computed(() => formatTime(BoardScene._tick.value))
 
@@ -360,10 +356,13 @@ const quit2 = () => {
   send('GAME_OUT')
 }
 
-const selectPlane = (id) => {
-  console.log('select:', id)
+const selectPlane = (id, index) => {
+  console.log('select plane', id, index)
   BoardScene.selectPlane(id)
+  selectedPlane.value = index
 }
+
+const selectedPlane = ref(null)
 </script>
 
 <style>
