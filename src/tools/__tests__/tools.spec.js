@@ -9,6 +9,7 @@ import {
   getNextPosition,
   getPrevPosition,
   formatTime,
+  mapDirection,
 } from '#tools'
 
 suite('tools', () => {
@@ -280,5 +281,16 @@ suite('tools', () => {
     expect(formatTime(time1)).toBe('00:00')
     expect(formatTime(time2)).toBe('08:15')
     expect(formatTime(time3)).toBe('23:45')
+  })
+
+  test('mapDirection', () => {
+    expect(mapDirection(0)).toBe('N')
+    expect(mapDirection(1)).toBe('NE')
+    expect(mapDirection(2)).toBe('E')
+    expect(mapDirection(3)).toBe('SE')
+    expect(mapDirection(4)).toBe('S')
+    expect(mapDirection(5)).toBe('SW')
+    expect(mapDirection(6)).toBe('W')
+    expect(mapDirection(7)).toBe('NW')
   })
 })

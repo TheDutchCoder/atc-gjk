@@ -167,11 +167,20 @@
       </div>
 
       <div class="fixed bottom-24 left-2 bg-white rounded-lg text-sm shadow-lg overflow-hidden">
-        <div class="grid grid-cols-2">
-          <button class="h-8 hover:bg-slate-200 flex items-center justify-center">
+        <div class="grid grid-cols-3">
+          <button
+            class="h-8 hover:bg-slate-200 flex items-center justify-center"
+            :class="selectedPlane && selectedPlane._targetDirection < 0 ? 'bg-red-500' : ''"
+            @click="setDirection(-1)"
+          >
             left
           </button>
-          <button class="h-8 hover:bg-slate-200 flex items-center justify-center">
+          {{ selectedPlane ? mapDirection(selectedPlane._direction) : 'N/A' }}
+          <button
+            class="h-8 hover:bg-slate-200 flex items-center justify-center"
+            :class="selectedPlane && selectedPlane._targetDirection > 0 ? 'bg-red-500' : ''"
+            @click="setDirection(1)"
+          >
             right
           </button>
         </div>
@@ -211,7 +220,7 @@ import controls from '#/controls'
 import camera from '#/camera'
 import clock from '#/clock'
 
-import { formatTime } from '#/tools'
+import { formatTime, mapDirection } from '#/tools'
 
 import IntroScene from '#/classes/scenes/intro-scene'
 import BoardScene from '#/classes/scenes/board-scene'
@@ -395,6 +404,12 @@ const selectPlane = (id, index) => {
 const setHeight = (height) => {
   if (selectedPlane.value) {
     selectedPlane.value.setHeight(height)
+  }
+}
+
+const setDirection = (direction) => {
+  if (selectedPlane.value) {
+    selectedPlane.value.setDirection(direction)
   }
 }
 

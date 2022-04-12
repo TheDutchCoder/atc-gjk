@@ -617,4 +617,8 @@ export default class Airplane {
   setHeight (height) {
     this._targetAltitude = height
   }
+
+  setDirection (direction) {
+    this._targetDirection += direction
+  }
 }
