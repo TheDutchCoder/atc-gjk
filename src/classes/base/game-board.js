@@ -186,7 +186,7 @@ export default class GameBoard {
 
       // Add airplanes to the queue
       this._airplanesQueue.push({
-        id: new uuidv4(),
+        id: uuidv4(),
         start: {
           position: startPosition,
           direction: startDirection,
@@ -202,18 +202,18 @@ export default class GameBoard {
     }
 
     // DEBUG
-    this._airplanesQueue.push({
-      index: 1000,
-      start: {
-        position: { x: 3, y: 1, z: -6 },
-        direction: 4,
-      },
-      end: {
-        position: { x: -5, y: 1, z: 0 },
-        direction: 4,
-      },
-      startTime: 1,
-    })
+    // this._airplanesQueue.push({
+    //   id: uuidv4(),
+    //   start: {
+    //     position: { x: 3, y: 1, z: -6 },
+    //     direction: 4,
+    //   },
+    //   end: {
+    //     position: { x: -5, y: 1, z: 0 },
+    //     direction: 4,
+    //   },
+    //   startTime: 1,
+    // })
 
     // this._airplanesQueue.push({
     //   index: 1001,

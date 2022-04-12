@@ -61,7 +61,7 @@ export default class GameScene {
     Tracks,
   ]
 
-  _airplanes = []
+  _airplanes = ref([])
 
   /**
    * The board in this scene (if any).
@@ -77,7 +77,7 @@ export default class GameScene {
     Clouds._animate()
     // Airplanes._animate()
 
-    this._airplanes.forEach(plane => plane?.animate())
+    this._airplanes.value.forEach(plane => plane?.animate())
   }
 
   /**
@@ -112,7 +112,7 @@ export default class GameScene {
    * Adds an airplane to the scene.
    */
   addAirplane (airplane) {
-    this._airplanes.push(airplane)
+    this._airplanes.value.push(airplane)
     this._scene.add(airplane._model)
   }
 
@@ -148,7 +148,7 @@ export default class GameScene {
    * Triggers all the "in" animations for the game elements.
    */
   async animateIn () {
-    await Promise.all([...this._elements, ...this._airplanes].map(prop => prop.animateIn()))
+    await Promise.all([...this._elements, ...this._airplanes.value].map(prop => prop.animateIn()))
 
     return Promise.resolve()
   }
@@ -157,7 +157,7 @@ export default class GameScene {
    * Triggers all the "out" animations for the game elements.
    */
   async animateOut () {
-    await Promise.all([...this._elements, ...this._airplanes].map(prop => prop.animateOut()))
+    await Promise.all([...this._elements, ...this._airplanes.value].map(prop => prop.animateOut()))
 
     return Promise.resolve()
   }
@@ -177,6 +177,6 @@ export default class GameScene {
 
   // TMP
   checkGhosts () {
-    this._airplanes.forEach(plane => plane.unsetGhost())
+    this._airplanes.value.forEach(plane => plane.unsetGhost())
   }
 }

@@ -345,3 +345,19 @@ export const formatTime = (tick) => {
 
   return `${hours.padStart(2, '0')}:${quarters.padStart(2, '0')}`
 }
+
+
+export const mapDirection = (direction) => {
+  const map = {
+    0: 'N',
+    1: 'NE',
+    2: 'E',
+    3: 'SE',
+    4: 'S',
+    5: 'SW',
+    6: 'W',
+    7: 'NW',
+  }
+
+  return map[direction]
+}

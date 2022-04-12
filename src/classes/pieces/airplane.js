@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+// import { ref, watch } from 'vue'
 
 import TWEEN from '@tweenjs/tween.js'
 
@@ -330,12 +330,12 @@ export default class Airplane {
   /**
    * Whether the airplane is currently uncontrollable.
    */
-  _isGhost = ref(false)
+  _isGhost = false
 
   /**
    * Whether the airplane is currently selected.
    */
-  _isSelected = ref(false)
+  _isSelected = false
 
   /**
    * The name/flight-number of the airplane.
@@ -378,34 +378,6 @@ export default class Airplane {
     this._color = new Color(Math.random() * 0xffffff)
 
     this.create()
-
-    watch(
-      this._isSelected,
-      selected => {
-        this._model.children.forEach(child => {
-          if (child.name === 'selector') {
-            child.visible = selected
-          }
-        })
-      }
-    )
-
-    watch(
-      this._isGhost,
-      isGhost => {
-        this._model.children.forEach(child => {
-          if (child.material.name === 'base') {
-            child.material.color.set(isGhost ? ghostColor : this._color)
-          }
-
-          if (child.material && child.material.name !== 'selector') {
-            child.material.transparent = isGhost
-            child.material.opacity = isGhost ? 0.75 : 1
-            child.material.needsUpdate = true
-          }
-        })
-      }
-    )
 
     return this
   }
@@ -591,18 +563,62 @@ export default class Airplane {
   }
 
   setGhost () {
-    this._isGhost.value = true
+    this._isGhost = true
+
+    this._model.children.forEach(child => {
+      if (child.material.name === 'base') {
+        child.material.color.set(ghostColor)
+      }
+
+      if (child.material && child.material.name !== 'selector') {
+        child.material.transparent = true
+        child.material.opacity = 0.75
+        child.material.needsUpdate = true
+      }
+    })
   }
 
   unsetGhost () {
-    this._isGhost.value = false
+    this._isGhost = false
+
+    this._model.children.forEach(child => {
+      if (child.material.name === 'base') {
+        child.material.color.set(this._color)
+      }
+
+      if (child.material && child.material.name !== 'selector') {
+        child.material.transparent = false
+        child.material.opacity = 1
+        child.material.needsUpdate = true
+      }
+    })
   }
 
   setSelected () {
-    this._isSelected.value = true
+    this._isSelected = true
+
+    this._model.children.forEach(child => {
+      if (child.name === 'selector') {
+        child.visible = true
+      }
+    })
   }
 
   unsetSelected () {
-    this._isSelected.value = false
+    this._isSelected = false
+
+    this._model.children.forEach(child => {
+      if (child.name === 'selector') {
+        child.visible = false
+      }
+    })
+  }
+
+  setHeight (height) {
+    this._targetAltitude = height
+  }
+
+  setDirection (direction) {
+    this._targetDirection += direction
   }
 }

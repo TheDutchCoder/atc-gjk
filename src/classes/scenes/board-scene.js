@@ -69,7 +69,7 @@ boardScene.nextTick = async () => {
   boardScene._tick.value++
 
   // Move existing planes every 15 minutes
-  const moves = Promise.all(boardScene._airplanes.map(plane => plane.next()))
+  const moves = Promise.all(boardScene._airplanes.value.map(plane => plane.next()))
   const spawns = Promise.all(boardScene._board._airplanesQueue.filter(plane => plane.startTime === boardScene._tick.value).map(plane => {
     const airplane = new Airplane(plane.start.position, plane.start.direction, plane.end.position, plane.end.direction, plane.id)
     boardScene.addAirplane(airplane)
@@ -98,7 +98,7 @@ boardScene.checkGhosts = () => {
   const maxZ = Math.abs(minZ)
 
   Clouds._tiles.forEach(cloud => {
-    boardScene._airplanes.forEach(plane => {
+    boardScene._airplanes.value.forEach(plane => {
       const { x: cX, y: cY, z: cZ } = cloud.position
       const { x: pX, y: pY, z: pZ } = plane._position
       if (
@@ -117,7 +117,7 @@ boardScene.checkGhosts = () => {
 }
 
 boardScene.checkCollisions = () => {
-  boardScene._airplanes.forEach(plane1 => {
+  boardScene._airplanes.value.forEach(plane1 => {
     const { x: p1X, y: p1Y, z: p1Z } = plane1._position
 
     // Check for collisions with the ground (if there's no airfield).
@@ -135,7 +135,7 @@ boardScene.checkCollisions = () => {
     }
 
     // Check for collisions with other planes that are not this plane.
-    boardScene._airplanes.forEach(plane2 => {
+    boardScene._airplanes.value.forEach(plane2 => {
       if (plane1._id !== plane2._id) {
         const { x: p2X, y: p2Y, z: p2Z } = plane2._position
         if (p1X === p2X && p1Y === p2Y && p1Z === p2Z) {
@@ -147,14 +147,22 @@ boardScene.checkCollisions = () => {
 }
 
 boardScene.selectPlane = (id) => {
-  boardScene._airplanes.forEach(plane => {
+  // let selected
+
+  boardScene._airplanes.value.forEach(plane => {
     plane.unsetSelected()
 
     if (plane._id === id) {
       console.log('select', id)
       plane.setSelected()
+
+      // selected = plane
     }
   })
+
+  // console.log(selected)
+
+  // return selected
 }
 
 export default boardScene
