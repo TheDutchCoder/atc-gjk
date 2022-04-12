@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+// import { ref, watch } from 'vue'
 
 import TWEEN from '@tweenjs/tween.js'
 
@@ -300,7 +300,7 @@ export default class Airplane {
    *   0: stay level
    * < 0: go down
    */
-  _targetAltitude = ref(0)
+  _targetAltitude = 0
 
   /**
    * The direction modifier for the airplane.
@@ -330,12 +330,12 @@ export default class Airplane {
   /**
    * Whether the airplane is currently uncontrollable.
    */
-  _isGhost = ref(false)
+  _isGhost = false
 
   /**
    * Whether the airplane is currently selected.
    */
-  _isSelected = ref(false)
+  _isSelected = false
 
   /**
    * The name/flight-number of the airplane.
@@ -372,40 +372,12 @@ export default class Airplane {
     this._direction = direction
     this._endPosition = endPosition
     this._endDirection = endDirection
-    this._targetAltitude.value = this._position.y
+    this._targetAltitude = this._position.y
     this._id = id
     this._name = `GJK`
     this._color = new Color(Math.random() * 0xffffff)
 
     this.create()
-
-    watch(
-      this._isSelected,
-      selected => {
-        this._model.children.forEach(child => {
-          if (child.name === 'selector') {
-            child.visible = selected
-          }
-        })
-      }
-    )
-
-    watch(
-      this._isGhost,
-      isGhost => {
-        this._model.children.forEach(child => {
-          if (child.material.name === 'base') {
-            child.material.color.set(isGhost ? ghostColor : this._color)
-          }
-
-          if (child.material && child.material.name !== 'selector') {
-            child.material.transparent = isGhost
-            child.material.opacity = isGhost ? 0.75 : 1
-            child.material.needsUpdate = true
-          }
-        })
-      }
-    )
 
     return this
   }
@@ -532,9 +504,9 @@ export default class Airplane {
     let altMod = 0
     let dirMod = 0
 
-    if (this._targetAltitude.value > this._position.y) {
+    if (this._targetAltitude > this._position.y) {
       altMod = 1
-    } else if (this._targetAltitude.value < this._position.y) {
+    } else if (this._targetAltitude < this._position.y) {
       altMod = -1
     }
 
@@ -591,19 +563,55 @@ export default class Airplane {
   }
 
   setGhost () {
-    this._isGhost.value = true
+    this._isGhost = true
+
+    this._model.children.forEach(child => {
+      if (child.material.name === 'base') {
+        child.material.color.set(ghostColor)
+      }
+
+      if (child.material && child.material.name !== 'selector') {
+        child.material.transparent = true
+        child.material.opacity = 0.75
+        child.material.needsUpdate = true
+      }
+    })
   }
 
   unsetGhost () {
-    this._isGhost.value = false
+    this._isGhost = false
+
+    this._model.children.forEach(child => {
+      if (child.material.name === 'base') {
+        child.material.color.set(this._color)
+      }
+
+      if (child.material && child.material.name !== 'selector') {
+        child.material.transparent = false
+        child.material.opacity = 1
+        child.material.needsUpdate = true
+      }
+    })
   }
 
   setSelected () {
-    this._isSelected.value = true
+    this._isSelected = true
+
+    this._model.children.forEach(child => {
+      if (child.name === 'selector') {
+        child.visible = true
+      }
+    })
   }
 
   unsetSelected () {
-    this._isSelected.value = false
+    this._isSelected = false
+
+    this._model.children.forEach(child => {
+      if (child.name === 'selector') {
+        child.visible = false
+      }
+    })
   }
 
   setHeight (height) {
