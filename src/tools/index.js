@@ -361,3 +361,54 @@ export const mapDirection = (direction) => {
 
   return map[direction]
 }
+
+
+export const getRandomDestination = (width, depth) => {
+  const minX = Math.ceil(0 - (width / 2)) -1
+  const maxX = Math.abs(minX)
+  const minZ = Math.ceil(0 - (depth / 2)) - 1
+  const maxZ = Math.abs(minZ)
+
+  const optionsX = [minX, maxX, 0]
+  const optionsZ1 = [minZ, maxZ]
+  const optionsZ2 = [minZ, maxZ, 0]
+
+  const x = randomItemFromArray(optionsX)
+  const y = Math.ceil(Math.random() * 9)
+  const z = x === 0 ? randomItemFromArray(optionsZ1) : randomItemFromArray(optionsZ2)
+
+  const position = { x, y, z }
+
+  return {
+    position,
+    name: `${getWindDirection(position)}${y}`,
+  }
+}
+
+export const getWindDirection = (coordinates) => {
+  const { x, z } = coordinates
+
+  if (x === 0) {
+    if (z > 0) {
+      return 'S'
+    } else if (z < 0) {
+      return 'N'
+    }
+  } else if (x < 0) {
+    if (z < 0) {
+      return 'NW'
+    } else if (z === 0) {
+      return 'W'
+    } else if (z > 0) {
+      return 'SW'
+    }
+  } else if (x > 0) {
+    if (z < 0) {
+      return 'NE'
+    } else if (z === 0) {
+      return 'E'
+    } else if (z > 0) {
+      return 'SE'
+    }
+  }
+}

@@ -10,6 +10,8 @@ import {
   getPrevPosition,
   formatTime,
   mapDirection,
+  getRandomDestination,
+  getWindDirection,
 } from '#tools'
 
 suite('tools', () => {
@@ -292,5 +294,30 @@ suite('tools', () => {
     expect(mapDirection(5)).toBe('SW')
     expect(mapDirection(6)).toBe('W')
     expect(mapDirection(7)).toBe('NW')
+  })
+
+  test('getRandomDestination', () => {
+    let width = 3
+    let height = 5
+
+    for (let i = 0; i < 100; i++) {
+      let result = getRandomDestination(width, height)
+
+      expect(result.position.x === -2 || result.position.x === 2 || result.position.x === 0).toBeTruthy()
+      expect(result.position.y).toBeGreaterThanOrEqual(1)
+      expect(result.position.y).toBeLessThanOrEqual(9)
+      expect(result.position.z === -3 || result.position.z === 3 || result.position.z === 0).toBeTruthy()
+    }
+  })
+
+  test('getWindDirection', () => {
+    expect(getWindDirection({ x: 0, y: 1, z: -1 })).toBe('N')
+    expect(getWindDirection({ x: 1, y: 1, z: -1 })).toBe('NE')
+    expect(getWindDirection({ x: 1, y: 1, z: 0 })).toBe('E')
+    expect(getWindDirection({ x: 1, y: 1, z: 1 })).toBe('SE')
+    expect(getWindDirection({ x: 0, y: 1, z: 1 })).toBe('S')
+    expect(getWindDirection({ x: -1, y: 1, z: 1 })).toBe('SW')
+    expect(getWindDirection({ x: -1, y: 1, z: 0 })).toBe('W')
+    expect(getWindDirection({ x: -1, y: 1, z: -1 })).toBe('NW')
   })
 })

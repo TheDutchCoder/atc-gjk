@@ -157,7 +157,7 @@
                 </td>
                 <td class="py-1 px-2">
                   <div class="inline-block bg-blue-100 rounded-full border border-blue-300 px-2 text-blue-700">
-                    NW-1
+                    {{ plane.end.position.name }}
                   </div>
                 </td>
               </tr>
