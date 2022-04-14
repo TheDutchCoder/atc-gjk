@@ -11,6 +11,7 @@ import {
   formatTime,
   mapDirection,
   getRandomDestination,
+  getRandomAirport,
   getWindDirection,
 } from '#tools'
 
@@ -307,6 +308,20 @@ suite('tools', () => {
       expect(result.position.y).toBeGreaterThanOrEqual(1)
       expect(result.position.y).toBeLessThanOrEqual(9)
       expect(result.position.z === -3 || result.position.z === 3 || result.position.z === 0).toBeTruthy()
+    }
+  })
+
+  test('getRandomAirport', () => {
+    const airfields = [
+      { position: { x: 1, y: 0, z: 1 }, direction: 0, name: 'AP1' },
+      { position: { x: 3, y: 0, z: 3 }, direction: 6, name: 'AP2' },
+      { position: { x: -2, y: 0, z: 2 }, direction: 3, name: 'AP3' },
+    ]
+
+    for (let i = 0; i < 100; i++) {
+      let result = getRandomAirport(airfields)
+
+      expect(airfields.includes(result)).toBeTruthy()
     }
   })
 

@@ -385,6 +385,10 @@ export const getRandomDestination = (width, depth) => {
   }
 }
 
+export const getRandomAirport = (airports) => {
+  return randomItemFromArray(airports)
+}
+
 export const getWindDirection = (coordinates) => {
   const { x, z } = coordinates
 

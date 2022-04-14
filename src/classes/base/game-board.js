@@ -9,6 +9,7 @@ import Clouds from '#/classes/pieces/clouds'
 import {
   randomRoundNumber,
   getRandomDestination,
+  getRandomAirport,
 } from '#tools/index'
 
 import { difficulties, dimensions, airfields, clouds, airplanes } from '#/constants'
@@ -135,7 +136,7 @@ export default class GameBoard {
       if (result) {
         const { x, z, tile } = result
 
-        const airfield = { position: tile, direction: randomRoundNumber(0, 7) }
+        const airfield = { position: tile, direction: randomRoundNumber(0, 7), name: `AP${airfields.length + 1}` }
 
         airfields.push(airfield)
         this._tiles[z][x] = new Airfield(airfield)
@@ -178,7 +179,8 @@ export default class GameBoard {
       const startDirection = getStartDirection(startPosition, this._width, this._depth)
 
       // Destination position & direction
-      const endPosition = getRandomDestination(this._width, this._depth)
+      const isAirfield = Math.random() > 0.3
+      const endPosition = isAirfield ? getRandomAirport(airfields) : getRandomDestination(this._width, this._depth)
       const endDirection = getStartDirection(endPosition, this._width, this._depth) // wat
 
       // Add airplanes to the queue
