@@ -146,7 +146,10 @@
                 @click="selectPlane(plane.id, index)"
               >
                 <td class="py-1 px-2">
-                  <div class="inline-block bg-green-100 rounded-full border border-green-300 px-2 text-green-700">
+                  <div
+                    class="inline-block rounded-full border px-2 "
+                    :class="plane.startTime < BoardScene._tick.value ? 'bg-green-100 border-green-300 text-green-700' : plane.startTime === BoardScene._tick.value ? 'bg-orange-100 border-orange-300 text-orange-700' : 'bg-blue-100 border-blue-300 text-blue-700'"
+                  >
                     {{ formatTime(plane.startTime) }}
                   </div>
                 </td>
