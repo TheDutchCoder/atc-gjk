@@ -70,6 +70,8 @@ export default class GameScene {
 
   _tick = ref(-1)
 
+  _score = ref(0)
+
   /**
    * Animates objects in the scene.
    */

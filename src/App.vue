@@ -104,7 +104,7 @@
       </transition>
 
       <div class="fixed top-1 left-1/2 transform -translate-x-1/2 bg-white rounded px-4 py-2 font-bold w-20 text-center">
-        {{ time }}
+        {{ time }} {{ BoardScene._score }}
       </div>
 
       <div class="fixed bottom-2 right-2 bg-white rounded-lg text-sm shadow-lg overflow-hidden">

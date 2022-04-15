@@ -80,8 +80,8 @@ boardScene.nextTick = async () => {
   await spawns
 
   boardScene.checkGhosts()
-
-  boardScene.checkCollisions()
+  // boardScene.checkCollisions()
+  boardScene.checkDestinations()
 }
 
 /**
@@ -143,6 +143,21 @@ boardScene.checkCollisions = () => {
         }
       }
     })
+  })
+}
+
+boardScene.checkDestinations = () => {
+  boardScene._airplanes.value.forEach(plane => {
+    const { x: curX, y: curY, z: curZ } = plane._position
+    const curD = plane.direction
+
+    const { x: endX, y: endY, z: endZ } = plane._endPosition.position
+    const endD = plane._endPosition.direction
+
+    if (curX === endX && curY === endY && curZ === endZ && curD === endD) {
+      console.log('plane at destination!', plane)
+      boardScene._score.value += 100
+    }
   })
 }
 
