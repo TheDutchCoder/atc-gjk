@@ -247,8 +247,6 @@ onMounted(() => {
 
   // Refactor
   service.onTransition(async (state) => {
-    console.log('service transition', state)
-
     /**
      * The intro should animate in.
      */
@@ -397,14 +395,10 @@ const quit2 = () => {
 const selectedPlane = ref(null)
 
 const selectPlane = (id, index) => {
-  console.log('select plane', id, index)
-  console.log(BoardScene._airplanes.value)
   BoardScene.selectPlane(id)
-  // console.log('select plane', selectPlane.value)
   selectedPlane.value = BoardScene._airplanes.value.find(plane => plane._isSelected)
 
-  console.log(selectedPlane.value)
-  console.log(BoardScene._airplanes.value)
+  console.log('select plane:', selectedPlane.value)
 }
 
 const setHeight = (height) => {

@@ -34,7 +34,3 @@ export const gameMachine = createMachine({
 })
 
 export const gameService = interpret(gameMachine)
-
-gameService.onTransition(state => {
-  console.log('hm', state)
-})
