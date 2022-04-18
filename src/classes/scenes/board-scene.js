@@ -73,6 +73,7 @@ boardScene.nextTick = async () => {
   const spawns = Promise.all(boardScene._board._airplanesQueue.filter(plane => plane.startTime === boardScene._tick.value).map(plane => {
     const airplane = new Airplane(plane.start.position, plane.start.direction, plane.end.position, plane.end.direction, plane.id)
     boardScene.addAirplane(airplane)
+    airplane.setGhost()
     return airplane.animateIn(0, 1000)
   }))
 
