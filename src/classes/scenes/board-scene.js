@@ -83,7 +83,9 @@ boardScene.nextTick = async () => {
   boardScene.checkGhosts()
   // boardScene.checkCollisions()
   boardScene.checkDestinations()
+  boardScene.checkOutOfBounds()
 }
+
 
 /**
  * When airplanes fly into clouds, or fly 1 square off the board, they become
@@ -156,29 +158,40 @@ boardScene.checkDestinations = () => {
     const endD = plane._endPosition.direction
 
     if (curX === endX && curY === endY && curZ === endZ && curD === endD) {
-      console.log('plane at destination!', plane)
       boardScene._score.value += 100
+
+      plane.setGhost()
+    } else if (curY === 0) {
+      console.log('game over!')
+      gameService.send('LOSE')
+    }
+  })
+}
+
+boardScene.checkOutOfBounds = () => {
+  boardScene._airplanes.value.forEach(plane => {
+    const { x: curX, z: curZ } = plane._position
+    const minX = 0 - Math.ceil(boardScene._board._width / 2)
+    const minZ = 0 - Math.ceil(boardScene._board._depth / 2)
+    const maxX = Math.abs(minX)
+    const maxZ = Math.abs(minZ)
+
+    if (curX < minX || curX > maxX || curZ < minZ || curZ > maxZ) {
+      boardScene._score.value -= 500
+
+      boardScene.removeAirplane(plane)
     }
   })
 }
 
 boardScene.selectPlane = (id) => {
-  // let selected
-
   boardScene._airplanes.value.forEach(plane => {
     plane.unsetSelected()
 
     if (plane._id === id) {
-      console.log('select', id)
       plane.setSelected()
-
-      // selected = plane
     }
   })
-
-  // console.log(selected)
-
-  // return selected
 }
 
 export default boardScene

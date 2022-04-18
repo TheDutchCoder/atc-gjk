@@ -118,6 +118,13 @@ export default class GameScene {
     this._scene.add(airplane._model)
   }
 
+  removeAirplane (airplane) {
+    this._airplanes.value = this._airplanes.value.filter(plane => plane._id !== airplane._id)
+
+    const plane = this._scene.getObjectById(airplane._model.id)
+    this._scene.remove(plane)
+  }
+
   /**
    * Resets the entire scene to clean up memory when another scene is rendered.
    */
