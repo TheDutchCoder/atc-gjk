@@ -104,7 +104,7 @@
       </transition>
 
       <div class="fixed top-1 left-1/2 transform -translate-x-1/2 bg-white rounded px-4 py-2 font-bold w-20 text-center">
-        {{ time }}
+        {{ time }} {{ BoardScene._score }}
       </div>
 
       <div class="fixed bottom-2 right-2 bg-white rounded-lg text-sm shadow-lg overflow-hidden">
@@ -247,8 +247,6 @@ onMounted(() => {
 
   // Refactor
   service.onTransition(async (state) => {
-    console.log('service transition', state)
-
     /**
      * The intro should animate in.
      */
@@ -397,14 +395,10 @@ const quit2 = () => {
 const selectedPlane = ref(null)
 
 const selectPlane = (id, index) => {
-  console.log('select plane', id, index)
-  console.log(BoardScene._airplanes.value)
   BoardScene.selectPlane(id)
-  // console.log('select plane', selectPlane.value)
   selectedPlane.value = BoardScene._airplanes.value.find(plane => plane._isSelected)
 
-  console.log(selectedPlane.value)
-  console.log(BoardScene._airplanes.value)
+  console.log('select plane:', selectedPlane.value)
 }
 
 const setHeight = (height) => {

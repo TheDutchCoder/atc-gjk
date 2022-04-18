@@ -73,6 +73,7 @@ boardScene.nextTick = async () => {
   const spawns = Promise.all(boardScene._board._airplanesQueue.filter(plane => plane.startTime === boardScene._tick.value).map(plane => {
     const airplane = new Airplane(plane.start.position, plane.start.direction, plane.end.position, plane.end.direction, plane.id)
     boardScene.addAirplane(airplane)
+    airplane.setGhost()
     return airplane.animateIn(0, 1000)
   }))
 
@@ -80,9 +81,11 @@ boardScene.nextTick = async () => {
   await spawns
 
   boardScene.checkGhosts()
-
-  boardScene.checkCollisions()
+  // boardScene.checkCollisions()
+  boardScene.checkDestinations()
+  boardScene.checkOutOfBounds()
 }
+
 
 /**
  * When airplanes fly into clouds, or fly 1 square off the board, they become
@@ -146,23 +149,49 @@ boardScene.checkCollisions = () => {
   })
 }
 
-boardScene.selectPlane = (id) => {
-  // let selected
+boardScene.checkDestinations = () => {
+  boardScene._airplanes.value.forEach(plane => {
+    const { x: curX, y: curY, z: curZ } = plane._position
+    const curD = plane._direction
 
+    const { x: endX, y: endY, z: endZ } = plane._endPosition.position
+    const endD = plane._endPosition.direction
+
+    if (curX === endX && curY === endY && curZ === endZ && curD === endD) {
+      boardScene._score.value += 100
+
+      plane.setGhost()
+    } else if (curY === 0) {
+      console.log('game over!')
+      gameService.send('LOSE')
+    }
+  })
+}
+
+boardScene.checkOutOfBounds = () => {
+  boardScene._airplanes.value.forEach(plane => {
+    const { x: curX, z: curZ } = plane._position
+    const minX = 0 - Math.ceil(boardScene._board._width / 2)
+    const minZ = 0 - Math.ceil(boardScene._board._depth / 2)
+    const maxX = Math.abs(minX)
+    const maxZ = Math.abs(minZ)
+
+    if (curX < minX || curX > maxX || curZ < minZ || curZ > maxZ) {
+      boardScene._score.value -= 500
+
+      boardScene.removeAirplane(plane)
+    }
+  })
+}
+
+boardScene.selectPlane = (id) => {
   boardScene._airplanes.value.forEach(plane => {
     plane.unsetSelected()
 
     if (plane._id === id) {
-      console.log('select', id)
       plane.setSelected()
-
-      // selected = plane
     }
   })
-
-  // console.log(selected)
-
-  // return selected
 }
 
 export default boardScene

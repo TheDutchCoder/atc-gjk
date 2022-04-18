@@ -70,6 +70,8 @@ export default class GameScene {
 
   _tick = ref(-1)
 
+  _score = ref(0)
+
   /**
    * Animates objects in the scene.
    */
@@ -114,6 +116,13 @@ export default class GameScene {
   addAirplane (airplane) {
     this._airplanes.value.push(airplane)
     this._scene.add(airplane._model)
+  }
+
+  removeAirplane (airplane) {
+    this._airplanes.value = this._airplanes.value.filter(plane => plane._id !== airplane._id)
+
+    const plane = this._scene.getObjectById(airplane._model.id)
+    this._scene.remove(plane)
   }
 
   /**

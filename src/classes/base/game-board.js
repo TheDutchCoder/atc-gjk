@@ -50,8 +50,6 @@ export default class GameBoard {
    */
   _airplanes = 0
 
-  _p = []
-
   /**
    * The complete queue of all airplanes during the game.
    */
@@ -61,10 +59,6 @@ export default class GameBoard {
    * The tiles that make up the board.
    */
   _tiles = []
-
-  /**
-   * All the clouds on this board.
-   */
 
 
   /**
