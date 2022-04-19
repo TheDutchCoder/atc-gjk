@@ -172,11 +172,15 @@
         </div>
       </div>
 
-      <div class="fixed bottom-24 left-2 bg-white rounded-lg text-sm shadow-lg overflow-hidden">
+      <div
+        class="fixed bottom-24 left-2 bg-white rounded-lg text-sm shadow-lg overflow-hidden"
+        :class="!selectedPlane || selectedPlane?._isGhost ? 'opacity-50' : ''"
+      >
         <div class="grid grid-cols-3">
           <button
             class="h-8 hover:bg-slate-200 flex items-center justify-center"
-            :class="selectedPlane && selectedPlane._targetDirection < 0 ? 'bg-red-500' : ''"
+            :class="selectedPlane?._targetDirection < 0 ? 'bg-red-500' : ''"
+            :disabled="selectedPlane?._isGhost"
             @click="setDirection(-1)"
           >
             left
@@ -184,7 +188,8 @@
           {{ selectedPlane ? mapDirection(selectedPlane._direction) : 'N/A' }}
           <button
             class="h-8 hover:bg-slate-200 flex items-center justify-center"
-            :class="selectedPlane && selectedPlane._targetDirection > 0 ? 'bg-red-500' : ''"
+            :class="selectedPlane?._targetDirection > 0 ? 'bg-red-500' : ''"
+            :disabled="selectedPlane?._isGhost"
             @click="setDirection(1)"
           >
             right
@@ -197,6 +202,7 @@
             :key="height"
             class="w-8 h-8 hover:bg-slate-200 flex items-center justify-center"
             :class="selectedPlane && (selectedPlane._position.y === height || selectedPlane._targetAltitude === height) ? 'bg-red-500' : ''"
+            :disabled="selectedPlane?._isGhost"
             @click="setHeight(height)"
           >
             {{ height }}
@@ -400,13 +406,13 @@ const selectPlane = (id) => {
 }
 
 const setHeight = (height) => {
-  if (selectedPlane.value) {
+  if (selectedPlane.value && !selectedPlane.value._isGhost) {
     selectedPlane.value.setHeight(height)
   }
 }
 
 const setDirection = (direction) => {
-  if (selectedPlane.value) {
+  if (selectedPlane.value && !selectedPlane.value._isGhost) {
     selectedPlane.value.setDirection(direction)
   }
 }
