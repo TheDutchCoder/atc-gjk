@@ -188,7 +188,7 @@ boardScene.selectPlane = (id) => {
   boardScene._airplanes.value.forEach(plane => {
     plane.unsetSelected()
 
-    if (plane._id === id) {
+    if (plane._id === id && !plane._isGhost) {
       plane.setSelected()
     }
   })
