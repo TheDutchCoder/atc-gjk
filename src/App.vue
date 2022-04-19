@@ -394,11 +394,9 @@ const quit2 = () => {
 
 const selectedPlane = ref(null)
 
-const selectPlane = (id, index) => {
+const selectPlane = (id) => {
   BoardScene.selectPlane(id)
   selectedPlane.value = BoardScene._airplanes.value.find(plane => plane._isSelected)
-
-  console.log('select plane:', selectedPlane.value)
 }
 
 const setHeight = (height) => {
