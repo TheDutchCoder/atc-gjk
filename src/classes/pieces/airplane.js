@@ -328,6 +328,11 @@ export default class Airplane {
   _spawned = false
 
   /**
+   * Whether the airplane has taken off.
+   */
+  _takenOff = false
+
+  /**
    * Whether the airplane is currently uncontrollable.
    */
   _isGhost = false
@@ -372,7 +377,8 @@ export default class Airplane {
     this._direction = direction
     this._endPosition = endPosition
     this._endDirection = endDirection
-    this._targetAltitude = this._position.y
+    this._targetAltitude = this._position.y || 1
+    this._takenOff = this._position.y !== 0
     this._id = id
     this._name = `GJK`
     this._color = new Color(Math.random() * 0xffffff)
@@ -387,12 +393,7 @@ export default class Airplane {
   updateAnimation (plane, from) {
     plane.position.x = from.position.x * 10
     plane.position.z = from.position.z * 10
-
-    if (this._position.y === 0) {
-      plane.position.y = 0.8
-    } else {
-      plane.position.y = from.position.y * 5
-    }
+    plane.position.y = from.position.y * 5
 
     plane.scale.setScalar(from.scale)
   }
@@ -521,6 +522,9 @@ export default class Airplane {
     // Move the model on the board (this should be animated).
     // this.unsetGhost()
     await this.animateNext(altMod, dirMod, delay, scale)
+
+    // The plane has taken off in every case on the first next step.
+    this._takenOff = true
 
     // Update the plane's new position.
     nextPosition.y += altMod

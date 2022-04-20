@@ -124,46 +124,50 @@ boardScene.checkCollisions = () => {
     const { x: p1X, y: p1Y, z: p1Z } = plane1._position
 
     // Check for collisions with the ground (if there's no airfield).
-    if (p1Y === 0) {
-      Airstrip._tiles.forEach(tile => {
-        const { x, y, z } = tile.position
+    if (plane1._takenOff) {
+      if (p1Y === 0) {
+        Airstrip._tiles.forEach(tile => {
+          const { x, y, z } = tile.position
 
-        if (p1X === x && p1Z === z && plane1._direction === tile.direction) {
-          console.log('plane landed on airport, check if it\'s the right airport!')
-        } else {
-          console.log(`plane crashed at ${x}, ${y}, ${z}`)
-          gameService.send('LOSE')
+          if (p1X === x && p1Z === z && plane1._direction === tile.direction) {
+            console.log('plane landed on airport, check if it\'s the right airport!')
+          } else {
+            console.log(`plane crashed at ${x}, ${y}, ${z}`)
+            gameService.send('LOSE')
+          }
+        })
+      }
+
+      // Check for collisions with other planes that are not this plane.
+      boardScene._airplanes.value.forEach(plane2 => {
+        if (plane1._id !== plane2._id) {
+          const { x: p2X, y: p2Y, z: p2Z } = plane2._position
+          if (p1X === p2X && p1Y === p2Y && p1Z === p2Z) {
+            gameService.send('LOSE')
+          }
         }
       })
     }
-
-    // Check for collisions with other planes that are not this plane.
-    boardScene._airplanes.value.forEach(plane2 => {
-      if (plane1._id !== plane2._id) {
-        const { x: p2X, y: p2Y, z: p2Z } = plane2._position
-        if (p1X === p2X && p1Y === p2Y && p1Z === p2Z) {
-          gameService.send('LOSE')
-        }
-      }
-    })
   })
 }
 
 boardScene.checkDestinations = () => {
   boardScene._airplanes.value.forEach(plane => {
-    const { x: curX, y: curY, z: curZ } = plane._position
-    const curD = plane._direction
+    if (plane._takenOff) {
+      const { x: curX, y: curY, z: curZ } = plane._position
+      const curD = plane._direction
 
-    const { x: endX, y: endY, z: endZ } = plane._endPosition.position
-    const endD = plane._endPosition.direction
+      const { x: endX, y: endY, z: endZ } = plane._endPosition
+      const endD = plane._endPosition
 
-    if (curX === endX && curY === endY && curZ === endZ && curD === endD) {
-      boardScene._score.value += 100
+      if (curX === endX && curY === endY && curZ === endZ && curD === endD) {
+        boardScene._score.value += 100
 
-      plane.setGhost()
-    } else if (curY === 0) {
-      console.log('game over!')
-      gameService.send('LOSE')
+        plane.setGhost()
+      } else if (curY === 0) {
+        console.log('game over!')
+        gameService.send('LOSE')
+      }
     }
   })
 }
