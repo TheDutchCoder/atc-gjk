@@ -6,10 +6,12 @@ import {
   randomNumber,
   getRandomTile,
   getStartDirection,
+  getEndDirection,
   getNextPosition,
   getPrevPosition,
   formatTime,
   mapDirection,
+  getRandomStart,
   getRandomDestination,
   getRandomAirport,
   getWindDirection,
@@ -236,6 +238,35 @@ suite('tools', () => {
     expect(result8).toBe(2)
   })
 
+  test('getEndDirection', () => {
+    const pos1 = { x: -2, y: 0, z: -2 }
+    const pos2 = { x: 0, y: 0, z: -2 }
+    const pos3 = { x: 2, y: 0, z: -2 }
+    const pos4 = { x: 2, y: 0, z: 0 }
+    const pos5 = { x: 2, y: 0, z: 2 }
+    const pos6 = { x: 0, y: 0, z: 2 }
+    const pos7 = { x: -2, y: 0, z: 2 }
+    const pos8 = { x: -2, y: 0, z: 0 }
+
+    const result1 = getEndDirection(pos1, 3, 3)
+    const result2 = getEndDirection(pos2, 3, 3)
+    const result3 = getEndDirection(pos3, 3, 3)
+    const result4 = getEndDirection(pos4, 3, 3)
+    const result5 = getEndDirection(pos5, 3, 3)
+    const result6 = getEndDirection(pos6, 3, 3)
+    const result7 = getEndDirection(pos7, 3, 3)
+    const result8 = getEndDirection(pos8, 3, 3)
+
+    expect(result1).toBe(7)
+    expect(result2).toBe(0)
+    expect(result3).toBe(1)
+    expect(result4).toBe(2)
+    expect(result5).toBe(3)
+    expect(result6).toBe(4)
+    expect(result7).toBe(5)
+    expect(result8).toBe(6)
+  })
+
   test('getNextPosition', () => {
     const result1 = getNextPosition({ x: 0, y: 0, z: 0 }, 0)
     const result2 = getNextPosition({ x: 0, y: 0, z: 0 }, 1)
@@ -297,17 +328,47 @@ suite('tools', () => {
     expect(mapDirection(7)).toBe('NW')
   })
 
-  test('getRandomDestination', () => {
-    let width = 3
-    let height = 5
+  test('getRandomStart', () => {
+    const width = 3
+    const height = 5
+    const airfields = [
+      { position: { x: 1, y: 0, z: 1 }, direction: 0, name: 'AP1' },
+      { position: { x: 3, y: 0, z: 3 }, direction: 6, name: 'AP2' },
+      { position: { x: -2, y: 0, z: 2 }, direction: 3, name: 'AP3' },
+    ]
 
     for (let i = 0; i < 100; i++) {
-      let result = getRandomDestination(width, height)
+      let result = getRandomStart(width, height, airfields)
 
-      expect(result.position.x === -2 || result.position.x === 2 || result.position.x === 0).toBeTruthy()
-      expect(result.position.y).toBeGreaterThanOrEqual(1)
-      expect(result.position.y).toBeLessThanOrEqual(9)
-      expect(result.position.z === -3 || result.position.z === 3 || result.position.z === 0).toBeTruthy()
+      // Destination is not an airport
+      if (!result.position.y === 0) {
+        expect(result.position.x === -2 || result.position.x === 2 || result.position.x === 0).toBeTruthy()
+        expect(result.position.y).toBeGreaterThanOrEqual(1)
+        expect(result.position.y).toBeLessThanOrEqual(9)
+        expect(result.position.z === -3 || result.position.z === 3 || result.position.z === 0).toBeTruthy()
+      }
+    }
+  })
+
+  test('getRandomDestination', () => {
+    const width = 3
+    const height = 5
+    const airfields = [
+      { position: { x: 1, y: 0, z: 1 }, direction: 0, name: 'AP1' },
+      { position: { x: 3, y: 0, z: 3 }, direction: 6, name: 'AP2' },
+      { position: { x: -2, y: 0, z: 2 }, direction: 3, name: 'AP3' },
+    ]
+
+    for (let i = 0; i < 100; i++) {
+      let result = getRandomDestination(width, height, airfields)
+
+      // Destination is not an airport
+      if (!result.position.y === 0) {
+        expect(result.position.x === -2 || result.position.x === 2 || result.position.x === 0).toBeTruthy()
+        expect(result.position.y).toBeGreaterThanOrEqual(1)
+        expect(result.position.y).toBeLessThanOrEqual(9)
+        expect(result.position.z === -3 || result.position.z === 3 || result.position.z === 0).toBeTruthy()
+      }
     }
   })
 

@@ -8,12 +8,12 @@ import Clouds from '#/classes/pieces/clouds'
 
 import {
   randomRoundNumber,
+  getRandomStart,
   getRandomDestination,
-  getRandomAirport,
 } from '#tools/index'
 
 import { difficulties, dimensions, airfields, clouds, airplanes } from '#/constants'
-import { getRandomTile, randomItemFromArray, getStartDirection, getWindDirection } from '#/tools'
+import { getRandomTile, randomItemFromArray } from '#/tools'
 
 /**
  * Basic class for any game board.
@@ -96,7 +96,6 @@ export default class GameBoard {
    */
   generate () {
     const minX = Math.ceil(0 - (this._width / 2))
-    const maxX = Math.abs(minX)
     const minZ = Math.ceil(0 - (this._depth / 2))
     const maxZ = Math.abs(minZ)
     this._tiles = Array.from({ length: this._depth }, () => Array.from({ length: this._width }, () => null))
@@ -125,7 +124,7 @@ export default class GameBoard {
     const airfields = []
 
     for (let i = 0; i < this._airfields; i++) {
-      const result = getRandomTile(this._tiles, this._width, this._depth, 2)
+      const result = getRandomTile(this._tiles, this._width, this._depth, 3)
 
       if (result) {
         const { x, z, tile } = result
@@ -165,28 +164,11 @@ export default class GameBoard {
      * 3. Departure time
      */
     for (let i = 0; i < this._airplanes; i++) {
+      const start = getRandomStart(this._width, this._depth, airfields)
+      let end = getRandomDestination(this._width, this._depth, airfields)
 
-      // Start position & direction
-      const startOnX = Math.random() > 0.5
-      const startX = startOnX ? randomItemFromArray([minX - 1, maxX + 1]) : randomRoundNumber(minX - 1, maxX + 1)
-      const startY = randomRoundNumber(airplanes[this._difficulty].height - 2, airplanes[this._difficulty].height)
-      const startZ = startOnX ? randomRoundNumber(minZ - 1, maxZ + 1) : randomItemFromArray([minZ - 1, maxZ + 1])
-
-      const isAirfieldStart = Math.random() >= 0.7
-
-      const start = isAirfieldStart ? getRandomAirport(airfields) : {
-        position: { x: startX, y: startY, z: startZ },
-        direction: getStartDirection({ x: startX, y: startY, z: startZ }, this._width, this._depth),
-        name: getWindDirection({ x: startX, y: startY, z: startZ }), // get name
-      }
-
-      // Destination position & direction
-      const isAirfieldEnd = Math.random() > 0.3
-      const dest = getRandomDestination(this._width, this._depth)
-      const end = isAirfieldEnd ? getRandomAirport(airfields) : {
-        position: dest.position,
-        direction: getStartDirection(dest, this._width, this._depth),
-        name: dest.name,
+      while (start.name === end.name) {
+        end = getRandomDestination(this._width, this._depth, airfields)
       }
 
       // Add airplanes to the queue

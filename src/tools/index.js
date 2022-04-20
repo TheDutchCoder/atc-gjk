@@ -283,6 +283,55 @@ export const getStartDirection = (position, width, depth) => {
   }
 }
 
+// 7     0     1
+//   ┌───────┐
+// 6 │       │ 2
+//   └───────┘
+// 5     4     3
+/**
+ * Returns the end direction of a plane for a given position.
+ *
+ * Airplanes always end 1 block outside of the playing area, so for a 3x3
+ * area, the top left corner is { -1, -1 }, but a plane would end at { -2. -2
+ * }.
+ * @param {*} position
+ * @param {*} width
+ * @param {*} depth
+ * @returns
+ */
+ export const getEndDirection = (position, width, depth) => {
+  const minX = Math.ceil(0 - (width / 2))
+  const maxX = Math.abs(minX)
+  const minZ = Math.ceil(0 - (depth / 2))
+  const maxZ = Math.abs(minZ)
+
+  const { x, z } = position
+
+  if (x === minX - 1) {
+    if (z === minZ - 1) {
+      return 7
+    } else if (z === maxZ + 1) {
+      return 5
+    } else {
+      return 6
+    }
+  } else if (x === maxX + 1) {
+    if (z === minZ - 1) {
+      return 1
+    } else if (z === maxZ + 1) {
+      return 3
+    } else {
+      return 2
+    }
+  } else {
+    if (z === minZ - 1) {
+      return 0
+    } else {
+      return 4
+    }
+  }
+}
+
 export const getNextPosition = (position, direction) => {
   let { x, y, z } = position
 
@@ -363,7 +412,9 @@ export const mapDirection = (direction) => {
 }
 
 
-export const getRandomDestination = (width, depth) => {
+export const getRandomStart = (width, depth, airports) => {
+  const isAirport = Math.random() > 0.7
+
   const minX = Math.ceil(0 - (width / 2)) -1
   const maxX = Math.abs(minX)
   const minZ = Math.ceil(0 - (depth / 2)) - 1
@@ -379,8 +430,34 @@ export const getRandomDestination = (width, depth) => {
 
   const position = { x, y, z }
 
-  return {
+  return isAirport ? getRandomAirport(airports) : {
     position,
+    direction: getStartDirection(position, width, depth),
+    name: `${getWindDirection(position)}${y}`,
+  }
+}
+
+export const getRandomDestination = (width, depth, airports) => {
+  const isAirport = Math.random() > 0.3
+
+  const minX = Math.ceil(0 - (width / 2)) -1
+  const maxX = Math.abs(minX)
+  const minZ = Math.ceil(0 - (depth / 2)) - 1
+  const maxZ = Math.abs(minZ)
+
+  const optionsX = [minX, maxX, 0]
+  const optionsZ1 = [minZ, maxZ]
+  const optionsZ2 = [minZ, maxZ, 0]
+
+  const x = randomItemFromArray(optionsX)
+  const y = Math.ceil(Math.random() * 9)
+  const z = x === 0 ? randomItemFromArray(optionsZ1) : randomItemFromArray(optionsZ2)
+
+  const position = { x, y, z }
+
+  return isAirport ? getRandomAirport(airports) : {
+    position,
+    direction: 0,
     name: `${getWindDirection(position)}${y}`,
   }
 }
