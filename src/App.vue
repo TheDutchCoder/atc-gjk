@@ -130,7 +130,7 @@
                   Time
                 </th>
                 <th class="py-1 px-2">
-                  Flight #
+                  Status
                 </th>
                 <th class="py-1 px-2">
                   From
@@ -144,9 +144,9 @@
               <tr
                 v-for="(plane, index) in schedule"
                 :key="plane.id"
-                :class="selectedPlane && (selectedPlane._id === plane.id) ? 'bg-sky-500' : index % 2 === 0 ? 'bg-slate-50 hover:bg-slate-100' : 'hover:bg-slate-100'"
+                :class="plane.landed ? 'opacity-50' : selectedPlane && (selectedPlane._id === plane.id) ? 'bg-sky-500' : index % 2 === 0 ? 'bg-slate-50 hover:bg-slate-100' : 'hover:bg-slate-100'"
                 class="cursor-pointer transition-colors"
-                @click="selectPlane(plane.id, index)"
+                @click="plane.landed ? null : selectPlane(plane.id, index)"
               >
                 <td class="py-1 px-2">
                   <div
@@ -158,7 +158,7 @@
                 </td>
                 <td class="py-1 px-2">
                   <div class="p-2 font-bold">
-                    GJK
+                    {{ plane.startTime > BoardScene._tick.value ? 'Scheduled': plane.startTime === BoardScene._tick.value ? 'Approaching' : plane.landed ? 'Passed' : 'In flight' }}
                   </div>
                 </td>
                 <td class="py-1 px-2">
