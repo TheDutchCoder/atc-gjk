@@ -66,24 +66,29 @@ boardScene.start = () => {
 }
 
 boardScene.nextTick = async () => {
-  boardScene._tick.value++
+  if (!boardScene._isAnimating) {
+    boardScene._isAnimating = true
+    boardScene._tick.value++
 
-  // Move existing planes every 15 minutes
-  const moves = Promise.all(boardScene._airplanes.value.map(plane => plane.next()))
-  const spawns = Promise.all(boardScene._board._airplanesQueue.filter(plane => plane.startTime === boardScene._tick.value).map(plane => {
-    const airplane = new Airplane(plane.start.position, plane.start.direction, plane.end.position, plane.end.direction, plane.id)
-    boardScene.addAirplane(airplane)
-    airplane.setGhost()
-    return airplane.animateIn(0, 1000)
-  }))
+    // Move existing planes every 15 minutes
+    const moves = Promise.all(boardScene._airplanes.value.map(plane => plane.next()))
+    const spawns = Promise.all(boardScene._board._airplanesQueue.filter(plane => plane.startTime === boardScene._tick.value).map(plane => {
+      const airplane = new Airplane(plane.start.position, plane.start.direction, plane.end.position, plane.end.direction, plane.id)
+      boardScene.addAirplane(airplane)
+      airplane.setGhost()
+      return airplane.animateIn(0, 1000)
+    }))
 
-  await moves
-  await spawns
+    await moves
+    await spawns
 
-  boardScene.checkGhosts()
-  // boardScene.checkCollisions()
-  boardScene.checkDestinations()
-  boardScene.checkOutOfBounds()
+    boardScene.checkGhosts()
+    // boardScene.checkCollisions()
+    boardScene.checkDestinations()
+    boardScene.checkOutOfBounds()
+
+    boardScene._isAnimating = false
+  }
 }
 
 
