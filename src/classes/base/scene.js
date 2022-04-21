@@ -123,6 +123,14 @@ export default class GameScene {
   removeAirplane (airplane) {
     this._airplanes.value = this._airplanes.value.filter(plane => plane._id !== airplane._id)
 
+    this._board._airplanesQueue.map(plane => {
+      if (plane.id === airplane._id) {
+        plane.landed = true
+      }
+
+      return plane
+    })
+
     const plane = this._scene.getObjectById(airplane._model.id)
     this._scene.remove(plane)
   }
