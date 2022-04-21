@@ -390,12 +390,17 @@ export default class Airplane {
 
   animate = () => this.animateIdle()
 
-  updateAnimation (plane, from) {
-    plane.position.x = from.position.x * 10
-    plane.position.z = from.position.z * 10
-    plane.position.y = from.position.y * 5
+  updateAnimation (from) {
+    this._model.position.x = from.position.x * 10
+    this._model.position.z = from.position.z * 10
 
-    plane.scale.setScalar(from.scale)
+    if (!this._takenOff) {
+      this._model.position.y = (0.18 + from.position.y) * 5
+    } else {
+      this._model.position.y = from.position.y * 5
+    }
+
+    this._model.scale.setScalar(from.scale)
   }
 
   /**
@@ -403,19 +408,47 @@ export default class Airplane {
    */
   animateIn (delay = 1250, speed = 500) {
     return new Promise((resolve) => {
-      const { _position, _direction } = this
-      const from = { position: getPrevPosition(_position, _direction), direction: this._direction, scale: 0 }
-      const to = { position: _position, direction: this._direction, scale: 1 }
+      // Airplane is spawning on an airfield
+      if (!this._takenOff) {
+        const { _position, _direction } = this
+        const from = { position: _position, direction: _direction, scale: 0 }
+        const to = { position: _position, direction: _direction, scale: 1 }
 
-      this.updateAnimation(this._model, from)
+        this.updateAnimation(from)
 
-      new TWEEN.Tween(from)
-        .to(to, speed)
-        .easing(TWEEN.Easing.Elastic.Out)
-        .onUpdate(() => this.updateAnimation(this._model, from))
-        .onComplete(resolve)
-        .delay(delay)
-        .start()
+        new TWEEN.Tween(from)
+          .to(to, speed)
+          .easing(TWEEN.Easing.Elastic.Out)
+          .onUpdate(() => this.updateAnimation(from))
+          .onComplete(resolve)
+          .delay(delay)
+          .start()
+
+      } else {
+        const { _position, _direction } = this
+        const from = { position: getPrevPosition(_position, _direction), direction: _direction, scale: 0 }
+        const to = { position: _position, direction: _direction, scale: 1 }
+
+        this.updateAnimation(from)
+
+        new TWEEN.Tween(from)
+          .to(to, speed)
+          .easing(TWEEN.Easing.Elastic.Out)
+          .onUpdate(() => this.updateAnimation(from))
+          .onComplete(resolve)
+          .delay(delay)
+          .start()
+      }
+
+      // this.updateAnimation(from)
+
+      // new TWEEN.Tween(from)
+      //   .to(to, speed)
+      //   .easing(TWEEN.Easing.Elastic.Out)
+      //   .onUpdate(() => this.updateAnimation(from))
+      //   .onComplete(resolve)
+      //   .delay(delay)
+      //   .start()
     })
   }
 
@@ -428,12 +461,12 @@ export default class Airplane {
       const from = { position: { x: this._model.position.x / 10, y: this._model.position.y / 5, z: this._model.position.z / 10 }, direction: this._direction, scale: 1 }
       const to = { position: getNextPosition(_position, _direction), direction: this._direction, scale: 0 }
 
-      this.updateAnimation(this._model, from)
+      this.updateAnimation(from)
 
       new TWEEN.Tween(from)
         .to(to, speed)
         .easing(TWEEN.Easing.Elastic.In)
-        .onUpdate(() => this.updateAnimation(this._model, from))
+        .onUpdate(() => this.updateAnimation(from))
         .onComplete(resolve)
         .delay(delay)
         .start()
@@ -448,7 +481,7 @@ export default class Airplane {
     const pitchZ = Math.sin(this._tick / 15 / Math.PI) / 10
     const pitchX = Math.sin(this._tick / 20 / Math.PI) / 20
 
-    if (this._position.y !== 0) {
+    if (this._position.y >= 1) {
       this._model.position.y += bob
       this._model.rotation.z = pitchZ
       this._model.rotation.x = pitchX
@@ -481,14 +514,13 @@ export default class Airplane {
 
     plane.position.x = this._position.x * 10
     plane.position.z = this._position.z * 10
-
-    if (plane.position > 0) {
-      plane.position.y = this._position.y * 5
-    } else {
-      plane.position.y = 0.8
-    }
+    plane.position.y = this._position.y * 5
 
     plane.rotation.y = this._direction * (Math.PI / -4)
+
+    if (!this._takenOff) {
+      plane.rotateX(0.1)
+    }
 
     this._model = plane
   }
@@ -521,7 +553,7 @@ export default class Airplane {
 
     // Move the model on the board (this should be animated).
     // this.unsetGhost()
-    await this.animateNext(altMod, dirMod, delay, scale)
+    await this.animateNext(altMod, dirMod, delay, scale, this._takenOff ? 0 : 0.1)
 
     // The plane has taken off in every case on the first next step.
     this._takenOff = true
@@ -533,12 +565,6 @@ export default class Airplane {
     // Update the plane's new direction.
     this._direction = (8 + (this._direction + dirMod)) % 8
     this._model.rotation.y = this._direction * (Math.PI / -4)
-
-    // Check if the plane is currently a ghost.
-    // this.checkGhost(false)
-
-    // Check if the plane has crashed into something (ground, obstacle, airplane)
-    // this.checkForCrashes()
 
     // Check if the plane has reached its destination with poor man's deep equal.
     if (
@@ -559,7 +585,7 @@ export default class Airplane {
       new TWEEN.Tween(from)
         .to(to, 500)
         .easing(TWEEN.Easing.Cubic.InOut)
-        .onUpdate(() => this.updateAnimation(this._model, from, this._targetDirection > 0))
+        .onUpdate(() => this.updateAnimation(from, this._targetDirection > 0))
         .onComplete(resolve)
         .delay(delay)
         .start()

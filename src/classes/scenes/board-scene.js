@@ -109,7 +109,8 @@ boardScene.checkGhosts = () => {
         (pX < minX) ||
         (pX > maxX) ||
         (pZ < minZ) ||
-        (pZ > maxZ)
+        (pZ > maxZ) ||
+        !plane._takenOff
       ) {
         plane.setGhost()
       } else {
