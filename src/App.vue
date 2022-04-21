@@ -394,8 +394,8 @@ const logStats = () => {
   })
 }
 
-const nextTick = () => {
-  BoardScene.nextTick()
+const nextTick = async () => {
+  await BoardScene.nextTick()
 }
 
 const showQuit = ref(false)
