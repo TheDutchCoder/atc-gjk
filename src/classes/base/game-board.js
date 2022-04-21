@@ -8,12 +8,12 @@ import Clouds from '#/classes/pieces/clouds'
 
 import {
   randomRoundNumber,
+  getRandomStart,
   getRandomDestination,
-  getRandomAirport,
 } from '#tools/index'
 
 import { difficulties, dimensions, airfields, clouds, airplanes } from '#/constants'
-import { getRandomTile, randomItemFromArray, getStartDirection } from '#/tools'
+import { getRandomTile, randomItemFromArray } from '#/tools'
 
 /**
  * Basic class for any game board.
@@ -96,7 +96,6 @@ export default class GameBoard {
    */
   generate () {
     const minX = Math.ceil(0 - (this._width / 2))
-    const maxX = Math.abs(minX)
     const minZ = Math.ceil(0 - (this._depth / 2))
     const maxZ = Math.abs(minZ)
     this._tiles = Array.from({ length: this._depth }, () => Array.from({ length: this._width }, () => null))
@@ -125,7 +124,7 @@ export default class GameBoard {
     const airfields = []
 
     for (let i = 0; i < this._airfields; i++) {
-      const result = getRandomTile(this._tiles, this._width, this._depth, 2)
+      const result = getRandomTile(this._tiles, this._width, this._depth, 3)
 
       if (result) {
         const { x, z, tile } = result
@@ -156,112 +155,34 @@ export default class GameBoard {
 
     Clouds.add({ position: { x: 0, y: 1, z: 0 } })
 
-    // Seed the airplanes.
     /**
+     * Seed the airplanes.
+     *
      * Airplanes need the following:
      * 1. Start position & direction (could be an airport!)
      * 2. Destination position and direction (could be an airport!)
      * 3. Departure time
      */
     for (let i = 0; i < this._airplanes; i++) {
-      // Start position & direction
-      const startOnX = Math.random() > 0.5
-      const startX = startOnX ? randomItemFromArray([minX - 1, maxX + 1]) : randomRoundNumber(minX - 1, maxX + 1)
-      const startY = randomRoundNumber(airplanes[this._difficulty].height - 2, airplanes[this._difficulty].height)
-      const startZ = startOnX ? randomRoundNumber(minZ - 1, maxZ + 1) : randomItemFromArray([minZ - 1, maxZ + 1])
-      const startPosition = { x: startX, y: startY, z: startZ }
-      const startDirection = getStartDirection(startPosition, this._width, this._depth)
+      const start = getRandomStart(this._width, this._depth, airfields)
+      let end = getRandomDestination(this._width, this._depth, airfields)
 
-      // Destination position & direction
-      const isAirfield = Math.random() > 0.3
-      const endPosition = isAirfield ? getRandomAirport(airfields) : getRandomDestination(this._width, this._depth)
-      const endDirection = getStartDirection(endPosition, this._width, this._depth) // wat
+      while (start.name === end.name) {
+        end = getRandomDestination(this._width, this._depth, airfields)
+      }
 
       // Add airplanes to the queue
       this._airplanesQueue.push({
         id: uuidv4(),
-        start: {
-          position: startPosition,
-          direction: startDirection,
-        },
-        end: {
-          position: endPosition,
-          direction: endDirection,
-        },
+        start,
+        end,
         startTime: randomRoundNumber(0, 96),
       })
-
-      // Airplanes.add({ position: startPosition, direction: startDirection })
     }
-
-    // DEBUG
-    // this._airplanesQueue.push({
-    //   id: uuidv4(),
-    //   start: {
-    //     position: { x: 3, y: 1, z: -6 },
-    //     direction: 4,
-    //   },
-    //   end: {
-    //     position: { x: -5, y: 1, z: 0 },
-    //     direction: 4,
-    //   },
-    //   startTime: 1,
-    // })
-
-    // this._airplanesQueue.push({
-    //   index: 1001,
-    //   start: {
-    //     position: { x: 5, y: 1, z: 0 },
-    //     direction: 6,
-    //   },
-    //   end: {
-    //     position: { x: -5, y: 1, z: 0 },
-    //     direction: 4,
-    //   },
-    //   startTime: 1,
-    // })
-    // DEBUG
 
     // Sort the planes by startTime
     this._airplanesQueue.sort((plane1, plane2) => {
       return plane1.startTime < plane2.startTime ? -1 : plane1.startTime > plane2.startTime ? 1 : 0
     })
-
-    // const schedule = document.querySelector('#schedule tbody')
-
-    // this._airplanesQueue.forEach(plane => {
-    //   console.log(plane)
-    //   const el = document.createElement('tr')
-    //   el.innerHTML = `<td>${formatTime(plane.startTime)}</td><td>GJK-${(plane.index).toString().padStart(3, '0')}</td><td>AP-1</td>`
-    //   schedule.appendChild(el)
-    // })
-
-    // Add the tiles.
-    // for (let x = minX; x <= maxX; x++) {
-    //   for (let z = minZ; z <= maxZ; z++) {
-    //     new Forest({ position: { x, y: 0, z } })
-    //   }
-    // }
-
-    // console.log(minX, minZ)
-    /**
-     * Airfields need to be at least 2 squares from each edge, otherwise planes
-     * might not be able to turn in time and land on them.
-     */
-    // for (let x = -5; x <= 5; x++) {
-    //   for (let z = -5; z <= 5; z++) {
-    //     if (x === 4) {
-    //       new TrainTracks({ position: { x, y: 0, z } })
-    //     } else if (x === 0 && z === 0) {
-    //       new Airfield({ position: { x, y: 0, z }, direction: randomRoundNumber(0, 7) })
-    //     } else {
-    //       new Forest({ position: { x, y: 0, z } })
-    //     }
-    //   }
-    // }
-
-    // for (let c = 0; c <= 7; c++) {
-    //   Clouds.add({ position: { x: randomRoundNumber(-5, 5), y: randomRoundNumber(4, 7), z: randomRoundNumber(-5, 5) } })
-    // }
   }
 }
