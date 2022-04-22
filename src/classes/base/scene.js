@@ -124,8 +124,8 @@ export default class GameScene {
     this._airplanes.value = this._airplanes.value.filter(plane => plane._id !== airplane._id)
 
     this._board._airplanesQueue.map(plane => {
-      if (plane.id === airplane._id) {
-        plane.landed = true
+      if (plane._id === airplane._id) {
+        plane._landed = true
       }
 
       return plane

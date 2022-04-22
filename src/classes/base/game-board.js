@@ -173,16 +173,17 @@ export default class GameBoard {
 
       // Add airplanes to the queue
       this._airplanesQueue.push({
-        id: uuidv4(),
-        start,
-        end,
-        startTime: randomRoundNumber(0, 96),
+        _id: uuidv4(),
+        _start: start,
+        _end: end,
+        _startTime: randomRoundNumber(0, 96),
+        _fuel: randomRoundNumber(20, 35),
       })
     }
 
     // Sort the planes by startTime
     this._airplanesQueue.sort((plane1, plane2) => {
-      return plane1.startTime < plane2.startTime ? -1 : plane1.startTime > plane2.startTime ? 1 : 0
+      return plane1._startTime < plane2._startTime ? -1 : plane1._startTime > plane2._startTime ? 1 : 0
     })
   }
 }

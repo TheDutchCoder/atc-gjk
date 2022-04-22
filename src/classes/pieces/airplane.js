@@ -283,6 +283,10 @@ const createDefaultPlane = (color) => {
  */
 export default class Airplane {
 
+  _start = null
+  _end = null
+  _startTime = 0
+
   /**
    * The current position of the airplane.
    */
@@ -368,20 +372,31 @@ export default class Airplane {
   _tick = 0
 
   /**
+   * Tracks the amout of fuel this plane has.
+   */
+  _fuel = 0
+
+  /**
    * AnimateIn
    * AnimateOut
    * AnimateIdle
    */
-  constructor (position, direction, endPosition, endDirection, id) {
-    this._position = position
-    this._direction = direction
-    this._endPosition = endPosition
-    this._endDirection = endDirection
+  // constructor (position, direction, endPosition, endDirection, id, fuel, start, end) {
+  constructor (options) {
+    const { id, start, end, fuel, startTime } = options
+    this._start = start
+    this._end = end
+    this._position = start.position
+    this._direction = start.direction
+    // this._endPosition = endPosition
+    // this._endDirection = endDirection
     this._targetAltitude = this._position.y || 1
     this._takenOff = this._position.y !== 0
     this._id = id
-    this._name = `GJK`
+    this._name = 'GJK'
     this._color = new Color(Math.random() * 0xffffff)
+    this._fuel = fuel
+    this._startTime = startTime
 
     this.create()
 
@@ -439,16 +454,6 @@ export default class Airplane {
           .delay(delay)
           .start()
       }
-
-      // this.updateAnimation(from)
-
-      // new TWEEN.Tween(from)
-      //   .to(to, speed)
-      //   .easing(TWEEN.Easing.Elastic.Out)
-      //   .onUpdate(() => this.updateAnimation(from))
-      //   .onComplete(resolve)
-      //   .delay(delay)
-      //   .start()
     })
   }
 
@@ -568,11 +573,14 @@ export default class Airplane {
 
     // Check if the plane has reached its destination with poor man's deep equal.
     if (
-      JSON.stringify(this._position) === JSON.stringify(this._endPosition) &&
-      this._direction === this._endDirection
+      JSON.stringify(this._position) === JSON.stringify(this._end.position) &&
+      this._direction === this._end.direction
     ) {
       console.log('yay, plane landed at target!')
     }
+
+    // Reduce the plane's fuel
+    this._fuel -= 1
   }
 
   async animateNext (nextAlt, nextDir, delay = 0, scale = 1) {
