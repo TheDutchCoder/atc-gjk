@@ -174,7 +174,7 @@ boardScene.checkDestinations = () => {
       const endD = plane._endPosition
 
       if (curX === endX && curY === endY && curZ === endZ && curD === endD) {
-        boardScene._score.value += 100
+        boardScene._score.value += 100 + (plane._fuel * 10)
 
         plane.setGhost()
       } else if (curY === 0) {
