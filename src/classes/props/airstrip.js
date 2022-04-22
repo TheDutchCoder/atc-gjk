@@ -6,7 +6,7 @@ import {
   Group,
 } from 'three'
 
-import { baseFont } from '#/loaders'
+import { helvetikerBold } from '#/fonts'
 
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 
@@ -151,7 +151,7 @@ class AirStrip {
       }
 
       const labelGeometry = new TextGeometry(`AP${index + 1}`, {
-        font: baseFont,
+        font: helvetikerBold,
         size: 80,
         height: 5,
         curveSegments: 12,
