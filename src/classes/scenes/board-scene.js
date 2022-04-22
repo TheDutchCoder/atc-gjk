@@ -84,10 +84,11 @@ boardScene.nextTick = async () => {
     boardScene._isAnimating = true
     boardScene._tick.value++
 
-    // Move existing planes every 15 minutes
-    const moves = Promise.all(boardScene._airplanes.value.map(plane => plane.next()))
+    // Move existing planes every 15 minutes.
+    const movePlanes = Promise.all(boardScene._airplanes.value.map(plane => plane.next()))
 
-    const spawns = Promise.all(boardScene._board._airplanesQueue.filter(plane => plane._startTime === boardScene._tick.value).map(plane => {
+    // Spawn new planes when their schedule says so.
+    const spawnPlanes = Promise.all(boardScene._board._airplanesQueue.filter(plane => plane._startTime === boardScene._tick.value).map(plane => {
       const airplane = new Airplane({
         id: plane._id,
         start: plane._start,
@@ -100,10 +101,10 @@ boardScene.nextTick = async () => {
       return airplane.animateIn(0, 500)
     }))
 
-    // Rotate the sun
-    const sun = boardScene._lights.find(light => light.name === 'sun')
+    // Rotate the sun depending on the time of day.
+    const moveSun = new Promise((resolve) => {
+      const sun = boardScene._lights.find(light => light.name === 'sun')
 
-    const moveSun =  new Promise((resolve) => {
       const from = { rot: sun.rotation.z }
       const to = { rot: sun.rotation.z + ((Math.PI * 2) * (1 / 96)) }
 
@@ -115,8 +116,8 @@ boardScene.nextTick = async () => {
       .start()
     })
 
-    await moves
-    await spawns
+    await movePlanes
+    await spawnPlanes
     await moveSun
 
     boardScene.checkGhosts()
