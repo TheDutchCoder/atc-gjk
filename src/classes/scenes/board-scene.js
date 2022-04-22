@@ -72,11 +72,18 @@ boardScene.nextTick = async () => {
 
     // Move existing planes every 15 minutes
     const moves = Promise.all(boardScene._airplanes.value.map(plane => plane.next()))
-    const spawns = Promise.all(boardScene._board._airplanesQueue.filter(plane => plane.startTime === boardScene._tick.value).map(plane => {
-      const airplane = new Airplane(plane.start.position, plane.start.direction, plane.end.position, plane.end.direction, plane.id)
+
+    const spawns = Promise.all(boardScene._board._airplanesQueue.filter(plane => plane._startTime === boardScene._tick.value).map(plane => {
+      const airplane = new Airplane({
+        id: plane._id,
+        start: plane._start,
+        end: plane._end,
+        fuel: plane._fuel,
+        startTime: plane._startTime,
+      })
       boardScene.addAirplane(airplane)
       airplane.setGhost()
-      return airplane.animateIn(0, 1000)
+      return airplane.animateIn(0, 500)
     }))
 
     await moves

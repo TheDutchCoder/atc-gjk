@@ -61,7 +61,13 @@ introScene.start = () => {
   new RandomTile()
 
   // Add an airplane.
-  const airplane = new Airplane({ x: 0, y: 1, z: 0 }, 1, { x: 0, y: 0, z: 0 }, 1, 0)
+  const airplane = new Airplane({
+    id: 0,
+    start: { position: { x: 0, y: 1, z: 0 }, direction: 1, name: '' },
+    end: { position: { x: 0, y: 0, z: 0 }, direction: 1, name: '' },
+    fuel: 100,
+  })
+
   introScene.addAirplane(airplane)
 
   // Add the dirt base.

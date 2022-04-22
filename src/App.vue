@@ -138,43 +138,54 @@
                 <th class="py-1 px-2">
                   To
                 </th>
+                <th class="py-1 px-2">
+                  Fuel
+                </th>
               </tr>
             </thead>
             <tbody class="text-xs">
               <tr
                 v-for="(plane, index) in schedule"
-                :key="plane.id"
-                :class="plane.landed ? 'opacity-50' : selectedPlane && (selectedPlane._id === plane.id) ? 'bg-sky-500' : index % 2 === 0 ? 'bg-slate-50 hover:bg-slate-100' : 'hover:bg-slate-100'"
+                :key="plane._id"
+                :class="plane._landed ? 'opacity-50' : selectedPlane && (selectedPlane._id === plane._id) ? 'bg-sky-500' : index % 2 === 0 ? 'bg-slate-50 hover:bg-slate-100' : 'hover:bg-slate-100'"
                 class="cursor-pointer transition-colors"
-                @click="plane.landed ? null : selectPlane(plane.id, index)"
+                @click="plane._landed ? null : selectPlane(plane._id, index)"
               >
                 <td class="py-1 px-2">
                   <div
                     class="inline-block rounded-full border px-2 "
-                    :class="plane.startTime < BoardScene._tick.value ? 'bg-green-100 border-green-300 text-green-700' : plane.startTime === BoardScene._tick.value ? 'bg-orange-100 border-orange-300 text-orange-700' : 'bg-blue-100 border-blue-300 text-blue-700'"
+                    :class="plane._startTime < BoardScene._tick.value ? 'bg-green-100 border-green-300 text-green-700' : plane._startTime === BoardScene._tick.value ? 'bg-orange-100 border-orange-300 text-orange-700' : 'bg-blue-100 border-blue-300 text-blue-700'"
                   >
-                    {{ formatTime(plane.startTime) }}
+                    {{ formatTime(plane._startTime) }}
                   </div>
                 </td>
                 <td class="py-1 px-2">
                   <div class="p-2 font-bold">
-                    {{ plane.startTime > BoardScene._tick.value ? 'Scheduled': plane.startTime === BoardScene._tick.value ? 'Approaching' : plane.landed ? 'Passed' : 'In flight' }}
+                    {{ plane._startTime > BoardScene._tick.value ? 'Scheduled': plane._startTime === BoardScene._tick.value ? 'Approaching' : plane._landed ? 'Passed' : 'In flight' }}
                   </div>
                 </td>
                 <td class="py-1 px-2">
                   <div
                     class="inline-block rounded-full border px-2"
-                    :class="plane.start.name.substring(0, 2) === 'AP' ? 'bg-orange-100 border-orange-300 text-orange-700' : 'bg-blue-100 border-blue-300 text-blue-700'"
+                    :class="plane._start.name.substring(0, 2) === 'AP' ? 'bg-orange-100 border-orange-300 text-orange-700' : 'bg-blue-100 border-blue-300 text-blue-700'"
                   >
-                    {{ plane.start.name }}
+                    {{ plane._start.name }}
                   </div>
                 </td>
                 <td class="py-1 px-2">
                   <div
                     class="inline-block rounded-full border px-2"
-                    :class="plane.end.name.substring(0, 2) === 'AP' ? 'bg-orange-100 border-orange-300 text-orange-700' : 'bg-blue-100 border-blue-300 text-blue-700'"
+                    :class="plane._end.name.substring(0, 2) === 'AP' ? 'bg-orange-100 border-orange-300 text-orange-700' : 'bg-blue-100 border-blue-300 text-blue-700'"
                   >
-                    {{ plane.end.name }}
+                    {{ plane._end.name }}
+                  </div>
+                </td>
+                <td class="py-1 px-2">
+                  <div
+                    class="inline-block rounded-full border px-2"
+                    :class="plane._fuel < 10 ? 'bg-red-100 border-red-300 text-red-700' : plane._fuel < 20 ? 'bg-orange-100 border-orange-300 text-orange-700' : 'bg-green-100 border-green-300 text-green-700'"
+                  >
+                    {{ plane._fuel }}
                   </div>
                 </td>
               </tr>
@@ -251,7 +262,13 @@ import BoardScene from '#/classes/scenes/board-scene'
 const { state, send, service } = useMachine(mainMachine)
 
 const scheduleOpen = ref(true)
-const schedule = computed(() => BoardScene._board._airplanesQueue)
+const schedule = computed(() => {
+  return BoardScene._board._airplanesQueue.map(plane => {
+    const n = BoardScene._airplanes.value.find((a) => a._id === plane._id)
+
+    return n || plane
+  })
+})
 
 const time = computed(() => formatTime(BoardScene._tick.value))
 
