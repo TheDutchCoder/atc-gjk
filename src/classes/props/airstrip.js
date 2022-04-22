@@ -6,11 +6,16 @@ import {
   Group,
 } from 'three'
 
+import { baseFont } from '#/loaders'
+
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
+
 import {
   LANDING_STRIP,
   STRIPE,
   GREEN_LIGHT,
   RED_LIGHT,
+  YELLOW,
 } from '#colors'
 
 import {
@@ -34,6 +39,9 @@ greenLightMaterial.color.set(GREEN_LIGHT)
 
 const redLightMaterial = defaultMaterial.clone()
 redLightMaterial.color.set(RED_LIGHT)
+
+const labelMaterial = defaultMaterial.clone()
+labelMaterial.color.set(YELLOW)
 
 
 /**
@@ -72,6 +80,11 @@ class AirStrip {
   _redLights = null
 
   /**
+   * The label.
+   */
+  _label = null
+
+  /**
    * Initialize the trees.
    */
   constructor () { }
@@ -90,6 +103,7 @@ class AirStrip {
     this._stripes = null
     this._greenLights = null
     this._redLights = null
+    this._label = null
   }
 
   /**
@@ -102,8 +116,9 @@ class AirStrip {
     const stripeGeometries = []
     const greenLightGeometries = []
     const redLightGeometries = []
+    const labelGeometries = []
 
-    this._tiles.forEach(tile => {
+    this._tiles.forEach((tile, index) => {
       const stripGeometry = runwayGeometry.clone()
       stripGeometry.rotateY(tile.direction * Math.PI / -4)
       stripGeometry.translate(tile.position.x * 10, 0.1 + (tile.position.y * 5), tile.position.z * 10)
@@ -134,6 +149,27 @@ class AirStrip {
 
         redLightGeometries.push(redLightGeometry)
       }
+
+      const labelGeometry = new TextGeometry(`AP${index + 1}`, {
+        font: baseFont,
+        size: 80,
+        height: 5,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 10,
+        bevelSize: 3,
+        bevelOffset: 0,
+        bevelSegments: 5,
+      })
+
+      labelGeometry.center()
+      labelGeometry.scale(0.01, 0.01, 0.01)
+      labelGeometry.translate(0, -3, 0)
+      labelGeometry.rotateX(Math.PI / -2)
+      labelGeometry.rotateY(tile.direction * Math.PI / -4)
+      labelGeometry.translate(tile.position.x * 10, 0.2 + (tile.position.y * 5), tile.position.z * 10)
+
+      labelGeometries.push(labelGeometry)
     })
 
     if (this._tiles.length) {
@@ -141,16 +177,18 @@ class AirStrip {
       const mergedStripeGeometries = mergeBufferGeometries(stripeGeometries)
       const mergedGreenLightsGeometries = mergeBufferGeometries(greenLightGeometries)
       const mergedRedLightsGeometries = mergeBufferGeometries(redLightGeometries)
+      const mergedLabelGeometries = mergeBufferGeometries(labelGeometries)
 
       this._strips = new Mesh(mergedStripGeometries, stripMaterial)
       this._stripes = new Mesh(mergedStripeGeometries, stripeMaterial)
       this._greenLights = new Mesh(mergedGreenLightsGeometries, greenLightMaterial)
       this._redLights = new Mesh(mergedRedLightsGeometries, redLightMaterial)
+      this._labels = new Mesh(mergedLabelGeometries, labelMaterial)
 
       this._greenLights.position.y = 0.2
       this._redLights.position.y = 0.2
 
-      this._airstrip.add(this._strips, this._stripes, this._greenLights, this._redLights)
+      this._airstrip.add(this._strips, this._stripes, this._greenLights, this._redLights, this._labels)
     }
 
     return this._airstrip
