@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
+import Label from '#/classes/tiles/label'
 import Dirt from '#/classes/tiles/dirt'
 import Forest from '#/classes/tiles/forest'
 import Airfield from '#/classes/tiles/airfield'
@@ -97,6 +98,7 @@ export default class GameBoard {
   generate () {
     const minX = Math.ceil(0 - (this._width / 2))
     const minZ = Math.ceil(0 - (this._depth / 2))
+    const maxX = Math.abs(minX)
     const maxZ = Math.abs(minZ)
     this._tiles = Array.from({ length: this._depth }, () => Array.from({ length: this._width }, () => null))
 
@@ -180,6 +182,16 @@ export default class GameBoard {
         _fuel: randomRoundNumber(20, 35),
       })
     }
+
+    // Add the labels
+    Label.add({ position: { x: 0, y: 0, z: minZ - 2 }, direction: 0, text: 'N' })
+    Label.add({ position: { x: maxX + 1, y: 0, z: minZ - 1 }, direction: 1, text: 'NE' })
+    Label.add({ position: { x: maxX + 2, y: 0, z: 0 }, direction: 2, text: 'E' })
+    Label.add({ position: { x: maxX + 1, y: 0, z: maxZ + 1 }, direction: 3, text: 'SE' })
+    Label.add({ position: { x: 0, y: 0, z: maxZ + 2 }, direction: 4, text: 'S' })
+    Label.add({ position: { x: minX - 1, y: 0, z: maxZ + 1 }, direction: 5, text: 'SW' })
+    Label.add({ position: { x: minX - 2, y: 0, z: 0 }, direction: 6, text: 'W' })
+    Label.add({ position: { x: minX - 1, y: 0, z: minZ - 1 }, direction: 7, text: 'NW' })
 
     // Sort the planes by startTime
     this._airplanesQueue.sort((plane1, plane2) => {

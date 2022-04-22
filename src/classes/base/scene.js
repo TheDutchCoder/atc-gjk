@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { Scene } from 'three'
 
+import Label from '#/classes/tiles/label'
 import Dirt from '#/classes/tiles/dirt'
 import Grass from '#/classes/tiles/grass'
 import Trees from '#/classes/props/trees'
@@ -52,6 +53,7 @@ export default class GameScene {
    * All the static game elements.
    */
   _elements = [
+    Label,
     Dirt,
     Grass,
     Trees,
