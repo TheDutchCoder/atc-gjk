@@ -11,15 +11,14 @@ jobs:
 
       - name: Config Git ⚙️
         run: |
-          git config user.name "Reinier Kaper"
-          git config user.email "rp.kaper+github@gmail.com"
+          git config --global user.name "Reinier Kaper"
+          git config --global user.email "rp.kaper+github@gmail.com"
 
-      - name: Install and Build 🔧
+      - name: NPM Install 🔧
         run: |
           npm ci
-          npm run build
 
-      - name: Deploy 🚀
+      - name: Build & Deploy 🚀
         run: ./deploy.sh
       #   with:
       #     ref: ${{ github.event.push.head.sha }}
