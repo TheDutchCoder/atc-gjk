@@ -6,7 +6,8 @@ import {
   Group,
 } from 'three'
 
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
+import { baseFont } from '#/loaders'
+
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 
 import {
@@ -41,16 +42,6 @@ redLightMaterial.color.set(RED_LIGHT)
 
 const labelMaterial = defaultMaterial.clone()
 labelMaterial.color.set(YELLOW)
-
-const fontLoader = new FontLoader()
-
-const loadFonts = new Promise(resolve => {
-  fontLoader.load('node_modules/three/examples/fonts/helvetiker_bold.typeface.json', (font) => {
-    resolve(font)
-  })
-})
-
-const font = await loadFonts
 
 
 /**
@@ -160,7 +151,7 @@ class AirStrip {
       }
 
       const labelGeometry = new TextGeometry(`AP${index + 1}`, {
-        font,
+        font: baseFont,
         size: 80,
         height: 5,
         curveSegments: 12,

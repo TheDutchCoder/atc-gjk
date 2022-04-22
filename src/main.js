@@ -3,4 +3,8 @@ import css from './index.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 
-createApp(App).mount('#app')
+import { manager } from '#/loaders'
+
+manager.onLoad = () => {
+  createApp(App).mount('#app')
+}
