@@ -93,6 +93,7 @@ boardScene.nextTick = async () => {
     // boardScene.checkCollisions()
     boardScene.checkDestinations()
     boardScene.checkOutOfBounds()
+    boardScene.checkOutOfFuel()
 
     boardScene._isAnimating = false
   }
@@ -197,6 +198,15 @@ boardScene.checkOutOfBounds = () => {
       boardScene._score.value -= 500
 
       boardScene.removeAirplane(plane)
+    }
+  })
+}
+
+boardScene.checkOutOfFuel = () => {
+  boardScene._airplanes.value.forEach(plane => {
+    if (plane._fuel <= 0) {
+      console.log('game over!')
+      gameService.send('LOSE')
     }
   })
 }
