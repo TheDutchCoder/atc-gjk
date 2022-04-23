@@ -6,6 +6,6 @@ const fontLoader = new FontLoader(manager)
 
 export let baseFont
 
-fontLoader.load('node_modules/three/examples/fonts/helvetiker_bold.typeface.json', (font) => {
+fontLoader.load('./fonts/helvetiker_bold.typeface.json', (font) => {
   baseFont = font
 })

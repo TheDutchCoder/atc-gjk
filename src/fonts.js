@@ -7,8 +7,8 @@ const loadFont = async (font) => new Promise((resolve, reject) => {
 })
 
 const fonts = [
-  'node_modules/three/examples/fonts/helvetiker_regular.typeface.json',
-  'node_modules/three/examples/fonts/helvetiker_bold.typeface.json',
+  './fonts/helvetiker_regular.typeface.json',
+  './fonts/helvetiker_bold.typeface.json',
 ]
 
 const result = await Promise.all(fonts.map(async font => await loadFont(font)))
