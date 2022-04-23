@@ -1,3 +1,5 @@
+import TWEEN from '@tweenjs/tween.js'
+
 import { gameService } from '#/state-machines/game'
 
 import GameScene from '#/classes/base/scene'
@@ -6,6 +8,7 @@ import GameBoard from '#/classes/base/game-board'
 import {
   HemisphereLight,
   DirectionalLight,
+  DirectionalLightHelper,
   Fog,
   Color,
   Object3D,
@@ -24,12 +27,17 @@ boardScene.start = () => {
   hemiLight.position.set(15, 25, 15)
 
   const pivot2 = new Object3D()
-  pivot2.rotation.x = Math.PI / -3
+  pivot2.name = 'sun'
+  // pivot2.rotation.x = Math.PI / -2
+  // pivot2.rotation.z = Math.PI / -2
   const dirLight1 = new DirectionalLight(0xffffff, 0.3)
+  const helper = new DirectionalLightHelper(dirLight1, 5)
   pivot2.add(dirLight1)
 
-  dirLight1.position.set(60, 0, 0)
-  dirLight1.lookAt(pivot2.position)
+  dirLight1.position.set(0, 60, 0)
+  // helper.target = pivot2
+  // dirLight1.lookAt(0 ,0 ,0)
+  // dirLight1.target = pivot2
   dirLight1.castShadow = true
   dirLight1.shadow.mapSize.width = 2048
   dirLight1.shadow.mapSize.height = 2048
@@ -40,9 +48,10 @@ boardScene.start = () => {
   dirLight1.shadow.camera.left = -90
   dirLight1.shadow.camera.right = 90
 
-  pivot2.rotation.y = Math.PI / -1.5
+  // pivot2.rotation.y = Math.PI / -1.5
 
   const dirLight2 = new DirectionalLight(0xb0e1ed, 0.2)
+  const helper2 = new DirectionalLightHelper(dirLight2, 5)
   dirLight2.position.set(-20, 25, -10)
 
   const pivot = new Object3D()
@@ -51,9 +60,14 @@ boardScene.start = () => {
 
   boardScene.addLight(hemiLight)
   boardScene.addLight(pivot2)
+  boardScene.addLight(helper)
+  boardScene.addLight(helper2)
   boardScene.addLight(dirLight2)
 
   const fog = new Fog(new Color(0x9bc8e9), 15, 250)
+
+  pivot2.rotation.x = Math.PI / 4 // How high the sun is in the sky
+  pivot2.rotation.z = Math.PI // The progress of the sun relative to time (0 is noon)
 
   board.generate()
 
@@ -70,10 +84,11 @@ boardScene.nextTick = async () => {
     boardScene._isAnimating = true
     boardScene._tick.value++
 
-    // Move existing planes every 15 minutes
-    const moves = Promise.all(boardScene._airplanes.value.map(plane => plane.next()))
+    // Move existing planes every 15 minutes.
+    const movePlanes = Promise.all(boardScene._airplanes.value.map(plane => plane.next()))
 
-    const spawns = Promise.all(boardScene._board._airplanesQueue.filter(plane => plane._startTime === boardScene._tick.value).map(plane => {
+    // Spawn new planes when their schedule says so.
+    const spawnPlanes = Promise.all(boardScene._board._airplanesQueue.filter(plane => plane._startTime === boardScene._tick.value).map(plane => {
       const airplane = new Airplane({
         id: plane._id,
         start: plane._start,
@@ -86,8 +101,24 @@ boardScene.nextTick = async () => {
       return airplane.animateIn(0, 500)
     }))
 
-    await moves
-    await spawns
+    // Rotate the sun depending on the time of day.
+    const moveSun = new Promise((resolve) => {
+      const sun = boardScene._lights.find(light => light.name === 'sun')
+
+      const from = { rot: sun.rotation.z }
+      const to = { rot: sun.rotation.z + ((Math.PI * 2) * (1 / 96)) }
+
+      new TWEEN.Tween(from)
+      .to(to, 500)
+      .easing(TWEEN.Easing.Quadratic.InOut)
+      .onUpdate(() => sun.rotation.z = from.rot)
+      .onComplete(resolve)
+      .start()
+    })
+
+    await movePlanes
+    await spawnPlanes
+    await moveSun
 
     boardScene.checkGhosts()
     // boardScene.checkCollisions()

@@ -54,7 +54,6 @@ class Label {
       })
 
       labelGeometry.center()
-      console.log(tile)
       labelGeometry.scale(0.03, 0.03, 0.03)
       labelGeometry.rotateX(Math.PI / -2)
       labelGeometry.rotateY(tile.direction * Math.PI / -4)

@@ -155,8 +155,6 @@ export default class GameBoard {
       Clouds.add({ position: { x: randomRoundNumber(minX, maxZ), y: randomRoundNumber(airplanes[this._difficulty].height - 2, airplanes[this._difficulty].height), z: randomRoundNumber(minZ, maxZ) } })
     }
 
-    Clouds.add({ position: { x: 0, y: 1, z: 0 } })
-
     /**
      * Seed the airplanes.
      *
