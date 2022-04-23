@@ -11,29 +11,13 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Config Git ⚙️
-        run: |
-          git config --global user.name "Reinier Kaper"
-          git config --global user.email "rp.kaper+github@gmail.com"
-
       - name: NPM Install 🔧
         run: |
           npm ci
+          npm run build
 
-      - name: Build & Deploy 🚀
-        run: ./deploy.sh
-      #   with:
-      #     ref: ${{ github.event.push.head.sha }}
-
-      # - name: Sync branches ♻️
-      #   run: |
-      #     git checkout develop
-      #     git pull
-      #     git push -f gh_pages
-
-      # - name: Deploy 🚀
-      #   uses: JamesIves/github-pages-deploy-action@v4.2.2
-      #   with:
-      #     branch: gh_pages # The branch the action should deploy to.
-      #     folder: dist # The folder the action should deploy.
-      #     clean: false
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.2.2
+        with:
+          branch: gh_pages # The branch the action should deploy to.
+          folder: dist # The folder the action should deploy.
