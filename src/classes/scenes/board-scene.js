@@ -244,6 +244,12 @@ boardScene.checkOutOfFuel = () => {
 
 boardScene.selectPlane = (id) => {
   boardScene._airplanes.value.forEach(plane => {
+    // The selected plane has been selected agin, so unselect and return.
+    if (plane._id === id && plane._isSelected) {
+      plane.unsetSelected()
+      return
+    }
+
     plane.unsetSelected()
 
     if (plane._id === id && !plane._isGhost) {

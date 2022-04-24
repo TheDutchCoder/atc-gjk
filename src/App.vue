@@ -149,7 +149,7 @@
                 :key="plane._id"
                 :class="plane._landed ? 'opacity-50' : selectedPlane && (selectedPlane._id === plane._id) ? 'bg-sky-500' : index % 2 === 0 ? 'bg-slate-50 hover:bg-slate-100' : 'hover:bg-slate-100'"
                 class="cursor-pointer transition-colors"
-                @click="plane._landed ? null : selectPlane(plane._id, index)"
+                @click="plane._landed ? null : selectPlane(plane)"
               >
                 <td class="py-1 px-2">
                   <div
@@ -259,7 +259,7 @@ import { formatTime, mapDirection } from '#/tools'
 import IntroScene from '#/classes/scenes/intro-scene'
 import BoardScene from '#/classes/scenes/board-scene'
 
-import { Raycaster, Vector2 } from 'three'
+import { Raycaster, Vector2, Vector3 } from 'three'
 
 const { state, send, service } = useMachine(mainMachine)
 
@@ -404,7 +404,8 @@ onMounted(() => {
         const planeParent = objects.find(object => object.object.parent.name === 'plane')
 
         if (planeParent) {
-          selectPlane(planeParent.object.parent._id)
+          selectPlane(planeParent.object.parent)
+          isMouseDown = false
         }
       }
 
@@ -461,9 +462,27 @@ const quit2 = () => {
 
 const selectedPlane = ref(null)
 
-const selectPlane = (id) => {
-  BoardScene.selectPlane(id)
+const selectPlane = (plane) => {
+  BoardScene.selectPlane(plane._id)
+
   selectedPlane.value = BoardScene._airplanes.value.find(plane => plane._isSelected)
+
+  let from
+  let to
+
+  if (selectedPlane.value) {
+    from = controls.target
+    to = selectedPlane.value._model.position
+  } else {
+    from = controls.target
+    to = new Vector3(0, 0, 0)
+  }
+
+  new TWEEN.Tween(from)
+    .to(to, 500)
+    .easing(TWEEN.Easing.Cubic.InOut)
+    .onUpdate(() => controls.target = from)
+    .start()
 }
 
 const setHeight = (height) => {
