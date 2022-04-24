@@ -259,6 +259,8 @@ import { formatTime, mapDirection } from '#/tools'
 import IntroScene from '#/classes/scenes/intro-scene'
 import BoardScene from '#/classes/scenes/board-scene'
 
+import { Raycaster, Vector2 } from 'three'
+
 const { state, send, service } = useMachine(mainMachine)
 
 const scheduleOpen = ref(true)
@@ -364,6 +366,20 @@ onMounted(() => {
   let delta = 0
   let interval = 1 / 60 // 60 FPS
 
+  const raycaster = new Raycaster()
+  const pointer = new Vector2()
+  let isMouseDown = false
+
+  const onMouseDown = (e) => {
+    isMouseDown = true
+    pointer.x = ( e.clientX / window.innerWidth ) * 2 - 1
+    pointer.y = - ( e.clientY / window.innerHeight ) * 2 + 1
+  }
+
+  const onMouseUp = () => {
+    isMouseDown = false
+  }
+
   // The main animation loop for the game, which is clamped to 60 FPS.
   renderer.setAnimationLoop(async (_) => {
     delta += clock.getDelta()
@@ -377,6 +393,21 @@ onMounted(() => {
         IntroScene._animate()
       }
     } else if (service.state.hasTag('board') && BoardScene._scene) {
+
+      if (isMouseDown) {
+        raycaster.setFromCamera( pointer, camera )
+
+        const intersects = raycaster.intersectObjects( BoardScene._scene.children )
+
+        // Find the closest airplane
+        const objects = intersects.sort((a, b) => a.distance < b.distance)
+        const planeParent = objects.find(object => object.object.parent.name === 'plane')
+
+        if (planeParent) {
+          selectPlane(planeParent.object.parent._id)
+        }
+      }
+
       renderer.render(BoardScene._scene, camera)
 
       if (delta > interval) {
@@ -401,6 +432,8 @@ onMounted(() => {
   }
 
   window.addEventListener('resize', onWindowResize, false)
+  window.addEventListener('mousedown', onMouseDown)
+  window.addEventListener('mouseup', onMouseUp)
 
   send('INTRO_IN')
 })
