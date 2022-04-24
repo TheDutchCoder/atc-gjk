@@ -225,6 +225,7 @@ const createDefaultPlane = (color) => {
 
 
   const plane = new Group()
+  plane.name = 'plane'
 
   /**
    * Assign materials to the eshes.
@@ -526,6 +527,8 @@ export default class Airplane {
     if (!this._takenOff) {
       plane.rotateX(0.1)
     }
+
+    plane._id = this._id
 
     this._model = plane
   }
