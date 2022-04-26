@@ -84,6 +84,15 @@ boardScene.nextTick = async () => {
     boardScene._isAnimating = true
     boardScene._tick.value++
 
+    // Prune all finished planes.
+    boardScene._airplanes.value = boardScene._airplanes.value.filter(plane => {
+      if (plane._finished) {
+        boardScene.removeAirplane(plane)
+      } else {
+        return plane
+      }
+    })
+
     // Move existing planes every 15 minutes.
     const movePlanes = Promise.all(boardScene._airplanes.value.map(plane => plane.next()))
 
@@ -208,6 +217,7 @@ boardScene.checkDestinations = () => {
         boardScene._score.value += 100 + (plane._fuel * 10)
 
         plane.setGhost()
+        plane.setFinished()
       } else if (curY === 0) {
         console.log('game over!')
         gameService.send('LOSE')
@@ -224,10 +234,10 @@ boardScene.checkOutOfBounds = () => {
     const maxX = Math.abs(minX)
     const maxZ = Math.abs(minZ)
 
-    if (curX < minX || curX > maxX || curZ < minZ || curZ > maxZ) {
+    if (curX <= minX || curX >= maxX || curZ <= minZ || curZ >= maxZ) {
       boardScene._score.value -= 500
 
-      boardScene.removeAirplane(plane)
+      plane.setFinished()
     }
   })
 }
