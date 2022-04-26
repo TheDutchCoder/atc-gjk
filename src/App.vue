@@ -476,7 +476,7 @@ watch(
 watch(
   boardScene._airplanes,
   (planes) => {
-    if (!planes.find(plane => plane._id === selectedPlane.value._id)) {
+    if (!planes.find(plane => plane._id === selectedPlane.value?._id)) {
       selectedPlane.value = null
     }
   }

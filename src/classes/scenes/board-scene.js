@@ -202,8 +202,7 @@ boardScene.checkDestinations = () => {
       const { x: curX, y: curY, z: curZ } = plane._position
       const curD = plane._direction
 
-      const { x: endX, y: endY, z: endZ } = plane._endPosition
-      const endD = plane._endPosition
+      const { position: { x: endX, y: endY, z: endZ }, direction: endD } = plane._end
 
       if (curX === endX && curY === endY && curZ === endZ && curD === endD) {
         boardScene._score.value += 100 + (plane._fuel * 10)
