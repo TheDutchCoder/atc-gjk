@@ -287,6 +287,11 @@ export default class Airplane {
   _startTime = 0
 
   /**
+   * Indicates the plane has reached its destination successfully.
+   */
+  _finished = false
+
+  /**
    * The current position of the airplane.
    */
   _position = { x: 0, y: 0, z: 0 }
@@ -529,12 +534,6 @@ export default class Airplane {
     this._model = plane
   }
 
-  unsetTakenOff () {
-    this._takenOff = false
-
-    this._model.rotateX(0.1)
-  }
-
   /**
    * Moves the plane to its next position.
    *
@@ -592,11 +591,13 @@ export default class Airplane {
     return new Promise((resolve) => {
       const from = { position: { x: this._model.position.x / 10, y: this._model.position.y / 5, z: this._model.position.z / 10 }, direction: this._model.rotation.y, scale }
       const p = getNextPosition(this._position, this._direction)
-      // console.log(p)
       p.y += nextAlt
+
+      // Planes on the ground are raised slightly.
       if (p.y === 0) {
         p.y = 0.18
       }
+
       const to = { position: p, direction: this._model.rotation.y + (nextDir * Math.PI / -4), scale: 1 }
 
       new TWEEN.Tween(from)
@@ -639,6 +640,10 @@ export default class Airplane {
         child.material.needsUpdate = true
       }
     })
+  }
+
+  setFinished () {
+    this._finished = true
   }
 
   setSelected () {
