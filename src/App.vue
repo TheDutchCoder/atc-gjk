@@ -244,13 +244,13 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import TWEEN from '@tweenjs/tween.js'
 import { mainMachine } from '#/state-machines/main'
 import { useMachine } from '@xstate/vue'
 
 import renderer, { initRenderer, initStats, stats } from '#/renderer'
-import controls from '#/controls'
+import controls, { resetControls } from '#/controls'
 import camera from '#/camera'
 import clock from '#/clock'
 
@@ -259,7 +259,8 @@ import { formatTime, mapDirection } from '#/tools'
 import IntroScene from '#/classes/scenes/intro-scene'
 import BoardScene from '#/classes/scenes/board-scene'
 
-import { Raycaster, Vector2, Vector3 } from 'three'
+import { Raycaster, Vector2 } from 'three'
+import boardScene from './classes/scenes/board-scene'
 
 const { state, send, service } = useMachine(mainMachine)
 
@@ -462,27 +463,40 @@ const quit2 = () => {
 
 const selectedPlane = ref(null)
 
+watch(
+  selectedPlane,
+  (newPlane) => {
+    if (!newPlane) {
+      resetControls()
+    }
+  }
+)
+
+// Reset the camera if the selected plane is removed.
+watch(
+  boardScene._airplanes,
+  (planes) => {
+    if (!planes.find(plane => plane._id === selectedPlane.value._id)) {
+      selectedPlane.value = null
+    }
+  }
+)
+
 const selectPlane = (plane) => {
   BoardScene.selectPlane(plane._id)
 
   selectedPlane.value = BoardScene._airplanes.value.find(plane => plane._isSelected)
 
-  let from
-  let to
-
   if (selectedPlane.value) {
-    from = controls.target
-    to = selectedPlane.value._model.position
-  } else {
-    from = controls.target
-    to = new Vector3(0, 0, 0)
-  }
+    const from = controls.target
+    const to = selectedPlane.value._model.position
 
-  new TWEEN.Tween(from)
-    .to(to, 500)
-    .easing(TWEEN.Easing.Cubic.InOut)
-    .onUpdate(() => controls.target = from)
-    .start()
+    new TWEEN.Tween(from)
+      .to(to, 500)
+      .easing(TWEEN.Easing.Cubic.InOut)
+      .onUpdate(() => controls.target = from)
+      .start()
+  }
 }
 
 const setHeight = (height) => {
