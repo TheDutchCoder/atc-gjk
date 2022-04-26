@@ -208,6 +208,11 @@ boardScene.checkDestinations = () => {
         boardScene._score.value += 100 + (plane._fuel * 10)
 
         plane.setGhost()
+
+        // If the plane is at an airport, set it to "not taken off".
+        if (curY === 0) {
+          plane.unsetTakenOff()
+        }
       } else if (curY === 0) {
         console.log('game over!')
         gameService.send('LOSE')

@@ -284,8 +284,6 @@ const createDefaultPlane = (color) => {
  */
 export default class Airplane {
 
-  _start = null
-  _end = null
   _startTime = 0
 
   /**
@@ -317,15 +315,16 @@ export default class Airplane {
   _targetDirection = 0
 
   /**
-   * The destination for the airplane.
+   * The start for the airplane, including direction.
    * This can either be a coordinate on the edge of the board, or an airfield.
    */
-  _endPosition = { x: 0, y: 0, z: 0 }
+  _start = null
 
   /**
-   * The direction the airplane has to exit or land with.
+   * The destination for the airplane, including direction.
+   * This can either be a coordinate on the edge of the board, or an airfield.
    */
-  _endDirection = 0
+  _end = null
 
   /**
    * Whether the airplane has spawned on the game board.
@@ -382,15 +381,12 @@ export default class Airplane {
    * AnimateOut
    * AnimateIdle
    */
-  // constructor (position, direction, endPosition, endDirection, id, fuel, start, end) {
   constructor (options) {
     const { id, start, end, fuel, startTime } = options
     this._start = start
     this._end = end
     this._position = start.position
     this._direction = start.direction
-    // this._endPosition = endPosition
-    // this._endDirection = endDirection
     this._targetAltitude = this._position.y || 1
     this._takenOff = this._position.y !== 0
     this._id = id
@@ -410,11 +406,11 @@ export default class Airplane {
     this._model.position.x = from.position.x * 10
     this._model.position.z = from.position.z * 10
 
-    if (!this._takenOff) {
-      this._model.position.y = (0.18 + from.position.y) * 5
-    } else {
+    // if (this._position.y === 0) {
+      // this._model.position.y = (0.18 + from.position.y) * 5
+    // } else {
       this._model.position.y = from.position.y * 5
-    }
+    // }
 
     this._model.scale.setScalar(from.scale)
   }
@@ -533,6 +529,12 @@ export default class Airplane {
     this._model = plane
   }
 
+  unsetTakenOff () {
+    this._takenOff = false
+
+    this._model.rotateX(0.1)
+  }
+
   /**
    * Moves the plane to its next position.
    *
@@ -590,7 +592,11 @@ export default class Airplane {
     return new Promise((resolve) => {
       const from = { position: { x: this._model.position.x / 10, y: this._model.position.y / 5, z: this._model.position.z / 10 }, direction: this._model.rotation.y, scale }
       const p = getNextPosition(this._position, this._direction)
+      // console.log(p)
       p.y += nextAlt
+      if (p.y === 0) {
+        p.y = 0.18
+      }
       const to = { position: p, direction: this._model.rotation.y + (nextDir * Math.PI / -4), scale: 1 }
 
       new TWEEN.Tween(from)
