@@ -54,3 +54,13 @@ export const airplanes = {
   NORMAL: { amount: 48, height: 7 },
   HARD: { amount: 96, height: 9 },
 }
+
+export const flightStatusses = {
+  SCHEDULED: 'Scheduled',
+  APPROACHING: 'Approaching',
+  IN_FLIGHT: 'In flight',
+  OBSTRUCTED: 'Obstructed',
+  LANDED: 'Landed',
+  EXITED: 'Exited',
+  CRASHED: 'Crashed',
+}

@@ -69,6 +69,8 @@ introScene.start = () => {
   })
 
   introScene.addAirplane(airplane)
+  // airplane.setSpawned()
+  // airplane.animateIn(0, 500)
 
   // Add the dirt base.
   Dirt.add()
