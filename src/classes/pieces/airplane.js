@@ -28,6 +28,10 @@ import {
   getNextPosition,
 } from '#tools'
 
+import {
+  flightStatusses,
+} from '#/constants'
+
 const ghostColor = new Color(0xffffff)
 
 const createDefaultPlane = (color) => {
@@ -382,6 +386,11 @@ export default class Airplane {
   _fuel = 0
 
   /**
+   * The status of the plane.
+   */
+  _flightStatus = flightStatusses.SCHEDULED
+
+  /**
    * AnimateIn
    * AnimateOut
    * AnimateIdle
@@ -515,8 +524,6 @@ export default class Airplane {
    * @todo add updatePosition?
    */
   create () {
-    this._spawned = true
-
     const plane = createDefaultPlane(this._color)
 
     plane.position.x = this._position.x * 10
@@ -561,11 +568,11 @@ export default class Airplane {
     }
 
     // Move the model on the board (this should be animated).
-    // this.unsetGhost()
     await this.animateNext(altMod, dirMod, delay, scale, this._takenOff ? 0 : 0.1)
 
     // The plane has taken off in every case on the first next step.
     this._takenOff = true
+    this._flightStatus = flightStatusses.IN_FLIGHT
 
     // Update the plane's new position.
     nextPosition.y += altMod
@@ -644,6 +651,12 @@ export default class Airplane {
 
   setFinished () {
     this._finished = true
+    this._flightStatus = flightStatusses.LANDED
+  }
+
+  setSpawned () {
+    this._spawned = true
+    this._flightStatus = flightStatusses.APPROACHING
   }
 
   setSelected () {

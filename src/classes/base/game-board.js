@@ -6,6 +6,7 @@ import Forest from '#/classes/tiles/forest'
 import Airfield from '#/classes/tiles/airfield'
 import TrainTracks from '#/classes/tiles/train-tracks'
 import Clouds from '#/classes/pieces/clouds'
+import Airplane from '#/classes/pieces/airplane'
 
 import {
   randomRoundNumber,
@@ -172,13 +173,13 @@ export default class GameBoard {
       }
 
       // Add airplanes to the queue
-      this._airplanesQueue.push({
-        _id: uuidv4(),
-        _start: start,
-        _end: end,
-        _startTime: randomRoundNumber(0, 96),
-        _fuel: randomRoundNumber(20, 35),
-      })
+      this._airplanesQueue.push(new Airplane({
+        id: uuidv4(),
+        start: start,
+        end: end,
+        startTime: randomRoundNumber(0, 96),
+        fuel: randomRoundNumber(20, 35),
+      }))
     }
 
     // Add the labels

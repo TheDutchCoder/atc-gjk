@@ -16,7 +16,6 @@ import {
 
 import Clouds from '#/classes/pieces/clouds'
 import controls from '../../controls'
-import Airplane from '#/classes/pieces/airplane'
 import Airstrip from '#/classes/props/airstrip'
 
 const boardScene = new GameScene()
@@ -98,16 +97,10 @@ boardScene.nextTick = async () => {
 
     // Spawn new planes when their schedule says so.
     const spawnPlanes = Promise.all(boardScene._board._airplanesQueue.filter(plane => plane._startTime === boardScene._tick.value).map(plane => {
-      const airplane = new Airplane({
-        id: plane._id,
-        start: plane._start,
-        end: plane._end,
-        fuel: plane._fuel,
-        startTime: plane._startTime,
-      })
-      boardScene.addAirplane(airplane)
-      airplane.setGhost()
-      return airplane.animateIn(0, 500)
+      boardScene.addAirplane(plane)
+      plane.setSpawned()
+      plane.setGhost()
+      return plane.animateIn(0, 500)
     }))
 
     // Rotate the sun depending on the time of day.
@@ -129,7 +122,7 @@ boardScene.nextTick = async () => {
     await spawnPlanes
     await moveSun
 
-    boardScene.checkGhosts()
+    boardScene.checkObstructions()
     // boardScene.checkCollisions()
     boardScene.checkDestinations()
     boardScene.checkOutOfBounds()
@@ -147,7 +140,7 @@ boardScene.nextTick = async () => {
  *
  * @todo move into the parent class?
  */
-boardScene.checkGhosts = () => {
+boardScene.checkObstructions = () => {
   const minX = 0 - Math.floor(boardScene._board._width / 2)
   const minZ = 0 - Math.floor(boardScene._board._depth / 2)
   const maxX = Math.abs(minX)
