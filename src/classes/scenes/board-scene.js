@@ -18,6 +18,8 @@ import Clouds from '#/classes/pieces/clouds'
 import controls from '../../controls'
 import Airstrip from '#/classes/props/airstrip'
 
+import { flightStatusses } from '#/constants'
+
 const boardScene = new GameScene()
 const board = new GameBoard()
 
@@ -27,16 +29,12 @@ boardScene.start = () => {
 
   const pivot2 = new Object3D()
   pivot2.name = 'sun'
-  // pivot2.rotation.x = Math.PI / -2
-  // pivot2.rotation.z = Math.PI / -2
+
   const dirLight1 = new DirectionalLight(0xffffff, 0.3)
   const helper = new DirectionalLightHelper(dirLight1, 5)
   pivot2.add(dirLight1)
 
   dirLight1.position.set(0, 60, 0)
-  // helper.target = pivot2
-  // dirLight1.lookAt(0 ,0 ,0)
-  // dirLight1.target = pivot2
   dirLight1.castShadow = true
   dirLight1.shadow.mapSize.width = 2048
   dirLight1.shadow.mapSize.height = 2048
@@ -46,8 +44,6 @@ boardScene.start = () => {
   dirLight1.shadow.camera.bottom = -120
   dirLight1.shadow.camera.left = -90
   dirLight1.shadow.camera.right = 90
-
-  // pivot2.rotation.y = Math.PI / -1.5
 
   const dirLight2 = new DirectionalLight(0xb0e1ed, 0.2)
   const helper2 = new DirectionalLightHelper(dirLight2, 5)
@@ -85,7 +81,7 @@ boardScene.nextTick = async () => {
 
     // Prune all finished planes.
     boardScene._airplanes.value = boardScene._airplanes.value.filter(plane => {
-      if (plane._finished) {
+      if (plane._flightStatus === flightStatusses.LANDED || plane._flightStatus === flightStatusses.EXITED) {
         boardScene.removeAirplane(plane)
       } else {
         return plane
@@ -141,46 +137,34 @@ boardScene.nextTick = async () => {
  * @todo move into the parent class?
  */
 boardScene.checkObstructions = () => {
-  // const minX = 0 - Math.floor(boardScene._board._width / 2)
-  // const minZ = 0 - Math.floor(boardScene._board._depth / 2)
-  // const maxX = Math.abs(minX)
-  // const maxZ = Math.abs(minZ)
+  const minX = 0 - Math.floor(boardScene._board._width / 2)
+  const minZ = 0 - Math.floor(boardScene._board._depth / 2)
+  const maxX = Math.abs(minX)
+  const maxZ = Math.abs(minZ)
 
   boardScene._airplanes.value.forEach(plane => {
-    // Check if the plane is in any of the clouds
+    const { x: pX, y: pY, z: pZ } = plane._position
     let isInCloud = false
+    let isLeaving = false
 
+    // Check if the plane is in any of the clouds
     Clouds._tiles.forEach(cloud => {
       const { x: cX, y: cY, z: cZ } = cloud.position
-      const { x: pX, y: pY, z: pZ } = plane._position
 
       if ((cX === pX && cY === pY && cZ === pZ)) {
         isInCloud = true
       }
     })
 
-    if (isInCloud) {
+    // Check if the plane is leaving the board.
+    if ((pX < minX) || (pX > maxX) || (pZ < minZ) || (pZ > maxZ)) {
+      isLeaving = true
+    }
+
+    if (isInCloud || isLeaving) {
       plane.setGhost()
     }
   })
-  // Clouds._tiles.forEach(cloud => {
-  //   boardScene._airplanes.value.forEach(plane => {
-  //     const { x: cX, y: cY, z: cZ } = cloud.position
-  //     const { x: pX, y: pY, z: pZ } = plane._position
-  //     if (
-  //       (cX === pX && cY === pY && cZ === pZ) ||
-  //       (pX < minX) ||
-  //       (pX > maxX) ||
-  //       (pZ < minZ) ||
-  //       (pZ > maxZ) || // not okay
-  //       !plane._takenOff
-  //     ) {
-  //       plane.setGhost()
-  //     } else {
-  //       plane.unsetGhost()
-  //     }
-  //   })
-  // })
 }
 
 boardScene.checkCollisions = () => {
@@ -224,10 +208,15 @@ boardScene.checkDestinations = () => {
       const { position: { x: endX, y: endY, z: endZ }, direction: endD } = plane._end
 
       if (curX === endX && curY === endY && curZ === endZ && curD === endD) {
-        boardScene._score.value += 100 + (plane._fuel * 10)
+        boardScene._score.value += (100 + (plane._fuel * 10))
 
         plane.setGhost()
-        plane.setFinished()
+
+        if (curY === 0) {
+          plane.setLanded()
+        } else {
+          plane.setExited()
+        }
       } else if (curY === 0) {
         console.log('game over!')
         gameService.send('LOSE')
@@ -244,10 +233,14 @@ boardScene.checkOutOfBounds = () => {
     const maxX = Math.abs(minX)
     const maxZ = Math.abs(minZ)
 
-    if (curX < minX || curX > maxX || curZ < minZ || curZ > maxZ && !plane._finished) {
+    if (
+      (curX <= minX || curX >= maxX || curZ <= minZ || curZ >= maxZ) &&
+      plane._flightStatus !== flightStatusses.APPROACHING &&
+      plane._startTime < boardScene._tick.value
+    ) {
       boardScene._score.value -= 500
 
-      plane.setFinished()
+      plane.setExited()
     }
   })
 }

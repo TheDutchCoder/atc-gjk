@@ -147,9 +147,9 @@
               <tr
                 v-for="(plane, index) in schedule"
                 :key="plane._id"
-                :class="plane._finished || plane._flightStatus === flightStatusses.OBSTRUCTED ? 'opacity-50' : selectedPlane && (selectedPlane._id === plane._id) ? 'bg-sky-500' : index % 2 === 0 ? 'bg-slate-50 hover:bg-slate-100' : 'hover:bg-slate-100'"
+                :class="(plane._flightStatus === flightStatusses.APPROACHING || plane._flightStatus === flightStatusses.OBSTRUCTED || plane._flightStatus === flightStatusses.LANDED || plane._flightStatus === flightStatusses.EXITED) ? 'opacity-50' : selectedPlane && (selectedPlane._id === plane._id) ? 'bg-sky-500' : index % 2 === 0 ? 'bg-slate-50 hover:bg-slate-100' : 'hover:bg-slate-100'"
                 class="cursor-pointer transition-colors"
-                @click="plane._finished ? null : selectPlane(plane)"
+                @click="plane._flightStatus === flightStatusses.IN_FLIGHT ? selectPlane(plane) : null"
               >
                 <td class="py-1 px-2">
                   <div

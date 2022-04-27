@@ -288,12 +288,10 @@ const createDefaultPlane = (color) => {
  */
 export default class Airplane {
 
-  _startTime = 0
-
   /**
-   * Indicates the plane has reached its destination successfully.
+   * The game tick at which this plane should spawn.
    */
-  _finished = false
+  _startTime = 0
 
   /**
    * The current position of the airplane.
@@ -344,6 +342,11 @@ export default class Airplane {
    * Whether the airplane has taken off.
    */
   _takenOff = false
+
+  /**
+   * Whether the airplane has landed.
+   */
+  _landed = false
 
   /**
    * Whether the airplane is currently uncontrollable.
@@ -418,13 +421,8 @@ export default class Airplane {
 
   updateAnimation (from) {
     this._model.position.x = from.position.x * 10
+    this._model.position.y = from.position.y * 5
     this._model.position.z = from.position.z * 10
-
-    // if (this._position.y === 0) {
-      // this._model.position.y = (0.18 + from.position.y) * 5
-    // } else {
-      this._model.position.y = from.position.y * 5
-    // }
 
     this._model.scale.setScalar(from.scale)
   }
@@ -434,37 +432,29 @@ export default class Airplane {
    */
   animateIn (delay = 1250, speed = 500) {
     return new Promise((resolve) => {
-      // Airplane is spawning on an airfield
+      const { _position, _direction } = this
+      let from
+      let to
+
       if (!this._takenOff) {
-        const { _position, _direction } = this
-        const from = { position: _position, direction: _direction, scale: 0 }
-        const to = { position: _position, direction: _direction, scale: 1 }
-
-        this.updateAnimation(from)
-
-        new TWEEN.Tween(from)
-          .to(to, speed)
-          .easing(TWEEN.Easing.Elastic.Out)
-          .onUpdate(() => this.updateAnimation(from))
-          .onComplete(resolve)
-          .delay(delay)
-          .start()
-
+        from = { position: { ..._position }, direction: _direction, scale: 0 }
+        to = { position: { ..._position }, direction: _direction, scale: 1 }
+        from.position.y = 0.18
+        to.position.y = 0.18
       } else {
-        const { _position, _direction } = this
-        const from = { position: getPrevPosition(_position, _direction), direction: _direction, scale: 0 }
-        const to = { position: _position, direction: _direction, scale: 1 }
-
-        this.updateAnimation(from)
-
-        new TWEEN.Tween(from)
-          .to(to, speed)
-          .easing(TWEEN.Easing.Elastic.Out)
-          .onUpdate(() => this.updateAnimation(from))
-          .onComplete(resolve)
-          .delay(delay)
-          .start()
+        from = { position: getPrevPosition({ ..._position }, _direction), direction: _direction, scale: 0 }
+        to = { position: { ..._position }, direction: _direction, scale: 1 }
       }
+
+      this.updateAnimation(from)
+
+      new TWEEN.Tween(from)
+        .to(to, speed)
+        .easing(TWEEN.Easing.Elastic.Out)
+        .onUpdate(() => this.updateAnimation(from))
+        .onComplete(resolve)
+        .delay(delay)
+        .start()
     })
   }
 
@@ -583,14 +573,6 @@ export default class Airplane {
     this._direction = (8 + (this._direction + dirMod)) % 8
     this._model.rotation.y = this._direction * (Math.PI / -4)
 
-    // Check if the plane has reached its destination with poor man's deep equal.
-    if (
-      JSON.stringify(this._position) === JSON.stringify(this._end.position) &&
-      this._direction === this._end.direction
-    ) {
-      console.log('yay, plane landed at target!')
-    }
-
     // Reduce the plane's fuel
     this._fuel -= 1
   }
@@ -650,14 +632,17 @@ export default class Airplane {
     })
   }
 
-  setFinished () {
-    this._finished = true
-    this._flightStatus = flightStatusses.LANDED
-  }
-
   setSpawned () {
     this._spawned = true
     this._flightStatus = flightStatusses.APPROACHING
+  }
+
+  setExited () {
+    this._flightStatus = flightStatusses.EXITED
+  }
+
+  setLanded () {
+    this._flightStatus = flightStatusses.LANDED
   }
 
   setSelected () {
