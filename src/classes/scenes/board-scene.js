@@ -18,6 +18,8 @@ import Clouds from '#/classes/pieces/clouds'
 import controls from '../../controls'
 import Airstrip from '#/classes/props/airstrip'
 
+import { flightStatusses } from '#/constants'
+
 const boardScene = new GameScene()
 const board = new GameBoard()
 
@@ -79,7 +81,7 @@ boardScene.nextTick = async () => {
 
     // Prune all finished planes.
     boardScene._airplanes.value = boardScene._airplanes.value.filter(plane => {
-      if (plane._finished) {
+      if (plane._flightStatus === flightStatusses.LANDED || plane._flightStatus === flightStatusses.EXITED) {
         boardScene.removeAirplane(plane)
       } else {
         return plane
@@ -209,7 +211,12 @@ boardScene.checkDestinations = () => {
         boardScene._score.value += (100 + (plane._fuel * 10))
 
         plane.setGhost()
-        plane.setFinished()
+
+        if (curY === 0) {
+          plane.setLanded()
+        } else {
+          plane.setExited()
+        }
       } else if (curY === 0) {
         console.log('game over!')
         gameService.send('LOSE')
@@ -228,12 +235,11 @@ boardScene.checkOutOfBounds = () => {
 
     if (
       (curX <= minX || curX >= maxX || curZ <= minZ || curZ >= maxZ) &&
-      !plane._finished &&
+      plane._flightStatus !== flightStatusses.APPROACHING &&
       plane._startTime < boardScene._tick.value
     ) {
       boardScene._score.value -= 500
 
-      plane.setFinished()
       plane.setExited()
     }
   })

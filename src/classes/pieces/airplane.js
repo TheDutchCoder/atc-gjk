@@ -288,12 +288,10 @@ const createDefaultPlane = (color) => {
  */
 export default class Airplane {
 
-  _startTime = 0
-
   /**
-   * Indicates the plane has reached its destination successfully.
+   * The game tick at which this plane should spawn.
    */
-  _finished = false
+  _startTime = 0
 
   /**
    * The current position of the airplane.
@@ -634,11 +632,6 @@ export default class Airplane {
     })
   }
 
-  setFinished () {
-    this._finished = true
-    this._flightStatus = flightStatusses.LANDED
-  }
-
   setSpawned () {
     this._spawned = true
     this._flightStatus = flightStatusses.APPROACHING
@@ -646,6 +639,10 @@ export default class Airplane {
 
   setExited () {
     this._flightStatus = flightStatusses.EXITED
+  }
+
+  setLanded () {
+    this._flightStatus = flightStatusses.LANDED
   }
 
   setSelected () {
