@@ -141,29 +141,46 @@ boardScene.nextTick = async () => {
  * @todo move into the parent class?
  */
 boardScene.checkObstructions = () => {
-  const minX = 0 - Math.floor(boardScene._board._width / 2)
-  const minZ = 0 - Math.floor(boardScene._board._depth / 2)
-  const maxX = Math.abs(minX)
-  const maxZ = Math.abs(minZ)
+  // const minX = 0 - Math.floor(boardScene._board._width / 2)
+  // const minZ = 0 - Math.floor(boardScene._board._depth / 2)
+  // const maxX = Math.abs(minX)
+  // const maxZ = Math.abs(minZ)
 
-  Clouds._tiles.forEach(cloud => {
-    boardScene._airplanes.value.forEach(plane => {
+  boardScene._airplanes.value.forEach(plane => {
+    // Check if the plane is in any of the clouds
+    let isInCloud = false
+
+    Clouds._tiles.forEach(cloud => {
       const { x: cX, y: cY, z: cZ } = cloud.position
       const { x: pX, y: pY, z: pZ } = plane._position
-      if (
-        (cX === pX && cY === pY && cZ === pZ) ||
-        (pX < minX) ||
-        (pX > maxX) ||
-        (pZ < minZ) ||
-        (pZ > maxZ) ||
-        !plane._takenOff
-      ) {
-        plane.setGhost()
-      } else {
-        plane.unsetGhost()
+
+      if ((cX === pX && cY === pY && cZ === pZ)) {
+        isInCloud = true
       }
     })
+
+    if (isInCloud) {
+      plane.setGhost()
+    }
   })
+  // Clouds._tiles.forEach(cloud => {
+  //   boardScene._airplanes.value.forEach(plane => {
+  //     const { x: cX, y: cY, z: cZ } = cloud.position
+  //     const { x: pX, y: pY, z: pZ } = plane._position
+  //     if (
+  //       (cX === pX && cY === pY && cZ === pZ) ||
+  //       (pX < minX) ||
+  //       (pX > maxX) ||
+  //       (pZ < minZ) ||
+  //       (pZ > maxZ) || // not okay
+  //       !plane._takenOff
+  //     ) {
+  //       plane.setGhost()
+  //     } else {
+  //       plane.unsetGhost()
+  //     }
+  //   })
+  // })
 }
 
 boardScene.checkCollisions = () => {

@@ -569,6 +569,7 @@ export default class Airplane {
 
     // Move the model on the board (this should be animated).
     await this.animateNext(altMod, dirMod, delay, scale, this._takenOff ? 0 : 0.1)
+    this.unsetGhost()
 
     // The plane has taken off in every case on the first next step.
     this._takenOff = true
