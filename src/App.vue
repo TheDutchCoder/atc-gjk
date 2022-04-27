@@ -147,9 +147,9 @@
               <tr
                 v-for="(plane, index) in schedule"
                 :key="plane._id"
-                :class="plane._landed ? 'opacity-50' : selectedPlane && (selectedPlane._id === plane._id) ? 'bg-sky-500' : index % 2 === 0 ? 'bg-slate-50 hover:bg-slate-100' : 'hover:bg-slate-100'"
+                :class="plane._finished || getStatus(plane) === 'Unreachable' ? 'opacity-50' : selectedPlane && (selectedPlane._id === plane._id) ? 'bg-sky-500' : index % 2 === 0 ? 'bg-slate-50 hover:bg-slate-100' : 'hover:bg-slate-100'"
                 class="cursor-pointer transition-colors"
-                @click="plane._landed ? null : selectPlane(plane)"
+                @click="plane._finished ? null : selectPlane(plane)"
               >
                 <td class="py-1 px-2">
                   <div
@@ -161,7 +161,7 @@
                 </td>
                 <td class="py-1 px-2">
                   <div class="p-2 font-bold">
-                    {{ plane._startTime > BoardScene._tick.value ? 'Scheduled': plane._startTime === BoardScene._tick.value ? 'Approaching' : plane._landed ? 'Passed' : 'In flight' }}
+                    {{ getStatus(plane) }}
                   </div>
                 </td>
                 <td class="py-1 px-2">
@@ -509,6 +509,20 @@ const setDirection = (direction) => {
   if (selectedPlane.value && !selectedPlane.value._isGhost) {
     selectedPlane.value.setDirection(direction)
   }
+}
+
+const getStatus = (plane) => {
+  if (plane._startTime > BoardScene._tick.value) {
+    return 'Scheduled'
+  } else if (plane._startTime === BoardScene._tick.value) {
+    return 'Approaching'
+  } else if (plane._finished) {
+    return 'Landed'
+  } else if (plane._isGhost && !plane._finished) {
+    return 'Unreachable'
+  }
+
+  return 'In flight'
 }
 
 </script>

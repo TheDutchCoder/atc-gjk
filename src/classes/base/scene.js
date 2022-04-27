@@ -127,7 +127,7 @@ export default class GameScene {
 
     this._board._airplanesQueue.map(plane => {
       if (plane._id === airplane._id) {
-        plane._landed = true
+        plane._finished = true
       }
 
       return plane
