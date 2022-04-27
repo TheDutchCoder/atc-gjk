@@ -577,6 +577,9 @@ export default class Airplane {
     this._fuel -= 1
   }
 
+  /**
+   * @todo Account for crashes
+   */
   async animateNext (nextAlt, nextDir, delay = 0, scale = 1) {
     return new Promise((resolve) => {
       const from = { position: { x: this._model.position.x / 10, y: this._model.position.y / 5, z: this._model.position.z / 10 }, direction: this._model.rotation.y, scale }
@@ -643,6 +646,10 @@ export default class Airplane {
 
   setLanded () {
     this._flightStatus = flightStatusses.LANDED
+  }
+
+  setCrashed () {
+    this._flightStatus = flightStatusses.CRASHED
   }
 
   setSelected () {

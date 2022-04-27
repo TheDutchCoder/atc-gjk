@@ -219,6 +219,7 @@ boardScene.checkDestinations = () => {
         }
       } else if (curY === 0) {
         console.log('game over!')
+        plane.setCrashed()
         gameService.send('LOSE')
       }
     }
