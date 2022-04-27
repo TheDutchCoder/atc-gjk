@@ -234,7 +234,7 @@ boardScene.checkOutOfBounds = () => {
     const maxX = Math.abs(minX)
     const maxZ = Math.abs(minZ)
 
-    if (curX <= minX || curX >= maxX || curZ <= minZ || curZ >= maxZ) {
+    if (curX < minX || curX > maxX || curZ < minZ || curZ > maxZ && !plane._finished) {
       boardScene._score.value -= 500
 
       plane.setFinished()

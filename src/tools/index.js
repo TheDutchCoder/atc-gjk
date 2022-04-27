@@ -457,7 +457,7 @@ export const getRandomDestination = (width, depth, airports) => {
 
   return isAirport ? getRandomAirport(airports) : {
     position,
-    direction: 0,
+    direction: getEndDirection(position, width, depth),
     name: `${getWindDirection(position)}${y}`,
   }
 }
