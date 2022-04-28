@@ -254,7 +254,7 @@ import controls, { resetControls } from '#/controls'
 import camera from '#/camera'
 import clock from '#/clock'
 
-import { formatTime, mapDirection } from '#/tools'
+import { formatTime, mapDirection, getDirectionFactors } from '#/tools'
 import { flightStatusses } from '#/constants'
 
 import IntroScene from '#/classes/scenes/intro-scene'
@@ -489,13 +489,27 @@ const selectPlane = (plane) => {
   selectedPlane.value = BoardScene._airplanes.value.find(plane => plane._isSelected)
 
   if (selectedPlane.value) {
-    const from = controls.target
-    const to = selectedPlane.value._model.position
+    const fromControls = controls.target
+    const toControls = selectedPlane.value._model.position
 
-    new TWEEN.Tween(from)
-      .to(to, 500)
+    new TWEEN.Tween(fromControls)
+      .to(toControls, 500)
       .easing(TWEEN.Easing.Cubic.InOut)
-      .onUpdate(() => controls.target = from)
+      .onUpdate(() => controls.target = fromControls)
+      .start()
+
+    const { x, y, z } = selectedPlane.value._model.position
+    const factors = getDirectionFactors(selectedPlane.value._direction)
+    const fromCamera = { x: camera.position.x, y: camera.position.y, z: camera.position.z }
+    const toCamera = { x: x + (20 * factors.x), y: y + 10, z: z + (20 * factors.z) }
+
+    new TWEEN.Tween(fromCamera)
+      .to(toCamera, 500)
+      .easing(TWEEN.Easing.Cubic.InOut)
+      .onUpdate(() => {
+        camera.position.set(fromCamera.x, fromCamera.y, fromCamera.z)
+        controls.update()
+      })
       .start()
   }
 }

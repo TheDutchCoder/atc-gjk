@@ -15,6 +15,7 @@ import {
   getRandomDestination,
   getRandomAirport,
   getWindDirection,
+  getDirectionFactors,
 } from '#tools'
 
 suite('tools', () => {
@@ -395,5 +396,16 @@ suite('tools', () => {
     expect(getWindDirection({ x: -1, y: 1, z: 1 })).toBe('SW')
     expect(getWindDirection({ x: -1, y: 1, z: 0 })).toBe('W')
     expect(getWindDirection({ x: -1, y: 1, z: -1 })).toBe('NW')
+  })
+
+  test('getDirectionFactors', () => {
+    expect(getDirectionFactors(0)).toEqual({ x: 0, z: 1 })
+    expect(getDirectionFactors(1)).toEqual({ x: -1, z: 1 })
+    expect(getDirectionFactors(2)).toEqual({ x: -1, z: 0 })
+    expect(getDirectionFactors(3)).toEqual({ x: -1, z: -1 })
+    expect(getDirectionFactors(4)).toEqual({ x: 0, z: -1 })
+    expect(getDirectionFactors(5)).toEqual({ x: 1, z: -1 })
+    expect(getDirectionFactors(6)).toEqual({ x: 1, z: 0 })
+    expect(getDirectionFactors(7)).toEqual({ x: 1, z: 1 })
   })
 })
