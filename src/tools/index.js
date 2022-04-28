@@ -493,3 +493,23 @@ export const getWindDirection = (coordinates) => {
     }
   }
 }
+
+export const getDirectionFactors = (direction = 0) => {
+  if (direction === 0) {
+    return { x: 0, z: 1 }
+  } else if (direction === 1) {
+    return { x: -1, z: 1 }
+  } else if (direction === 2) {
+    return { x: -1, z: 0 }
+  } else if (direction === 3) {
+    return { x: -1, z: -1 }
+  } else if (direction === 4) {
+    return { x: 0, z: -1 }
+  } else if (direction === 5) {
+    return { x: 1, z: -1 }
+  } else if (direction === 6) {
+    return { x: 1, z: 0 }
+  } else if (direction === 7) {
+    return { x: 1, z: 1 }
+  }
+}

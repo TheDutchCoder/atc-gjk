@@ -23,6 +23,18 @@ export const resetControls = () => {
     .easing(TWEEN.Easing.Cubic.InOut)
     .onUpdate(() => controls.target = from)
     .start()
+
+  const fromCamera = { x: camera.position.x, y: camera.position.y, z: camera.position.z }
+  const toCamera = { x: 80, y: 35, z: 80 }
+
+  new TWEEN.Tween(fromCamera)
+    .to(toCamera, 500)
+    .easing(TWEEN.Easing.Cubic.InOut)
+    .onUpdate(() => {
+      camera.position.set(fromCamera.x, fromCamera.y, fromCamera.z)
+      controls.update()
+    })
+    .start()
 }
 
 export default controls

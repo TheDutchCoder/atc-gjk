@@ -17,6 +17,7 @@ import {
 import Clouds from '#/classes/pieces/clouds'
 import controls from '../../controls'
 import Airstrip from '#/classes/props/airstrip'
+import camera from '#/camera'
 
 import { flightStatusses } from '#/constants'
 
@@ -59,7 +60,7 @@ boardScene.start = () => {
   boardScene.addLight(helper2)
   boardScene.addLight(dirLight2)
 
-  const fog = new Fog(new Color(0x9bc8e9), 15, 250)
+  const fog = new Fog(new Color(0x9bc8e9), 15, 350)
 
   pivot2.rotation.x = Math.PI / 4 // How high the sun is in the sky
   pivot2.rotation.z = Math.PI // The progress of the sun relative to time (0 is noon)

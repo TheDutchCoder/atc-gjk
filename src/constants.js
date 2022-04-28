@@ -6,16 +6,16 @@ export const difficulties = {
 
 export const dimensions = {
   EASY: {
-    width: 9,
-    depth: 9,
-  },
-  NORMAL: {
     width: 11,
     depth: 11,
   },
+  NORMAL: {
+    width: 15,
+    depth: 15,
+  },
   HARD: {
-    width: 13,
-    depth: 13,
+    width: 21,
+    depth: 21,
   },
 }
 
