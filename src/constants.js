@@ -62,5 +62,6 @@ export const flightStatusses = {
   OBSTRUCTED: 'Obstructed',
   LANDED: 'Landed',
   EXITED: 'Exited',
+  LOST: 'Lost',
   CRASHED: 'Crashed',
 }

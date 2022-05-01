@@ -43,30 +43,55 @@
     </transition>
 
     <!-- Intro UI -->
-    <template v-if="state.hasTag('intro')">
-      <button
-        class="fixed top-1 right-1 bg-white rounded px-4 py-2 font-bold"
-        @click="send('INTRO_OUT')"
-      >
-        Play
-      </button>
-    </template>
+    <transition
+      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)]"
+      enter-from-class="scale-50 opacity-0"
+      enter-to-class="scale-100 opacity-100"
+      leave-active-class="transition duration-500 ease-in"
+      leave-from-class="scale-100 opacity-100"
+      leave-to-class="scale-95 opacity-0"
+    >
+      <template v-if="state.matches('introIdle')">
+        <ActionButton
+          class="fixed bottom-1/4 left-1/2 transform -translate-x-1/2"
+          size="lg"
+          @click="send('INTRO_OUT')"
+        >
+          Play
+        </ActionButton>
+      </template>
+    </transition>
 
     <!-- Game UI -->
     <template v-if="state.hasTag('board')">
-      <button
-        class="fixed top-1 right-20 bg-white rounded px-4 py-2 font-bold"
-        @click="nextTick"
-      >
-        Tick
-      </button>
+      <div class="fixed top-2 right-2 text-xs font-bold">
+        <div
+          class="flex justify-center items-center rounded-full w-16 h-16 shadow-lg bg-white cursor-pointer transform hover:bg-blue-200 transition-colors"
+          @click="nextTick"
+        >
+          <div
+            class="rounded-full w-16 h-16 border-2 border-white"
+            :style="grad"
+          />
+        </div>
 
-      <button
-        class="fixed top-1 right-1 bg-white rounded px-4 py-2 font-bold"
+        <div class="absolute -bottom-16 left-1/2 w-16 transform -translate-x-1/2 bg-white py-2 px-3 rounded shadow-lg text-center">
+          <div class="font-bold text-sm">
+            Time
+          </div>
+          <div class="text-blue-500">
+            {{ time }}
+          </div>
+        </div>
+      </div>
+
+      <ActionButton
+        size="sm"
+        class="fixed top-2 left-2"
         @click="quit"
       >
         Quit
-      </button>
+      </ActionButton>
 
       <transition
         enter-active-class="transition duration-100 ease-out"
@@ -80,166 +105,240 @@
           v-if="showQuit"
           class="fixed z-50 inset-0 flex items-center justify-center"
         >
-          <div class="absolute inset-0 bg-sky-800 bg-opacity-80" />
-          <div class="relative z-10 p-4 rounded bg-white shadow-xl">
-            <h2 class="text-lg font-bold">
+          <div
+            class="absolute inset-0 bg-blue-300 bg-opacity-80"
+            @click.self="showQuit = false"
+          />
+          <div class="relative z-10 p-6 rounded bg-white shadow-xl">
+            <h2 class="text-base font-bold">
               Are you sure you want to quit?
             </h2>
-            <div class="flex space-x-4 items-center justify-center mt-4">
-              <button
-                class="rounded py-2 px-6 bg-gray-200"
+            <div class="flex space-x-4 items-center justify-center mt-6">
+              <ActionButton
+                size="sm"
+                is-secondary
                 @click="showQuit = false"
               >
                 No
-              </button>
-              <button
-                class="rounded py-2 px-6 bg-sky-700 text-white"
+              </ActionButton>
+              <ActionButton
+                size="sm"
+                is-primary
                 @click="quit2"
               >
                 Yes
-              </button>
+              </ActionButton>
             </div>
           </div>
         </div>
       </transition>
 
-      <div class="fixed top-1 left-1/2 transform -translate-x-1/2 bg-white rounded px-4 py-2 font-bold w-20 text-center">
+      <div class="fixed top-2 left-1/2 transform -translate-x-1/2 bg-white rounded shadow-lg">
+        <div class="py-3 px-4 text-center text-sm">
+          <div class="font-bold text-gray-800">
+            Score
+          </div>
+          <div
+            class="font-bold"
+            :class="BoardScene._score.value < 0 ? 'text-rose-500' : BoardScene._score.value > 0 ? 'text-green-500' : 'text-blue-500'"
+          >
+            {{ BoardScene._score }}
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="fixed top-1 left-1/2 transform -translate-x-1/2 bg-white rounded px-4 py-2 font-bold w-20 text-center">
         {{ time }} {{ BoardScene._score }}
-      </div>
+      </div> -->
 
-      <div class="fixed bottom-2 right-2 bg-white rounded-lg text-sm shadow-lg overflow-hidden">
-        <h2 class="font-bold p-4">
-          Flight Schedule
-        </h2>
-
-        <div
-          class="absolute top-1 right-1"
-          @click="scheduleOpen = !scheduleOpen"
-        >
-          x
-        </div>
-
-        <div
-          class="max-h-64 overflow-auto"
-          :class="scheduleOpen ? '' : 'h-0'"
-        >
-          <table class="text-center">
-            <thead class="bg-slate-100">
-              <tr>
-                <th class="py-1 px-2">
-                  Time
-                </th>
-                <th class="py-1 px-2">
-                  Status
-                </th>
-                <th class="py-1 px-2">
-                  From
-                </th>
-                <th class="py-1 px-2">
-                  To
-                </th>
-                <th class="py-1 px-2">
-                  Fuel
-                </th>
-              </tr>
-            </thead>
-            <tbody class="text-xs">
-              <tr
-                v-for="(plane, index) in schedule"
-                :key="plane._id"
-                :class="(plane._flightStatus === flightStatusses.APPROACHING || plane._flightStatus === flightStatusses.OBSTRUCTED || plane._flightStatus === flightStatusses.LANDED || plane._flightStatus === flightStatusses.EXITED) ? 'opacity-50' : selectedPlane && (selectedPlane._id === plane._id) ? 'bg-sky-500' : index % 2 === 0 ? 'bg-slate-50 hover:bg-slate-100' : 'hover:bg-slate-100'"
-                class="cursor-pointer transition-colors"
-                @click="plane._flightStatus === flightStatusses.IN_FLIGHT ? selectPlane(plane) : null"
-              >
-                <td class="py-1 px-2">
-                  <div
-                    class="inline-block rounded-full border px-2 "
-                    :class="plane._startTime < BoardScene._tick.value ? 'bg-green-100 border-green-300 text-green-700' : plane._startTime === BoardScene._tick.value ? 'bg-orange-100 border-orange-300 text-orange-700' : 'bg-blue-100 border-blue-300 text-blue-700'"
-                  >
-                    {{ formatTime(plane._startTime) }}
-                  </div>
-                </td>
-                <td class="py-1 px-2">
-                  <div class="p-2 font-bold">
-                    {{ plane._flightStatus }}
-                  </div>
-                </td>
-                <td class="py-1 px-2">
-                  <div
-                    class="inline-block rounded-full border px-2"
-                    :class="plane._start.name.substring(0, 2) === 'AP' ? 'bg-orange-100 border-orange-300 text-orange-700' : 'bg-blue-100 border-blue-300 text-blue-700'"
-                  >
-                    {{ plane._start.name }}
-                  </div>
-                </td>
-                <td class="py-1 px-2">
-                  <div
-                    class="inline-block rounded-full border px-2"
-                    :class="plane._end.name.substring(0, 2) === 'AP' ? 'bg-orange-100 border-orange-300 text-orange-700' : 'bg-blue-100 border-blue-300 text-blue-700'"
-                  >
-                    {{ plane._end.name }}
-                  </div>
-                </td>
-                <td class="py-1 px-2">
-                  <div
-                    class="inline-block rounded-full border px-2"
-                    :class="plane._fuel < 10 ? 'bg-red-100 border-red-300 text-red-700' : plane._fuel < 20 ? 'bg-orange-100 border-orange-300 text-orange-700' : 'bg-green-100 border-green-300 text-green-700'"
-                  >
-                    {{ plane._fuel }}
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div
-        class="fixed bottom-24 left-2 bg-white rounded-lg text-sm shadow-lg overflow-hidden"
-        :class="!selectedPlane || selectedPlane?._isGhost ? 'opacity-50' : ''"
+      <!-- Flight Controls -->
+      <transition
+        enter-active-class="transition duration-200 ease-in-out"
+        enter-from-class="transform scale-50 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-200 ease-in-out"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-50 opacity-0"
       >
-        <div class="grid grid-cols-3">
-          <button
-            class="h-8 hover:bg-slate-200 flex items-center justify-center"
-            :class="selectedPlane?._targetDirection < 0 ? 'bg-red-500' : ''"
-            :disabled="selectedPlane?._isGhost"
-            @click="setDirection(-1)"
-          >
-            left
-          </button>
-          {{ selectedPlane ? mapDirection(selectedPlane._direction) : 'N/A' }}
-          <button
-            class="h-8 hover:bg-slate-200 flex items-center justify-center"
-            :class="selectedPlane?._targetDirection > 0 ? 'bg-red-500' : ''"
-            :disabled="selectedPlane?._isGhost"
-            @click="setDirection(1)"
-          >
-            right
-          </button>
+        <div
+          v-show="selectedPlane"
+          class="fixed bottom-2 left-2 bg-white rounded shadow-lg origin-bottom-left"
+        >
+          <div class="p-2 text-center">
+            <div class="font-bold text-sm text-gray-800">
+              Flight Controls
+            </div>
+            <div class="flex">
+              <div class="p-2 space-y-1">
+                <div class="font-bold text-sm text-gray-700">
+                  Direction
+                </div>
+                <div class="grid grid-cols-3 gap-1">
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === -1"
+                    @click="setDirection(-1)"
+                  >
+                    45
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    class="row-span-2"
+                    :is-primary="selectedPlane?._targetDirection === 0 && selectedPlane?._targetAltitude !== 0"
+                    @click="setDirection(0); setHeight(selectedPlane?._position.y)"
+                  >
+                    &uarr;
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === 1"
+                    @click="setDirection(1)"
+                  >
+                    45
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === -2"
+                    @click="setDirection(-2)"
+                  >
+                    90
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === 2"
+                    @click="setDirection(2)"
+                  >
+                    90
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === -3"
+                    @click="setDirection(-3)"
+                  >
+                    135
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === 0 && selectedPlane?._targetAltitude === 0"
+                    @click="setDirection(0); setHeight(0)"
+                  >
+                    L
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === 3"
+                    @click="setDirection(3)"
+                  >
+                    135
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === -4"
+                    @click="setDirection(-4)"
+                  >
+                    180
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    is-disabled
+                  >
+                    &infin;
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === 4"
+                    @click="setDirection(4)"
+                  >
+                    180
+                  </ActionButton>
+                </div>
+              </div>
+              <div class="p-2 space-y-1">
+                <div class="font-bold text-sm text-gray-700">
+                  Altitude
+                </div>
+                <div class="grid grid-cols-3 gap-1">
+                  <ActionButton
+                    v-for="height in [0, 1, 2, 3, 4, 5, 6, 7, 8]"
+                    :key="height"
+                    size="control"
+                    :is-secondary="selectedPlane?._position.y === height && selectedPlane?._targetAltitude !== height"
+                    :is-primary="selectedPlane?._targetAltitude === height"
+                    @click="setHeight(height)"
+                  >
+                    {{ height }}
+                  </ActionButton>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </transition>
 
-        <div class="grid grid-cols-3">
-          <button
-            v-for="height in [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]"
-            :key="height"
-            class="w-8 h-8 hover:bg-slate-200 flex items-center justify-center"
-            :class="selectedPlane && (selectedPlane._position.y === height || selectedPlane._targetAltitude === height) ? 'bg-red-500' : ''"
-            :disabled="selectedPlane?._isGhost"
-            @click="setHeight(height)"
-          >
-            {{ height }}
-          </button>
+      <div class="fixed bottom-2 right-2 w-80 bg-white rounded shadow-lg origin-bottom-left">
+        <div class="p-2 text-center">
+          <div class="font-bold text-sm text-gray-800">
+            Flight Schedule
+          </div>
+          <div class="space-y-1 max-h-48 overflow-auto mt-2">
+            <table class="text-sm font-bold w-full">
+              <thead>
+                <tr class="sticky top-0 bg-white bg-opacity-80">
+                  <th class="font-bold text-sm text-gray-700">
+                    Time
+                  </th>
+                  <th class="font-bold text-sm text-gray-700">
+                    Status
+                  </th>
+                  <th class="font-bold text-sm text-gray-700">
+                    Entry
+                  </th>
+                  <th class="font-bold text-sm text-gray-700">
+                    Exit
+                  </th>
+                  <th class="font-bold text-sm text-gray-700">
+                    Fuel
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="text-xs">
+                <tr
+                  v-for="(plane, index) in schedule"
+                  :key="plane._id"
+                  class="transition-colors cursor-pointer"
+                  :class="getPlaneClasses(plane, index)"
+                  @click="plane._flightStatus === flightStatusses.IN_FLIGHT ? selectPlane(plane) : null"
+                >
+                  <td class="py-1">
+                    {{ formatTime(plane._startTime) }}
+                  </td>
+                  <td class="py-1">
+                    {{ plane._flightStatus }}
+                  </td>
+                  <td class="py-1">
+                    {{ plane._start.name }}
+                  </td>
+                  <td class="py-1">
+                    {{ plane._end.name }}
+                  </td>
+                  <td class="py-1">
+                    {{ plane._fuel }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </template>
 
     <!-- Debug UI -->
-    <button
-      class="fixed bottom-1 left-1 bg-white rounded px-4 py-2 font-bold"
+    <!-- <button
+      class="fixed bottom-64 left-2 bg-white rounded px-4 py-2 font-bold"
       @click="logStats"
     >
       Stats
-    </button>
+    </button> -->
   </div>
 </template>
 
@@ -263,6 +362,8 @@ import BoardScene from '#/classes/scenes/board-scene'
 import { Raycaster, Vector2 } from 'three'
 import boardScene from './classes/scenes/board-scene'
 
+import ActionButton from '#/components/ActionButton.vue'
+
 const { state, send, service } = useMachine(mainMachine)
 
 const scheduleOpen = ref(true)
@@ -276,9 +377,40 @@ const schedule = computed(() => {
 
 const time = computed(() => formatTime(BoardScene._tick.value))
 
+/**
+ * Returns the classes for a plane in the flight schedule.
+ */
+const getPlaneClasses = (plane, index) => {
+  const isSelected = plane._id === selectedPlane.value?._id
+  const isInFlight = plane._flightStatus === flightStatusses.IN_FLIGHT
+
+  const status = [
+    plane._flightStatus === flightStatusses.APPROACHING && 'bg-blue-200 text-blue-400 cursor-not-allowed',
+    plane._flightStatus === flightStatusses.SCHEDULED && 'text-gray-400 cursor-not-allowed',
+    plane._flightStatus === flightStatusses.LANDED && 'bg-teal-100 text-teal-500 cursor-not-allowed',
+    plane._flightStatus === flightStatusses.EXITED && 'bg-teal-100 text-teal-500 cursor-not-allowed',
+    plane._flightStatus === flightStatusses.LOST && 'bg-rose-100 text-rose-400 cursor-not-allowed',
+  ]
+
+  const selected = [
+    'bg-blue-500 text-white hover:bg-blue-600 border-b-2 border-blue-800',
+  ]
+
+  const inFlight = [
+    !isSelected && (index % 2 === 0) && 'bg-gray-100',
+    !isSelected && 'hover:bg-gray-200',
+  ]
+
+  return [
+    ...(!isSelected ? status : []),
+    ...(isSelected ? selected : []),
+    ...(isInFlight ? inFlight : []),
+  ]
+}
+
 onMounted(() => {
   initRenderer()
-  initStats()
+  // initStats()
 
   controls.autoRotate = false
   controls.enablePan = true
@@ -525,6 +657,39 @@ const setDirection = (direction) => {
     selectedPlane.value.setDirection(direction)
   }
 }
+
+const subTick = ref(0)
+const subTickTimer = ref(null)
+
+watch(
+  BoardScene._tick,
+  () => {
+    clearInterval(subTickTimer.value)
+
+    subTick.value = 0
+
+    subTickTimer.value = setInterval(() => {
+      subTick.value++
+    }, 1000)
+  },
+   {
+     immediate: true,
+   }
+)
+
+watch(
+  subTick,
+  (newTick) => {
+    // next boardTick
+    if (newTick === 30) {
+      BoardScene._tick.value++
+    }
+  }
+)
+
+const grad = computed(() => {
+  return { 'background': `conic-gradient(#3b82f6 ${(subTick.value / 30) * 360}deg, transparent ${(subTick.value / 30) * 360}deg)` }
+})
 
 </script>
 

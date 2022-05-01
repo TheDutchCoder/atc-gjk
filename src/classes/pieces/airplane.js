@@ -648,6 +648,10 @@ export default class Airplane {
     this._flightStatus = flightStatusses.LANDED
   }
 
+  setLost () {
+    this._flightStatus = flightStatusses.LOST
+  }
+
   setCrashed () {
     this._flightStatus = flightStatusses.CRASHED
   }
@@ -677,6 +681,6 @@ export default class Airplane {
   }
 
   setDirection (direction) {
-    this._targetDirection += direction
+    this._targetDirection = direction
   }
 }
