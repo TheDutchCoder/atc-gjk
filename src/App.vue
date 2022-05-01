@@ -66,7 +66,7 @@
     <template v-if="state.hasTag('board')">
       <div class="fixed top-2 right-2 text-xs font-bold">
         <div
-          class="flex justify-center items-center rounded-full w-16 h-16 shadow-lg bg-white cursor-pointer transform hover:bg-blue-200 transition-colors"
+          class="flex justify-center items-center rounded-full w-16 h-16 shadow-block bg-white cursor-pointer transform hover:bg-blue-200 transition-colors"
           @click="nextTick"
         >
           <div
@@ -75,7 +75,7 @@
           />
         </div>
 
-        <div class="absolute -bottom-16 left-1/2 w-16 transform -translate-x-1/2 bg-white py-2 px-3 rounded shadow-lg text-center">
+        <div class="absolute -bottom-16 left-1/2 w-16 transform -translate-x-1/2 bg-white pt-2 pb-3 px-3 rounded shadow-block text-center">
           <div class="font-bold text-sm">
             Time
           </div>
@@ -109,7 +109,7 @@
             class="absolute inset-0 bg-blue-300 bg-opacity-80"
             @click.self="showQuit = false"
           />
-          <div class="relative z-10 p-6 rounded bg-white shadow-xl">
+          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block">
             <h2 class="text-base font-bold">
               Are you sure you want to quit?
             </h2>
@@ -133,8 +133,8 @@
         </div>
       </transition>
 
-      <div class="fixed top-2 left-1/2 transform -translate-x-1/2 bg-white rounded shadow-lg">
-        <div class="py-3 px-4 text-center text-sm">
+      <div class="fixed top-2 left-1/2 transform -translate-x-1/2 bg-white rounded shadow-block">
+        <div class="pt-2 pb-3 px-4 text-center text-sm">
           <div class="font-bold text-gray-800">
             Score
           </div>
@@ -162,9 +162,9 @@
       >
         <div
           v-show="selectedPlane"
-          class="fixed bottom-2 left-2 bg-white rounded shadow-lg origin-bottom-left"
+          class="fixed bottom-2 left-2 bg-white rounded shadow-block origin-bottom-left"
         >
-          <div class="p-2 text-center">
+          <div class="p-2 pb-3 text-center">
             <div class="font-bold text-sm text-gray-800">
               Flight Controls
             </div>
@@ -275,8 +275,8 @@
         </div>
       </transition>
 
-      <div class="fixed bottom-2 right-2 w-80 bg-white rounded shadow-lg origin-bottom-left">
-        <div class="p-2 text-center">
+      <div class="fixed bottom-2 right-2 w-80 bg-white rounded shadow-block origin-bottom-left">
+        <div class="p-2 pb-3 text-center">
           <div class="font-bold text-sm text-gray-800">
             Flight Schedule
           </div>
@@ -679,10 +679,10 @@ watch(
 
 watch(
   subTick,
-  (newTick) => {
+  async (newTick) => {
     // next boardTick
     if (newTick === 30) {
-      BoardScene._tick.value++
+      await BoardScene.nextTick()
     }
   }
 )
