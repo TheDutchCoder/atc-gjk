@@ -35,6 +35,10 @@ module.exports = {
     transitionTimingFunction: {
       'boing': 'cubic-bezier(.7,-1.82,.47,2.84)',
     },
+    minHeight: {
+      '6': '1.5rem',
+      '7': '1.75rem',
+    },
     // },
   },
   plugins: [

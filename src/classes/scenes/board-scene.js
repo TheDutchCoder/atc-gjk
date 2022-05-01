@@ -82,7 +82,7 @@ boardScene.nextTick = async () => {
 
     // Prune all finished planes.
     boardScene._airplanes.value = boardScene._airplanes.value.filter(plane => {
-      if (plane._flightStatus === flightStatusses.LANDED || plane._flightStatus === flightStatusses.EXITED) {
+      if (plane._flightStatus === flightStatusses.LANDED || plane._flightStatus === flightStatusses.EXITED || plane._flightStatus === flightStatusses.LOST) {
         boardScene.removeAirplane(plane)
       } else {
         return plane
@@ -242,7 +242,7 @@ boardScene.checkOutOfBounds = () => {
     ) {
       boardScene._score.value -= 500
 
-      plane.setExited()
+      plane.setLost()
     }
   })
 }
