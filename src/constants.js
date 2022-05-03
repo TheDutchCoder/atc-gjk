@@ -1,8 +1,13 @@
-export const difficulties = {
-  EASY: 'EASY',
-  NORMAL: 'NORMAL',
-  HARD: 'HARD',
-}
+export const difficulties = [
+  'EASY',
+  'NORMAL',
+  'HARD',
+]
+// export const difficulties = {
+//   EASY: 'EASY',
+//   NORMAL: 'NORMAL',
+//   HARD: 'HARD',
+// }
 
 export const dimensions = {
   EASY: {

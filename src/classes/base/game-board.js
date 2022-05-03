@@ -80,8 +80,8 @@ export default class GameBoard {
   /**
    * Initialize the game board.
    */
-  constructor (difficulty = difficulties.NORMAL) {
-    this._difficulty = difficulty
+  constructor (difficulty = 1) {
+    this._difficulty = difficulties[difficulty]
     this._width = dimensions[this._difficulty].width
     this._depth = dimensions[this._difficulty].depth
     this._airfields = randomRoundNumber(airfields[this._difficulty].min, airfields[this._difficulty].max)
