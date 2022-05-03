@@ -1,5 +1,5 @@
 import { createMachine } from 'xstate'
-import { gameMachine } from './game'
+// import { gameMachine } from './game'
 
 export const mainMachine = createMachine({
   id: 'main',

@@ -43,6 +43,14 @@
     </transition>
 
     <!-- Intro UI -->
+    <!-- <transition-group
+      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)]"
+      enter-from-class="scale-50 opacity-0"
+      enter-to-class="scale-100 opacity-100"
+      leave-active-class="transition duration-500 ease-in"
+      leave-from-class="scale-100 opacity-100"
+      leave-to-class="scale-95 opacity-0"
+    > -->
     <transition
       enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)]"
       enter-from-class="scale-50 opacity-0"
@@ -51,16 +59,39 @@
       leave-from-class="scale-100 opacity-100"
       leave-to-class="scale-95 opacity-0"
     >
-      <template v-if="state.matches('introIdle')">
+      <div
+        v-if="state.matches('introIdle')"
+        class="fixed bottom-1/4 left-1/2 transform -translate-x-1/2"
+      >
         <ActionButton
-          class="fixed bottom-1/4 left-1/2 transform -translate-x-1/2"
           size="lg"
           @click="send('INTRO_OUT')"
         >
           Play
         </ActionButton>
-      </template>
+      </div>
     </transition>
+
+    <!-- <transition
+      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)]"
+      enter-from-class="scale-50 opacity-0"
+      enter-to-class="scale-100 opacity-100"
+      leave-active-class="transition duration-500 ease-in"
+      leave-from-class="scale-100 opacity-100"
+      leave-to-class="scale-95 opacity-0"
+    >
+      <div
+        v-if="state.matches('introIdle')"
+        class="fixed top-3 right-2"
+      >
+        <ActionButton
+          @click="gameSend('DIFFICULTY')"
+        >
+          {{ difficulties[gameState.context.difficulty] }}
+        </ActionButton>
+      </div>
+    </transition> -->
+    <!-- </transition-group> -->
 
     <!-- Game UI -->
     <template v-if="state.hasTag('board')">
@@ -346,6 +377,7 @@
 import { onMounted, ref, computed, watch } from 'vue'
 import TWEEN from '@tweenjs/tween.js'
 import { mainMachine } from '#/state-machines/main'
+import { gameMachine } from '#/state-machines/game'
 import { useMachine } from '@xstate/vue'
 
 import renderer, { initRenderer, initStats, stats } from '#/renderer'
@@ -354,7 +386,7 @@ import camera from '#/camera'
 import clock from '#/clock'
 
 import { formatTime, mapDirection, getDirectionFactors } from '#/tools'
-import { flightStatusses } from '#/constants'
+import { flightStatusses, difficulties } from '#/constants'
 
 import IntroScene from '#/classes/scenes/intro-scene'
 import BoardScene from '#/classes/scenes/board-scene'
@@ -365,6 +397,7 @@ import boardScene from './classes/scenes/board-scene'
 import ActionButton from '#/components/ActionButton.vue'
 
 const { state, send, service } = useMachine(mainMachine)
+const { state: gameState, send: gameSend } = useMachine(gameMachine)
 
 const scheduleOpen = ref(true)
 const schedule = computed(() => {
@@ -671,10 +704,7 @@ watch(
     subTickTimer.value = setInterval(() => {
       subTick.value++
     }, 1000)
-  },
-   {
-     immediate: true,
-   }
+  }
 )
 
 watch(

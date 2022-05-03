@@ -23,6 +23,12 @@
   </div>
 </template>
 
+<script>
+export default {
+  inheritAttrs: false,
+}
+</script>
+
 <script setup>
 import { toRefs, computed } from 'vue'
 
