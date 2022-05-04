@@ -1,5 +1,5 @@
-import { createMachine } from 'xstate'
-// import { gameMachine } from './game'
+import { createMachine, interpret } from 'xstate'
+import { ref } from 'vue'
 
 export const mainMachine = createMachine({
   id: 'main',
@@ -36,11 +36,25 @@ export const mainMachine = createMachine({
     },
     gamePlaying: {
       tags: 'board',
-      // invoke: {
-      //   id: 'gameMachine',
-      //   src: gameMachine,
-      //   onDone: 'gameOut',
-      // },
+      initial: 'playing',
+      states: {
+        playing: {
+          on: {
+            LOSE: 'lose',
+            Win: 'win',
+          },
+        },
+        lose: {
+          on: {
+            DONE: '#main.gameOut',
+          },
+        },
+        win: {
+          on: {
+            DONE: '#main.gameOut',
+          },
+        },
+      },
       on: {
         GAME_OUT: 'gameOut',
       },
@@ -54,4 +68,7 @@ export const mainMachine = createMachine({
   },
 })
 
-// export const service = interpret(mainMachine).start()
+export const service = interpret(mainMachine).start()
+export const state = ref(service.state)
+
+service.onTransition(newState => state.value = newState)

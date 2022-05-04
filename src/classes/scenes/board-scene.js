@@ -1,9 +1,9 @@
 import TWEEN from '@tweenjs/tween.js'
 
-import { gameService } from '#/state-machines/game'
-
 import GameScene from '#/classes/base/scene'
 import GameBoard from '#/classes/base/game-board'
+
+import { service } from '#/state-machines/main'
 
 import {
   HemisphereLight,
@@ -17,7 +17,6 @@ import {
 import Clouds from '#/classes/pieces/clouds'
 import controls from '../../controls'
 import Airstrip from '#/classes/props/airstrip'
-import camera from '#/camera'
 
 import { flightStatusses } from '#/constants'
 
@@ -69,8 +68,6 @@ boardScene.start = () => {
 
   boardScene.addFog(fog)
   boardScene.addBoard(board)
-
-  gameService.start()
 
   boardScene.nextTick()
 }
@@ -182,7 +179,7 @@ boardScene.checkCollisions = () => {
             console.log('plane landed on airport, check if it\'s the right airport!')
           } else {
             console.log(`plane crashed at ${x}, ${y}, ${z}`)
-            gameService.send('LOSE')
+            service.send('LOSE')
           }
         })
       }
@@ -192,7 +189,7 @@ boardScene.checkCollisions = () => {
         if (plane1._id !== plane2._id) {
           const { x: p2X, y: p2Y, z: p2Z } = plane2._position
           if (p1X === p2X && p1Y === p2Y && p1Z === p2Z) {
-            gameService.send('LOSE')
+            service.send('LOSE')
           }
         }
       })
@@ -221,7 +218,7 @@ boardScene.checkDestinations = () => {
       } else if (curY === 0) {
         console.log('game over!')
         plane.setCrashed()
-        gameService.send('LOSE')
+        service.send('LOSE')
       }
     }
   })
@@ -251,7 +248,7 @@ boardScene.checkOutOfFuel = () => {
   boardScene._airplanes.value.forEach(plane => {
     if (plane._fuel <= 0) {
       console.log('game over!')
-      gameService.send('LOSE')
+      service.send('LOSE')
     }
   })
 }

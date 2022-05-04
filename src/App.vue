@@ -65,7 +65,7 @@
       >
         <ActionButton
           size="lg"
-          @click="send('INTRO_OUT')"
+          @click="service.send('INTRO_OUT')"
         >
           Play
         </ActionButton>
@@ -158,6 +158,35 @@
                 @click="quit2"
               >
                 Yes
+              </ActionButton>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <transition
+        enter-active-class="transition duration-100 ease-out"
+        enter-from-class="transform scale-95 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-75 ease-in"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-95 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying.lose')"
+          class="fixed z-50 inset-0 flex items-center justify-center"
+        >
+          <div class="absolute inset-0 bg-blue-300 bg-opacity-80" />
+          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block">
+            <h2 class="text-base font-bold">
+              You lost!
+            </h2>
+            <div class="flex space-x-4 items-center justify-center mt-6">
+              <ActionButton
+                size="sm"
+                is-primary
+              >
+                Admit Defeat
               </ActionButton>
             </div>
           </div>
@@ -376,9 +405,9 @@
 <script setup>
 import { onMounted, ref, computed, watch } from 'vue'
 import TWEEN from '@tweenjs/tween.js'
-import { mainMachine } from '#/state-machines/main'
-import { gameMachine } from '#/state-machines/game'
-import { useMachine } from '@xstate/vue'
+import { service, state } from '#/state-machines/main'
+// import { gameMachine } from '#/state-machines/game'
+// import { useMachine } from '@xstate/vue'
 
 import renderer, { initRenderer, initStats, stats } from '#/renderer'
 import controls, { resetControls } from '#/controls'
@@ -396,8 +425,8 @@ import boardScene from './classes/scenes/board-scene'
 
 import ActionButton from '#/components/ActionButton.vue'
 
-const { state, send, service } = useMachine(mainMachine)
-const { state: gameState, send: gameSend } = useMachine(gameMachine)
+// const { state, send, service } = useMachine(mainMachine)
+// const { state: gameState, send: gameSend } = useMachine(gameMachine)
 
 const scheduleOpen = ref(true)
 const schedule = computed(() => {
@@ -603,7 +632,7 @@ onMounted(() => {
   window.addEventListener('mousedown', onMouseDown)
   window.addEventListener('mouseup', onMouseUp)
 
-  send('INTRO_IN')
+  service.send('INTRO_IN')
 })
 
 const logStats = () => {
@@ -624,7 +653,7 @@ const quit = () => {
 const quit2 = () => {
   console.log('quit')
   showQuit.value = false
-  send('GAME_OUT')
+  service.send('GAME_OUT')
 }
 
 const selectedPlane = ref(null)
@@ -713,6 +742,15 @@ watch(
     // next boardTick
     if (newTick === 30) {
       await BoardScene.nextTick()
+    }
+  }
+)
+
+watch(
+  state,
+  (newState) => {
+    if (newState.matches('gamePlaying.lose')) {
+      clearInterval(subTickTimer.value)
     }
   }
 )
