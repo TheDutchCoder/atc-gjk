@@ -1,9 +1,12 @@
-import { createMachine, interpret } from 'xstate'
+import { createMachine, interpret, assign } from 'xstate'
 import { ref } from 'vue'
 
 export const mainMachine = createMachine({
   id: 'main',
   initial: 'loading',
+  context: {
+    difficulty: 0,
+  },
   states: {
     loading: {
       on: {
@@ -20,6 +23,9 @@ export const mainMachine = createMachine({
       tags: 'intro',
       on: {
         INTRO_OUT: 'introOut',
+        DIFFICULTY: {
+          actions: ['setDifficulty'],
+        },
       },
     },
     introOut: {
@@ -41,7 +47,8 @@ export const mainMachine = createMachine({
         playing: {
           on: {
             LOSE: 'lose',
-            Win: 'win',
+            WIN: 'win',
+            QUIT: 'quit',
           },
         },
         lose: {
@@ -52,6 +59,12 @@ export const mainMachine = createMachine({
         win: {
           on: {
             DONE: '#main.gameOut',
+          },
+        },
+        quit: {
+          on: {
+            DONE: '#main.gameOut',
+            CANCEL: 'playing',
           },
         },
       },
@@ -65,6 +78,12 @@ export const mainMachine = createMachine({
         DONE: 'introIn',
       },
     },
+  },
+}, {
+  actions: {
+    setDifficulty: assign({
+      difficulty: (ctx) => (ctx.difficulty + 1) % 3,
+    }),
   },
 })
 
