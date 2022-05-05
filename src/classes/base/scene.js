@@ -152,6 +152,11 @@ export default class GameScene {
     this._models = []
     this._fog = null
 
+    // Reset all reactive properties.
+    this._airplanes.value = []
+    this._tick.value = -1
+    this._score.value = 0
+
     // Reset all the individual elements as well, because they are global and
     // used in different scenees.
     this._elements.forEach(prop => prop.reset())

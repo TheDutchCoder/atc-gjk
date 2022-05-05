@@ -42,20 +42,12 @@
       </div>
     </transition>
 
-    <!-- Intro UI -->
-    <!-- <transition-group
-      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)]"
-      enter-from-class="scale-50 opacity-0"
-      enter-to-class="scale-100 opacity-100"
-      leave-active-class="transition duration-500 ease-in"
-      leave-from-class="scale-100 opacity-100"
-      leave-to-class="scale-95 opacity-0"
-    > -->
+    <!-- Play -->
     <transition
-      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)]"
+      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)] delay-100"
       enter-from-class="scale-50 opacity-0"
       enter-to-class="scale-100 opacity-100"
-      leave-active-class="transition duration-500 ease-in"
+      leave-active-class="transition duration-500 ease-in delay-200"
       leave-from-class="scale-100 opacity-100"
       leave-to-class="scale-95 opacity-0"
     >
@@ -65,18 +57,19 @@
       >
         <ActionButton
           size="lg"
-          @click="send('INTRO_OUT')"
+          @click="service.send('INTRO_OUT')"
         >
           Play
         </ActionButton>
       </div>
     </transition>
 
-    <!-- <transition
-      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)]"
+    <!-- Difficulty -->
+    <transition
+      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)] delay-200"
       enter-from-class="scale-50 opacity-0"
       enter-to-class="scale-100 opacity-100"
-      leave-active-class="transition duration-500 ease-in"
+      leave-active-class="transition duration-500 ease-in delay-100"
       leave-from-class="scale-100 opacity-100"
       leave-to-class="scale-95 opacity-0"
     >
@@ -85,102 +78,165 @@
         class="fixed top-3 right-2"
       >
         <ActionButton
-          @click="gameSend('DIFFICULTY')"
+          :is-secondary="state.context.difficulty === 1"
+          :is-primary="state.context.difficulty === 2"
+          @click="service.send('DIFFICULTY')"
         >
-          {{ difficulties[gameState.context.difficulty] }}
+          {{ difficulties[state.context.difficulty] }}
         </ActionButton>
       </div>
-    </transition> -->
-    <!-- </transition-group> -->
+    </transition>
 
     <!-- Game UI -->
     <template v-if="state.hasTag('board')">
-      <div class="fixed top-2 right-2 text-xs font-bold">
-        <div
-          class="flex justify-center items-center rounded-full w-16 h-16 shadow-block bg-white cursor-pointer transform hover:bg-blue-200 transition-colors"
-          @click="nextTick"
-        >
-          <div
-            class="rounded-full w-16 h-16 border-2 border-white"
-            :style="grad"
-          />
-        </div>
-
-        <div class="absolute -bottom-16 left-1/2 w-16 transform -translate-x-1/2 bg-white pt-2 pb-3 px-3 rounded shadow-block text-center">
-          <div class="font-bold text-sm">
-            Time
-          </div>
-          <div class="text-blue-500">
-            {{ time }}
-          </div>
-        </div>
-      </div>
-
-      <ActionButton
-        size="sm"
-        class="fixed top-2 left-2"
-        @click="quit"
-      >
-        Quit
-      </ActionButton>
-
+      <!-- Score -->
       <transition
-        enter-active-class="transition duration-100 ease-out"
-        enter-from-class="transform scale-95 opacity-0"
+        enter-active-class="transition duration-200 ease-in-out delay-100"
+        enter-from-class="transform scale-50 opacity-0"
         enter-to-class="transform scale-100 opacity-100"
-        leave-active-class="transition duration-75 ease-in"
+        leave-active-class="transition duration-200 ease-in-out delay-300"
         leave-from-class="transform scale-100 opacity-100"
-        leave-to-class="transform scale-95 opacity-0"
+        leave-to-class="transform scale-50 opacity-0"
       >
         <div
-          v-if="showQuit"
-          class="fixed z-50 inset-0 flex items-center justify-center"
+          v-if="state.matches('gamePlaying')"
+          class="fixed top-2 left-1/2 transform -translate-x-1/2 bg-white rounded shadow-block origin-top"
         >
-          <div
-            class="absolute inset-0 bg-blue-300 bg-opacity-80"
-            @click.self="showQuit = false"
-          />
-          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block">
-            <h2 class="text-base font-bold">
-              Are you sure you want to quit?
-            </h2>
-            <div class="flex space-x-4 items-center justify-center mt-6">
-              <ActionButton
-                size="sm"
-                is-secondary
-                @click="showQuit = false"
-              >
-                No
-              </ActionButton>
-              <ActionButton
-                size="sm"
-                is-primary
-                @click="quit2"
-              >
-                Yes
-              </ActionButton>
+          <div class="pt-2 pb-3 px-4 text-center text-sm">
+            <div class="font-bold text-gray-800">
+              Score
+            </div>
+            <div
+              class="font-bold"
+              :class="score < 0 ? 'text-rose-500' : score > 0 ? 'text-green-500' : 'text-blue-500'"
+            >
+              {{ score }}
             </div>
           </div>
         </div>
       </transition>
 
-      <div class="fixed top-2 left-1/2 transform -translate-x-1/2 bg-white rounded shadow-block">
-        <div class="pt-2 pb-3 px-4 text-center text-sm">
-          <div class="font-bold text-gray-800">
-            Score
-          </div>
+      <!-- Time -->
+      <transition
+        enter-active-class="transition duration-200 ease-in-out delay-200"
+        enter-from-class="transform scale-50 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-200 ease-in-out delay-200"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-50 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying')"
+          class="fixed top-2 right-2 text-xs font-bold origin-top-right"
+        >
           <div
-            class="font-bold"
-            :class="BoardScene._score.value < 0 ? 'text-rose-500' : BoardScene._score.value > 0 ? 'text-green-500' : 'text-blue-500'"
+            class="flex justify-center items-center rounded-full w-16 h-16 shadow-block bg-white cursor-pointer transform hover:bg-blue-200 transition-colors"
+            @click="nextTick"
           >
-            {{ BoardScene._score }}
+            <div
+              class="rounded-full w-16 h-16 border-2 border-white"
+              :style="grad"
+            />
+          </div>
+
+          <div class="absolute -bottom-16 left-1/2 w-16 transform -translate-x-1/2 bg-white pt-2 pb-3 px-3 rounded shadow-block text-center">
+            <div class="font-bold text-sm">
+              Time
+            </div>
+            <div class="text-blue-500">
+              {{ time }}
+            </div>
           </div>
         </div>
-      </div>
+      </transition>
 
-      <!-- <div class="fixed top-1 left-1/2 transform -translate-x-1/2 bg-white rounded px-4 py-2 font-bold w-20 text-center">
-        {{ time }} {{ BoardScene._score }}
-      </div> -->
+      <!-- Schedule -->
+      <transition
+        enter-active-class="transition duration-200 ease-in-out delay-300"
+        enter-from-class="transform scale-50 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-200 ease-in-out delay-100"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-50 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying')"
+          class="fixed bottom-2 right-2 w-80 bg-white rounded shadow-block origin-bottom-right"
+        >
+          <div class="p-2 pb-3 text-center">
+            <div class="font-bold text-sm text-gray-800">
+              Flight Schedule
+            </div>
+            <div class="space-y-1 max-h-48 overflow-auto mt-2">
+              <table class="text-sm font-bold w-full">
+                <thead>
+                  <tr class="sticky top-0 bg-white bg-opacity-80">
+                    <th class="font-bold text-sm text-gray-700">
+                      Time
+                    </th>
+                    <th class="font-bold text-sm text-gray-700">
+                      Status
+                    </th>
+                    <th class="font-bold text-sm text-gray-700">
+                      Entry
+                    </th>
+                    <th class="font-bold text-sm text-gray-700">
+                      Exit
+                    </th>
+                    <th class="font-bold text-sm text-gray-700">
+                      Fuel
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="text-xs">
+                  <tr
+                    v-for="(plane, index) in schedule"
+                    :key="plane._id"
+                    class="transition-colors cursor-pointer"
+                    :class="getPlaneClasses(plane, index)"
+                    @click="plane._flightStatus === flightStatusses.IN_FLIGHT ? selectPlane(plane) : null"
+                  >
+                    <td class="py-1">
+                      {{ formatTime(plane._startTime) }}
+                    </td>
+                    <td class="py-1">
+                      {{ plane._flightStatus }}
+                    </td>
+                    <td class="py-1">
+                      {{ plane._start.name }}
+                    </td>
+                    <td class="py-1">
+                      {{ plane._end.name }}
+                    </td>
+                    <td class="py-1">
+                      {{ plane._fuel }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- Quit -->
+      <transition
+        enter-active-class="transition duration-200 ease-in-out delay-[400ms]"
+        enter-from-class="transform scale-50 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-200 ease-in-out"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-50 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying')"
+          class="fixed top-3 left-2 origin-top-left"
+        >
+          <ActionButton @click="service.send('QUIT')">
+            Quit
+          </ActionButton>
+        </div>
+      </transition>
 
       <!-- Flight Controls -->
       <transition
@@ -192,7 +248,7 @@
         leave-to-class="transform scale-50 opacity-0"
       >
         <div
-          v-show="selectedPlane"
+          v-show="state.matches('gamePlaying') && selectedPlane"
           class="fixed bottom-2 left-2 bg-white rounded shadow-block origin-bottom-left"
         >
           <div class="p-2 pb-3 text-center">
@@ -306,61 +362,76 @@
         </div>
       </transition>
 
-      <div class="fixed bottom-2 right-2 w-80 bg-white rounded shadow-block origin-bottom-left">
-        <div class="p-2 pb-3 text-center">
-          <div class="font-bold text-sm text-gray-800">
-            Flight Schedule
-          </div>
-          <div class="space-y-1 max-h-48 overflow-auto mt-2">
-            <table class="text-sm font-bold w-full">
-              <thead>
-                <tr class="sticky top-0 bg-white bg-opacity-80">
-                  <th class="font-bold text-sm text-gray-700">
-                    Time
-                  </th>
-                  <th class="font-bold text-sm text-gray-700">
-                    Status
-                  </th>
-                  <th class="font-bold text-sm text-gray-700">
-                    Entry
-                  </th>
-                  <th class="font-bold text-sm text-gray-700">
-                    Exit
-                  </th>
-                  <th class="font-bold text-sm text-gray-700">
-                    Fuel
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="text-xs">
-                <tr
-                  v-for="(plane, index) in schedule"
-                  :key="plane._id"
-                  class="transition-colors cursor-pointer"
-                  :class="getPlaneClasses(plane, index)"
-                  @click="plane._flightStatus === flightStatusses.IN_FLIGHT ? selectPlane(plane) : null"
-                >
-                  <td class="py-1">
-                    {{ formatTime(plane._startTime) }}
-                  </td>
-                  <td class="py-1">
-                    {{ plane._flightStatus }}
-                  </td>
-                  <td class="py-1">
-                    {{ plane._start.name }}
-                  </td>
-                  <td class="py-1">
-                    {{ plane._end.name }}
-                  </td>
-                  <td class="py-1">
-                    {{ plane._fuel }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+      <!-- Quit Modal -->
+      <transition
+        enter-active-class="transition duration-100 ease-out"
+        enter-from-class="transform scale-95 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-75 ease-in"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-95 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying.quit')"
+          class="fixed z-50 inset-0 flex items-center justify-center"
+        >
+          <div
+            class="absolute inset-0 bg-blue-300 bg-opacity-80"
+            @click.self="service.send('CANCEL')"
+          />
+          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block">
+            <h2 class="text-base font-bold">
+              Are you sure you want to quit?
+            </h2>
+            <div class="flex space-x-4 items-center justify-center mt-6">
+              <ActionButton
+                size="sm"
+                is-secondary
+                @click="service.send('CANCEL')"
+              >
+                No
+              </ActionButton>
+              <ActionButton
+                size="sm"
+                is-primary
+                @click="service.send('DONE')"
+              >
+                Yes
+              </ActionButton>
+            </div>
           </div>
         </div>
-      </div>
+      </transition>
+
+      <!-- Lose Modal -->
+      <transition
+        enter-active-class="transition duration-100 ease-out"
+        enter-from-class="transform scale-95 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-75 ease-in"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-95 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying.lose')"
+          class="fixed z-50 inset-0 flex items-center justify-center"
+        >
+          <div class="absolute inset-0 bg-blue-300 bg-opacity-80" />
+          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block">
+            <h2 class="text-base font-bold">
+              You lost!
+            </h2>
+            <div class="flex space-x-4 items-center justify-center mt-6">
+              <ActionButton
+                size="sm"
+                is-primary
+              >
+                Admit Defeat
+              </ActionButton>
+            </div>
+          </div>
+        </div>
+      </transition>
     </template>
 
     <!-- Debug UI -->
@@ -376,9 +447,9 @@
 <script setup>
 import { onMounted, ref, computed, watch } from 'vue'
 import TWEEN from '@tweenjs/tween.js'
-import { mainMachine } from '#/state-machines/main'
-import { gameMachine } from '#/state-machines/game'
-import { useMachine } from '@xstate/vue'
+import { service, state } from '#/state-machines/main'
+// import { gameMachine } from '#/state-machines/game'
+// import { useMachine } from '@xstate/vue'
 
 import renderer, { initRenderer, initStats, stats } from '#/renderer'
 import controls, { resetControls } from '#/controls'
@@ -392,23 +463,22 @@ import IntroScene from '#/classes/scenes/intro-scene'
 import BoardScene from '#/classes/scenes/board-scene'
 
 import { Raycaster, Vector2 } from 'three'
-import boardScene from './classes/scenes/board-scene'
 
 import ActionButton from '#/components/ActionButton.vue'
 
-const { state, send, service } = useMachine(mainMachine)
-const { state: gameState, send: gameSend } = useMachine(gameMachine)
+let IntroSceneRef = null
+let BoardSceneRef = null
 
-const scheduleOpen = ref(true)
 const schedule = computed(() => {
-  return BoardScene._board._airplanesQueue.map(plane => {
-    const n = BoardScene._airplanes.value.find((a) => a._id === plane._id)
+  return BoardSceneRef._board._airplanesQueue.map(plane => {
+    const n = BoardSceneRef._airplanes.value.find((a) => a._id === plane._id)
 
     return n || plane
   })
 })
 
-const time = computed(() => formatTime(BoardScene._tick.value))
+const time = computed(() => formatTime(BoardSceneRef._tick.value))
+const score = computed(() => BoardSceneRef._score.value)
 
 /**
  * Returns the classes for a plane in the flight schedule.
@@ -448,6 +518,9 @@ onMounted(() => {
   controls.autoRotate = false
   controls.enablePan = true
 
+  let watcher1
+  let watcher2
+
   // Refactor
   service.onTransition(async (state) => {
     /**
@@ -455,10 +528,13 @@ onMounted(() => {
      */
     if (state.changed && state.matches('introIn')) {
       controls.autoRotate = true
-      IntroScene.start()
-      IntroScene.render()
 
-      await IntroScene.animateIn()
+      IntroSceneRef = new IntroScene()
+      IntroSceneRef.start()
+      IntroSceneRef.render()
+
+      await IntroSceneRef.animateIn()
+
       service.send('DONE')
     }
 
@@ -469,7 +545,8 @@ onMounted(() => {
       controls.enableRotate = false
       controls.autoRotate = false
 
-      await IntroScene.animateOut()
+      await IntroSceneRef.animateOut()
+
       service.send('DONE')
     }
 
@@ -477,10 +554,33 @@ onMounted(() => {
      * The Game board should animate in.
      */
     if (state.changed && state.matches('gameIn')) {
-      IntroScene.reset()
+      IntroSceneRef.reset()
+      BoardSceneRef = new BoardScene()
 
-      BoardScene.start()
-      BoardScene.render()
+      watcher1 = watch(
+        BoardSceneRef._tick,
+        () => {
+          clearInterval(subTickTimer.value)
+
+          subTick.value = 0
+
+          subTickTimer.value = setInterval(() => {
+            subTick.value++
+          }, 1000)
+        }
+      )
+
+      watcher2 = watch(
+        BoardSceneRef._airplanes,
+        (planes) => {
+          if (!planes.find(plane => plane._id === selectedPlane.value?._id)) {
+            selectedPlane.value = null
+          }
+        }
+      )
+
+      BoardSceneRef.start()
+      BoardSceneRef.render()
 
       const pos = camera.position
 
@@ -495,7 +595,7 @@ onMounted(() => {
         })
         .start()
 
-      await BoardScene.animateIn()
+      await BoardSceneRef.animateIn()
     }
 
     /**
@@ -525,8 +625,11 @@ onMounted(() => {
         .delay(500)
         .start()
 
-      await BoardScene.animateOut()
-      BoardScene.reset()
+      await BoardSceneRef.animateOut()
+      BoardSceneRef.reset()
+
+      watcher1()
+      watcher2()
     }
   })
 
@@ -547,24 +650,25 @@ onMounted(() => {
     isMouseDown = false
   }
 
+
   // The main animation loop for the game, which is clamped to 60 FPS.
   renderer.setAnimationLoop(async (_) => {
     delta += clock.getDelta()
 
     stats.begin()
 
-    if (service.state.hasTag('intro') && IntroScene._scene) {
-      renderer.render(IntroScene._scene, camera)
+    if (service.state.hasTag('intro') && IntroSceneRef._scene) {
+      renderer.render(IntroSceneRef._scene, camera)
 
       if (delta > interval) {
-        IntroScene._animate()
+        IntroSceneRef._animate()
       }
-    } else if (service.state.hasTag('board') && BoardScene._scene) {
+    } else if (service.state.hasTag('board') && BoardSceneRef._scene) {
 
       if (isMouseDown) {
         raycaster.setFromCamera( pointer, camera )
 
-        const intersects = raycaster.intersectObjects( BoardScene._scene.children )
+        const intersects = raycaster.intersectObjects( BoardSceneRef._scene.children )
 
         // Find the closest airplane
         const objects = intersects.sort((a, b) => a.distance < b.distance)
@@ -576,10 +680,10 @@ onMounted(() => {
         }
       }
 
-      renderer.render(BoardScene._scene, camera)
+      renderer.render(BoardSceneRef._scene, camera)
 
       if (delta > interval) {
-        BoardScene._animate()
+        BoardSceneRef._animate()
       }
     }
 
@@ -603,7 +707,7 @@ onMounted(() => {
   window.addEventListener('mousedown', onMouseDown)
   window.addEventListener('mouseup', onMouseUp)
 
-  send('INTRO_IN')
+  service.send('INTRO_IN')
 })
 
 const logStats = () => {
@@ -613,7 +717,7 @@ const logStats = () => {
 }
 
 const nextTick = async () => {
-  await BoardScene.nextTick()
+  await BoardSceneRef.nextTick()
 }
 
 const showQuit = ref(false)
@@ -624,7 +728,7 @@ const quit = () => {
 const quit2 = () => {
   console.log('quit')
   showQuit.value = false
-  send('GAME_OUT')
+  service.send('GAME_OUT')
 }
 
 const selectedPlane = ref(null)
@@ -639,19 +743,19 @@ watch(
 )
 
 // Reset the camera if the selected plane is removed.
-watch(
-  boardScene._airplanes,
-  (planes) => {
-    if (!planes.find(plane => plane._id === selectedPlane.value?._id)) {
-      selectedPlane.value = null
-    }
-  }
-)
+// watch(
+//   BoardSceneRef?._airplanes,
+//   (planes) => {
+//     if (!planes.find(plane => plane._id === selectedPlane.value?._id)) {
+//       selectedPlane.value = null
+//     }
+//   }
+// )
 
 const selectPlane = (plane) => {
-  BoardScene.selectPlane(plane._id)
+  BoardSceneRef.selectPlane(plane._id)
 
-  selectedPlane.value = BoardScene._airplanes.value.find(plane => plane._isSelected)
+  selectedPlane.value = BoardSceneRef._airplanes.value.find(plane => plane._isSelected)
 
   if (selectedPlane.value) {
     const fromControls = controls.target
@@ -694,25 +798,34 @@ const setDirection = (direction) => {
 const subTick = ref(0)
 const subTickTimer = ref(null)
 
-watch(
-  BoardScene._tick,
-  () => {
-    clearInterval(subTickTimer.value)
+// watch(
+//   BoardSceneRef?._tick,
+//   () => {
+//     clearInterval(subTickTimer.value)
 
-    subTick.value = 0
+//     subTick.value = 0
 
-    subTickTimer.value = setInterval(() => {
-      subTick.value++
-    }, 1000)
-  }
-)
+//     subTickTimer.value = setInterval(() => {
+//       subTick.value++
+//     }, 1000)
+//   }
+// )
 
 watch(
   subTick,
   async (newTick) => {
     // next boardTick
     if (newTick === 30) {
-      await BoardScene.nextTick()
+      await BoardSceneRef.nextTick()
+    }
+  }
+)
+
+watch(
+  state,
+  (newState) => {
+    if (newState.matches('gamePlaying.lose') || newState.matches('gamePlaying.win') || newState.matches('gameOut')) {
+      clearInterval(subTickTimer.value)
     }
   }
 )

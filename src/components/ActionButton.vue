@@ -1,33 +1,26 @@
 <template>
-  <div>
-    <button
-      class="relative group select-none"
-      v-bind="$attrs"
-      :class="baseClasses"
+  <!-- <div> -->
+  <button
+    class="relative group select-none"
+    :class="baseClasses"
+  >
+    <span
+      class="absolute inset-0 bg-opacity-50 transition-transform transform"
+      :class="backClasses"
+    />
+    <span
+      class="absolute inset-0 bg-gray-200"
+      :class="midClasses"
+    />
+    <span
+      class="flex justify-center items-center bg-white font-bold transition-all transform"
+      :class="frontClasses"
     >
-      <span
-        class="absolute inset-0 bg-opacity-50 transition-transform transform"
-        :class="backClasses"
-      />
-      <span
-        class="absolute inset-0 bg-gray-200"
-        :class="midClasses"
-      />
-      <span
-        class="flex justify-center items-center bg-white font-bold transition-all transform"
-        :class="frontClasses"
-      >
-        <slot />
-      </span>
-    </button>
-  </div>
+      <slot />
+    </span>
+  </button>
+  <!-- </div> -->
 </template>
-
-<script>
-export default {
-  inheritAttrs: false,
-}
-</script>
 
 <script setup>
 import { toRefs, computed } from 'vue'
