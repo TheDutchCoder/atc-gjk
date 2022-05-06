@@ -432,6 +432,43 @@
           </div>
         </div>
       </transition>
+
+      <!-- Win Modal -->
+      <transition
+        enter-active-class="transition duration-100 ease-out"
+        enter-from-class="transform scale-95 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-75 ease-in"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-95 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying.win')"
+          class="fixed z-50 inset-0 flex items-center justify-center"
+        >
+          <div class="absolute inset-0 bg-blue-300 bg-opacity-80" />
+          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block text-center">
+            <h2 class="text-base font-bold">
+              You won{{ score < 0 ? ' (sort of)' : '' }}! {{ score < 0 ? '😅' : '🎉' }}
+            </h2>
+            <p class="mt-2 text-sm">
+              You scored a total of <span
+                class="font-bold"
+                :class="score < 0 ? 'text-rose-500' : score > 0 ? 'text-green-500' : 'text-blue-500'"
+              >{{ score }}</span> points.
+            </p>
+            <div class="flex space-x-4 items-center justify-center mt-6">
+              <ActionButton
+                size="sm"
+                is-primary
+                @click="service.send('DONE')"
+              >
+                Nice{{ score < 0 ? '-ish' : '' }}!
+              </ActionButton>
+            </div>
+          </div>
+        </div>
+      </transition>
     </template>
 
     <!-- Debug UI -->
