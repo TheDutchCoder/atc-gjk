@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { Scene } from 'three'
 
 import Label from '#/classes/tiles/label'
@@ -9,6 +9,8 @@ import Rocks from '#/classes/props/rocks'
 import Clouds from '#/classes/pieces/clouds'
 import Airstrip from '#/classes/props/airstrip'
 import Tracks from '#/classes/props/tracks'
+
+import { service } from '#/state-machines/main'
 
 const cleanMaterial = material => {
   material.dispose()
@@ -71,6 +73,7 @@ export default class GameScene {
   _board = null
 
   _tick = ref(-1)
+  _tickWatcher = null
 
   _isAnimating = false
 
@@ -91,6 +94,16 @@ export default class GameScene {
    */
   constructor () {
     this._scene = new Scene()
+
+    this._tickWatcher = watch(
+      this._tick,
+      (newTick) => {
+        if (newTick >= 96) {
+          service.send('WIN')
+          this._tickWatcher()
+        }
+      }
+    )
   }
 
   /**
