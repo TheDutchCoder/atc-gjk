@@ -177,7 +177,7 @@ export default class GameBoard {
         id: uuidv4(),
         start: start,
         end: end,
-        startTime: randomRoundNumber(0, 96),
+        startTime: randomRoundNumber(0, (96 - (this._width + 4))),
         fuel: randomRoundNumber(20, 35),
       }))
     }

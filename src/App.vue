@@ -557,6 +557,7 @@ onMounted(() => {
 
   let watcher1
   let watcher2
+  let watcher3
 
   // Refactor
   service.onTransition(async (state) => {
@@ -640,6 +641,15 @@ onMounted(() => {
      */
     if (state.changed && state.matches('gamePlaying')) {
       controls.enableRotate = true
+
+      watcher3 = watch(
+        schedule,
+        (newSchedule) => {
+          if (newSchedule.every(plane => plane._flightStatus === flightStatusses.LANDED || plane._flightStatus === flightStatusses.EXITED || plane._flightStatus === flightStatusses.LOST)) {
+            service.send('WIN')
+          }
+        }
+      )
     }
 
     /**
@@ -667,6 +677,7 @@ onMounted(() => {
 
       watcher1()
       watcher2()
+      watcher3()
     }
   })
 
