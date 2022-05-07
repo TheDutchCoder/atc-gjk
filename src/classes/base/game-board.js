@@ -165,11 +165,11 @@ export default class GameBoard {
      * 3. Departure time
      */
     for (let i = 0; i < this._airplanes; i++) {
-      const start = getRandomStart(this._width, this._depth, airfields)
-      let end = getRandomDestination(this._width, this._depth, airfields)
+      const start = getRandomStart(this._width, this._depth, airplanes[this._difficulty].height, airfields)
+      let end = getRandomDestination(this._width, this._depth, airplanes[this._difficulty].height, airfields)
 
       while (start.name === end.name) {
-        end = getRandomDestination(this._width, this._depth, airfields)
+        end = getRandomDestination(this._width, this._depth, airplanes[this._difficulty].height, airfields)
       }
 
       // Add airplanes to the queue

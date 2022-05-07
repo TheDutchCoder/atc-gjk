@@ -412,7 +412,7 @@ export const mapDirection = (direction) => {
 }
 
 
-export const getRandomStart = (width, depth, airports) => {
+export const getRandomStart = (width, depth, maxHeight, airports) => {
   const isAirport = Math.random() > 0.7
 
   const minX = Math.ceil(0 - (width / 2)) -1
@@ -425,7 +425,7 @@ export const getRandomStart = (width, depth, airports) => {
   const optionsZ2 = [minZ, maxZ, 0]
 
   const x = randomItemFromArray(optionsX)
-  const y = Math.ceil(Math.random() * 9)
+  const y = Math.ceil(Math.random() * maxHeight)
   const z = x === 0 ? randomItemFromArray(optionsZ1) : randomItemFromArray(optionsZ2)
 
   const position = { x, y, z }
@@ -437,7 +437,7 @@ export const getRandomStart = (width, depth, airports) => {
   }
 }
 
-export const getRandomDestination = (width, depth, airports) => {
+export const getRandomDestination = (width, depth, maxHeight, airports) => {
   const isAirport = Math.random() > 0.3
 
   const minX = Math.ceil(0 - (width / 2)) -1
@@ -450,7 +450,7 @@ export const getRandomDestination = (width, depth, airports) => {
   const optionsZ2 = [minZ, maxZ, 0]
 
   const x = randomItemFromArray(optionsX)
-  const y = Math.ceil(Math.random() * 9)
+  const y = Math.ceil(Math.random() * maxHeight)
   const z = x === 0 ? randomItemFromArray(optionsZ1) : randomItemFromArray(optionsZ2)
 
   const position = { x, y, z }

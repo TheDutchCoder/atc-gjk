@@ -332,6 +332,7 @@ suite('tools', () => {
   test('getRandomStart', () => {
     const width = 3
     const height = 5
+    const maxHeight = 8
     const airfields = [
       { position: { x: 1, y: 0, z: 1 }, direction: 0, name: 'AP1' },
       { position: { x: 3, y: 0, z: 3 }, direction: 6, name: 'AP2' },
@@ -339,13 +340,13 @@ suite('tools', () => {
     ]
 
     for (let i = 0; i < 100; i++) {
-      let result = getRandomStart(width, height, airfields)
+      let result = getRandomStart(width, height, maxHeight, airfields)
 
       // Destination is not an airport
       if (!result.position.y === 0) {
         expect(result.position.x === -2 || result.position.x === 2 || result.position.x === 0).toBeTruthy()
         expect(result.position.y).toBeGreaterThanOrEqual(1)
-        expect(result.position.y).toBeLessThanOrEqual(9)
+        expect(result.position.y).toBeLessThanOrEqual(8)
         expect(result.position.z === -3 || result.position.z === 3 || result.position.z === 0).toBeTruthy()
       }
     }
@@ -354,6 +355,7 @@ suite('tools', () => {
   test('getRandomDestination', () => {
     const width = 3
     const height = 5
+    const maxHeight = 8
     const airfields = [
       { position: { x: 1, y: 0, z: 1 }, direction: 0, name: 'AP1' },
       { position: { x: 3, y: 0, z: 3 }, direction: 6, name: 'AP2' },
@@ -361,13 +363,13 @@ suite('tools', () => {
     ]
 
     for (let i = 0; i < 100; i++) {
-      let result = getRandomDestination(width, height, airfields)
+      let result = getRandomDestination(width, height, maxHeight, airfields)
 
       // Destination is not an airport
       if (!result.position.y === 0) {
         expect(result.position.x === -2 || result.position.x === 2 || result.position.x === 0).toBeTruthy()
         expect(result.position.y).toBeGreaterThanOrEqual(1)
-        expect(result.position.y).toBeLessThanOrEqual(9)
+        expect(result.position.y).toBeLessThanOrEqual(8)
         expect(result.position.z === -3 || result.position.z === 3 || result.position.z === 0).toBeTruthy()
       }
     }
