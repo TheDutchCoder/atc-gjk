@@ -691,6 +691,10 @@ onMounted(() => {
       await BoardSceneRef.animateOut()
       BoardSceneRef.reset()
 
+      // Reset background
+      color1.value = '#ecfeff'
+      color2.value = '#7dd3fc'
+
       watcher1()
       watcher2()
       watcher3()
