@@ -603,11 +603,15 @@ onMounted(() => {
           }, 1000)
 
           // Update colors.
-          color1.value = lerpColor('#4a6263', '#ecfeff', Math.sin((tick / 96) * Math.PI))
-          color2.value = lerpColor('#1d3743', '#7dd3fc', Math.sin((tick / 96) * Math.PI))
-          const fog = lerpColor('#1d3743', '#9bc8e9', Math.sin((tick / 96) * Math.PI))
-          const hemi = lerpColor('#1d3743', '#9bc8e9', Math.sin((tick / 96) * Math.PI))
-          const sunlight = lerpColor('#c09db2', '#f4efd4', Math.sin((tick / 96) * Math.PI))
+          const factor = tick / 96
+          const sin = Math.sin(factor * Math.PI)
+
+          color1.value = lerpColor('#4a6263', '#ecfeff', sin)
+          color2.value = lerpColor('#1d3743', '#7dd3fc', sin)
+
+          const fog = lerpColor('#1d3743', '#9bc8e9', sin)
+          const hemi = lerpColor('#1d3743', '#9bc8e9', sin)
+          const sunlight = lerpColor('#c09db2', '#f4efd4', sin)
 
           BoardSceneRef._scene.fog = new Fog(new Color(fog), 15, 350)
           BoardSceneRef._scene.children.forEach(child => {
