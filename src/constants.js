@@ -55,9 +55,9 @@ export const clouds = {
 }
 
 export const airplanes = {
-  EASY: { amount: 24, height: 5 },
+  EASY: { amount: 24, height: 6 },
   NORMAL: { amount: 48, height: 7 },
-  HARD: { amount: 96, height: 9 },
+  HARD: { amount: 96, height: 8 },
 }
 
 export const flightStatusses = {

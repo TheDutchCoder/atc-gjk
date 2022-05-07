@@ -72,8 +72,6 @@ export default class IntroScene extends Scene {
     })
 
     this.addAirplane(airplane)
-    // airplane.setSpawned()
-    // airplane.animateIn(0, 500)
 
     // Add the dirt base.
     Dirt.add()
