@@ -163,8 +163,6 @@ export default class GameBoard {
         for (let z = 0; z < size; z++) {
           const pos = start
 
-          console.log({ x: (pos.x + x), y: pos.y, z: (pos.z + z) })
-
           Clouds.add({ position: { x: (pos.x + x), y: pos.y, z: (pos.z + z) } })
         }
       }
