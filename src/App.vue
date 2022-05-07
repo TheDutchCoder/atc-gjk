@@ -3,7 +3,7 @@
     id="three"
   />
 
-  <div class="">
+  <div>
     <transition
       enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)]"
       enter-from-class="scale-50 opacity-0"
@@ -493,13 +493,13 @@ import controls, { resetControls } from '#/controls'
 import camera from '#/camera'
 import clock from '#/clock'
 
-import { formatTime, mapDirection, getDirectionFactors } from '#/tools'
+import { formatTime, mapDirection, getDirectionFactors, lerpColor } from '#/tools'
 import { flightStatusses, difficulties } from '#/constants'
 
 import IntroScene from '#/classes/scenes/intro-scene'
 import BoardScene from '#/classes/scenes/board-scene'
 
-import { Raycaster, Vector2 } from 'three'
+import { Raycaster, Vector2, Color, Fog } from 'three'
 
 import ActionButton from '#/components/ActionButton.vue'
 
@@ -547,6 +547,9 @@ const getPlaneClasses = (plane, index) => {
     ...(isInFlight ? inFlight : []),
   ]
 }
+
+const color1 = ref('#ecfeff')
+const color2 = ref('#7dd3fc')
 
 onMounted(() => {
   initRenderer()
@@ -597,7 +600,7 @@ onMounted(() => {
 
       watcher1 = watch(
         BoardSceneRef._tick,
-        () => {
+        (tick) => {
           clearInterval(subTickTimer.value)
 
           subTick.value = 0
@@ -605,15 +608,19 @@ onMounted(() => {
           subTickTimer.value = setInterval(() => {
             subTick.value++
           }, 1000)
-        }
-      )
 
-      watcher2 = watch(
-        BoardSceneRef._airplanes,
-        (planes) => {
-          if (!planes.find(plane => plane._id === selectedPlane.value?._id)) {
-            selectedPlane.value = null
-          }
+          // Update colors.
+          color1.value = lerpColor('#4a6263', '#ecfeff', Math.sin((tick / 96) * Math.PI))
+          color2.value = lerpColor('#1d3743', '#7dd3fc', Math.sin((tick / 96) * Math.PI))
+          const fog = lerpColor('#1d3743', '#9bc8e9', Math.sin((tick / 96) * Math.PI))
+          const hemi = lerpColor('#1d3743', '#9bc8e9', Math.sin((tick / 96) * Math.PI))
+
+          BoardSceneRef._scene.fog = new Fog(new Color(fog), 15, 350)
+          BoardSceneRef._scene.children.forEach(child => {
+            if (child.name === 'hemi') {
+              child.color = new Color(hemi)
+            }
+          })
         }
       )
 
@@ -641,6 +648,15 @@ onMounted(() => {
      */
     if (state.changed && state.matches('gamePlaying')) {
       controls.enableRotate = true
+
+      watcher2 = watch(
+        BoardSceneRef._airplanes,
+        (planes) => {
+          if (!planes.find(plane => plane._id === selectedPlane.value?._id)) {
+            selectedPlane.value = null
+          }
+        }
+      )
 
       watcher3 = watch(
         schedule,
@@ -846,19 +862,6 @@ const setDirection = (direction) => {
 const subTick = ref(0)
 const subTickTimer = ref(null)
 
-// watch(
-//   BoardSceneRef?._tick,
-//   () => {
-//     clearInterval(subTickTimer.value)
-
-//     subTick.value = 0
-
-//     subTickTimer.value = setInterval(() => {
-//       subTick.value++
-//     }, 1000)
-//   }
-// )
-
 watch(
   subTick,
   async (newTick) => {
@@ -881,10 +884,22 @@ watch(
 const grad = computed(() => {
   return { 'background': `conic-gradient(#3b82f6 ${(subTick.value / 30) * 360}deg, transparent ${(subTick.value / 30) * 360}deg)` }
 })
+const foo = computed(() => `radial-gradient(${color1.value}, ${color2.value})`)
+
+// watch(
+//   foo,
+//   (f) => {
+//     console.log(f)
+//   }
+// )
 
 </script>
 
 <style>
+#three {
+  background: v-bind(foo)
+}
+
 .stage {
   position: relative;
   perspective: 9999px;

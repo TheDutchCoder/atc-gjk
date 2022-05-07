@@ -23,6 +23,7 @@ import { flightStatusses } from '#/constants'
 export default class BoardScene extends Scene {
   start = () => {
     const hemiLight = new HemisphereLight(0xffffff, 0x080802, 0.7)
+    hemiLight.name = 'hemi'
     hemiLight.position.set(15, 25, 15)
 
     const pivot2 = new Object3D()
