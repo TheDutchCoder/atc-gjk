@@ -21,7 +21,7 @@ import Airstrip from '#/classes/props/airstrip'
 import { flightStatusses } from '#/constants'
 
 export default class BoardScene extends Scene {
-  start = () => {
+  start () {
     const hemiLight = new HemisphereLight(0xffffff, 0x080802, 0.7)
     hemiLight.name = 'hemi'
     hemiLight.position.set(15, 25, 15)
@@ -72,7 +72,7 @@ export default class BoardScene extends Scene {
     this.nextTick()
   }
 
-  nextTick = async () => {
+  async nextTick () {
     if (!this._isAnimating) {
       this._isAnimating = true
       this._tick.value++
@@ -126,7 +126,7 @@ export default class BoardScene extends Scene {
     }
   }
 
-  checkObstructions = () => {
+  checkObstructions () {
     const minX = 0 - Math.floor(this._board._width / 2)
     const minZ = 0 - Math.floor(this._board._depth / 2)
     const maxX = Math.abs(minX)
@@ -157,7 +157,7 @@ export default class BoardScene extends Scene {
     })
   }
 
-  checkCollisions = () => {
+  checkCollisions () {
     this._airplanes.value.forEach(plane1 => {
       const { x: p1X, y: p1Y, z: p1Z } = plane1._position
 
@@ -189,7 +189,7 @@ export default class BoardScene extends Scene {
     })
   }
 
-  checkDestinations = () => {
+  checkDestinations () {
     this._airplanes.value.forEach(plane => {
       if (plane._takenOff) {
         const { x: curX, y: curY, z: curZ } = plane._position
@@ -216,7 +216,7 @@ export default class BoardScene extends Scene {
     })
   }
 
-  checkOutOfBounds = () => {
+  checkOutOfBounds () {
     this._airplanes.value.forEach(plane => {
       const { x: curX, z: curZ } = plane._position
       const minX = 0 - Math.ceil(this._board._width / 2)
@@ -236,7 +236,7 @@ export default class BoardScene extends Scene {
     })
   }
 
-  checkOutOfFuel = () => {
+  checkOutOfFuel () {
     this._airplanes.value.forEach(plane => {
       if (plane._fuel <= 0) {
         console.log('game over!')
@@ -245,7 +245,7 @@ export default class BoardScene extends Scene {
     })
   }
 
-  selectPlane = (id) => {
+  selectPlane (id) {
     this._airplanes.value.forEach(plane => {
       // The selected plane has been selected agin, so unselect and return.
       if (plane._id === id && plane._isSelected) {
