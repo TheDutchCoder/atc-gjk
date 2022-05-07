@@ -45,6 +45,7 @@ export default class BoardScene extends Scene {
     dirLight1.shadow.camera.right = 90
 
     const dirLight2 = new DirectionalLight(0xb0e1ed, 0.2)
+    dirLight1.name = 'sunlight'
     const helper2 = new DirectionalLightHelper(dirLight2, 5)
     dirLight2.position.set(-20, 25, -10)
 
