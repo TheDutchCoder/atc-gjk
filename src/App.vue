@@ -506,14 +506,7 @@ import ActionButton from '#/components/ActionButton.vue'
 let IntroSceneRef = null
 let BoardSceneRef = null
 
-const schedule = computed(() => {
-  return BoardSceneRef._board._airplanesQueue.map(plane => {
-    const n = BoardSceneRef._airplanes.value.find((a) => a._id === plane._id)
-
-    return n || plane
-  })
-})
-
+const schedule = ref([])
 const time = computed(() => formatTime(BoardSceneRef._tick.value))
 const score = computed(() => BoardSceneRef._score.value)
 
@@ -620,6 +613,13 @@ onMounted(() => {
             if (child.name === 'hemi') {
               child.color = new Color(hemi)
             }
+          })
+
+          // Update schedule.
+          schedule.value = BoardSceneRef._board._airplanesQueue.map(plane => {
+            const n = BoardSceneRef._airplanes.value.find((a) => a._id === plane._id)
+
+            return n || plane
           })
         }
       )

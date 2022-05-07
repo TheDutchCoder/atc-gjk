@@ -160,6 +160,7 @@ export default class GameScene {
     })
 
     this._scene = new Scene()
+    this._board = null
     this._anims = []
     this._lights = []
     this._models = []
