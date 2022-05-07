@@ -412,10 +412,28 @@ export const mapDirection = (direction) => {
 }
 
 
+export const getRandomCloudStart = (width, depth, maxHeight) => {
+  const minX = Math.ceil(0 - (width / 2))
+  const maxX = Math.abs(minX)
+  const minY = 2
+  const maxY = maxHeight - 2
+  const minZ = Math.ceil(0 - (depth / 2))
+  const maxZ = Math.abs(minZ)
+
+  const x = randomRoundNumber(minX, maxX)
+  const y = randomRoundNumber(minY, maxY)
+  const z = randomRoundNumber(minZ, maxZ)
+
+  const position = { x, y, z }
+
+  return position
+}
+
+
 export const getRandomStart = (width, depth, maxHeight, airports) => {
   const isAirport = Math.random() > 0.7
 
-  const minX = Math.ceil(0 - (width / 2)) -1
+  const minX = Math.ceil(0 - (width / 2)) - 1
   const maxX = Math.abs(minX)
   const minZ = Math.ceil(0 - (depth / 2)) - 1
   const maxZ = Math.abs(minZ)

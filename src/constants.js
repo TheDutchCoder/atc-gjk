@@ -41,16 +41,34 @@ export const airfields = {
 
 export const clouds = {
   EASY: {
-    min: 1,
-    max: 2,
+    count: {
+      min: 1,
+      max: 1,
+    },
+    size: {
+      min: 1,
+      max: 2,
+    },
   },
   NORMAL: {
-    min: 3,
-    max: 5,
+    count: {
+      min: 1,
+      max: 2,
+    },
+    size: {
+      min: 2,
+      max: 3,
+    },
   },
   HARD: {
-    min: 6,
-    max: 9,
+    count: {
+      min: 1,
+      max: 3,
+    },
+    size: {
+      min: 2,
+      max: 5,
+    },
   },
 }
 

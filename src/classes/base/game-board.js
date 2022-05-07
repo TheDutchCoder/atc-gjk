@@ -12,6 +12,7 @@ import {
   randomRoundNumber,
   getRandomStart,
   getRandomDestination,
+  getRandomCloudStart,
 } from '#tools/index'
 
 import { difficulties, dimensions, airfields, clouds, airplanes } from '#/constants'
@@ -85,7 +86,7 @@ export default class GameBoard {
     this._width = dimensions[this._difficulty].width
     this._depth = dimensions[this._difficulty].depth
     this._airfields = randomRoundNumber(airfields[this._difficulty].min, airfields[this._difficulty].max)
-    this._clouds = randomRoundNumber(clouds[this._difficulty].min, clouds[this._difficulty].max)
+    this._clouds = randomRoundNumber(clouds[this._difficulty].count.min, clouds[this._difficulty].count.max)
     this._airplanes = airplanes[this._difficulty].amount
   }
 
@@ -151,9 +152,22 @@ export default class GameBoard {
     // Add the dirt.
     Dirt.add({ scale: { x: this._width, y: 1, z: this._depth } })
 
-    // Add the clouds.
+    // Clouds are added in groups (e.g. 4x4), this makes them a lot more
+    // impactful on the game. The idea is to animate them later (e.g. move from
+    // E to W every few ticks).
     for (let i = 0; i < this._clouds; i++) {
-      Clouds.add({ position: { x: randomRoundNumber(minX, maxZ), y: randomRoundNumber(airplanes[this._difficulty].height - 2, airplanes[this._difficulty].height), z: randomRoundNumber(minZ, maxZ) } })
+      const size = randomRoundNumber(clouds[this._difficulty].size.min, clouds[this._difficulty].size.max)
+      const start = getRandomCloudStart(this._width, this._depth, airplanes[this._difficulty].height)
+
+      for (let x = 0; x < size; x++) {
+        for (let z = 0; z < size; z++) {
+          const pos = start
+
+          console.log({ x: (pos.x + x), y: pos.y, z: (pos.z + z) })
+
+          Clouds.add({ position: { x: (pos.x + x), y: pos.y, z: (pos.z + z) } })
+        }
+      }
     }
 
     /**

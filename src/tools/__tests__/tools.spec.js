@@ -11,6 +11,7 @@ import {
   getPrevPosition,
   formatTime,
   mapDirection,
+  getRandomCloudStart,
   getRandomStart,
   getRandomDestination,
   getRandomAirport,
@@ -327,6 +328,22 @@ suite('tools', () => {
     expect(mapDirection(5)).toBe('SW')
     expect(mapDirection(6)).toBe('W')
     expect(mapDirection(7)).toBe('NW')
+  })
+
+  test('getRandomCloudStart', () => {
+    const width = 7
+    const height = 9
+    const maxHeight = 8
+
+    for (let i = 0; i < 100; i++) {
+      let position = getRandomCloudStart(width, height, maxHeight)
+
+      // Destination is not an airport
+      expect(position.x >= -3 && position.x <= 3).toBeTruthy()
+      expect(position.y).toBeGreaterThanOrEqual(2)
+      expect(position.y).toBeLessThanOrEqual(6)
+      expect(position.z >= -4 && position.z <= 4).toBeTruthy()
+    }
   })
 
   test('getRandomStart', () => {
