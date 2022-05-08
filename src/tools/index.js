@@ -250,7 +250,7 @@ export const randomCoordinate = (min, max, excludes = { width: 0, direction: 0 }
  * @param {*} depth
  * @returns
  */
-export const getStartDirection = (position, width, depth) => {
+export const getStartDirection = (position, width, depth, offset = 1) => {
   const minX = Math.ceil(0 - (width / 2))
   const maxX = Math.abs(minX)
   const minZ = Math.ceil(0 - (depth / 2))
@@ -258,24 +258,24 @@ export const getStartDirection = (position, width, depth) => {
 
   const { x, z } = position
 
-  if (x === minX - 1) {
-    if (z === minZ - 1) {
+  if (x === minX - offset) {
+    if (z === minZ - offset) {
       return 3
-    } else if (z === maxZ + 1) {
+    } else if (z === maxZ + offset) {
       return 1
     } else {
       return 2
     }
-  } else if (x === maxX + 1) {
-    if (z === minZ - 1) {
+  } else if (x === maxX + offset) {
+    if (z === minZ - offset) {
       return 5
-    } else if (z === maxZ + 1) {
+    } else if (z === maxZ + offset) {
       return 7
     } else {
       return 6
     }
   } else {
-    if (z === minZ - 1) {
+    if (z === minZ - offset) {
       return 4
     } else {
       return 0
@@ -420,13 +420,21 @@ export const getRandomCloudStart = (width, depth, maxHeight) => {
   const minZ = Math.ceil(0 - (depth / 2))
   const maxZ = Math.abs(minZ)
 
-  const x = randomRoundNumber(minX, maxX)
+  const optionsX = [minX, maxX, 0]
+  const optionsZ1 = [minZ, maxZ]
+  const optionsZ2 = [minZ, maxZ, 0]
+
+  const x = randomItemFromArray(optionsX)
   const y = randomRoundNumber(minY, maxY)
-  const z = randomRoundNumber(minZ, maxZ)
+  const z = x === 0 ? randomItemFromArray(optionsZ1) : randomItemFromArray(optionsZ2)
 
   const position = { x, y, z }
+  const direction = getStartDirection(position, width, depth, 0)
 
-  return position
+  return {
+    position,
+    direction,
+  }
 }
 
 

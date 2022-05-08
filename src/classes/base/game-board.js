@@ -161,9 +161,7 @@ export default class GameBoard {
 
       for (let x = 0; x < size; x++) {
         for (let z = 0; z < size; z++) {
-          const pos = start
-
-          Clouds.add({ position: { x: (pos.x + x), y: pos.y, z: (pos.z + z) } })
+          Clouds.add({ position: { x: (start.position.x + x), y: start.position.y, z: (start.position.z + z) }, direction: start.direction })
         }
       }
     }

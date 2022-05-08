@@ -336,13 +336,14 @@ suite('tools', () => {
     const maxHeight = 8
 
     for (let i = 0; i < 100; i++) {
-      let position = getRandomCloudStart(width, height, maxHeight)
+      let result = getRandomCloudStart(width, height, maxHeight)
 
       // Destination is not an airport
-      expect(position.x >= -3 && position.x <= 3).toBeTruthy()
-      expect(position.y).toBeGreaterThanOrEqual(2)
-      expect(position.y).toBeLessThanOrEqual(6)
-      expect(position.z >= -4 && position.z <= 4).toBeTruthy()
+      expect(result.position.x === -3 || result.position.x === 0 || result.position.x === 3).toBeTruthy()
+      expect(result.position.y).toBeGreaterThanOrEqual(2)
+      expect(result.position.y).toBeLessThanOrEqual(6)
+      expect(result.position.z === -4 || result.position.z === 0 || result.position.z === 4).toBeTruthy()
+      expect(result.direction >= 0 && result.direction <= 7).toBeTruthy()
     }
   })
 

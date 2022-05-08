@@ -67,6 +67,8 @@ export default class GameScene {
 
   _airplanes = ref([])
 
+  _clouds = Clouds
+
   /**
    * The board in this scene (if any).
    */

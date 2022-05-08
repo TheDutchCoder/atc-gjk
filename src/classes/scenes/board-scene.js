@@ -113,6 +113,11 @@ export default class BoardScene extends Scene {
         .start()
       })
 
+      // Move clouds planes every hour
+      if (this._tick.value % 6 === 0 && this._tick.value > 0) {
+        await this._clouds.next()
+      }
+
       await movePlanes
       await spawnPlanes
       await moveSun
