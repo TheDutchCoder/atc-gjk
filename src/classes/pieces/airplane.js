@@ -10,6 +10,7 @@ import {
   Mesh,
   Group,
   Color,
+  PointLight,
 } from 'three'
 
 import {
@@ -228,11 +229,21 @@ const createDefaultPlane = (color) => {
   ])
 
 
+  // Lights.
+  const greenLightGeometry = boxGeometry.clone()
+  greenLightGeometry.scale(0.1, 0.1, 0.1)
+  greenLightGeometry.translate(1.7, 0, -0.5)
+
+  const redLightGeometry = boxGeometry.clone()
+  redLightGeometry.scale(0.1, 0.1, 0.1)
+  redLightGeometry.translate(-1.7, 0, -0.5)
+
+
   const plane = new Group()
   plane.name = 'plane'
 
   /**
-   * Assign materials to the eshes.
+   * Assign materials to the meshes.
    */
   const baseMaterial = defaultMaterial.clone()
   baseMaterial.color.set(color)
@@ -243,18 +254,24 @@ const createDefaultPlane = (color) => {
   const nutMaterial = defaultMaterial.clone()
   const propMaterial = defaultMaterial.clone()
   const selectorMaterial = defaultMaterial.clone()
+  const greenLightMaterial = glassMaterial.clone()
+  const redLightMaterial = glassMaterial.clone()
 
   const screenColor = new Color(0xe2eff4)
   const propColor = new Color(0x000000)
   const nutColor = new Color(0x99684a)
   const engineColor = new Color(0xffffff)
   const selectorColor = new Color(0x00ff00)
+  const greenLightColor = new Color(0x00ff00)
+  const redLightColor = new Color(0xff0000)
 
   screenMaterial.color.set(screenColor)
   engineMaterial.color.set(engineColor)
   nutMaterial.color.set(nutColor)
   propMaterial.color.set(propColor)
   selectorMaterial.color.set(selectorColor)
+  greenLightMaterial.color.set(greenLightColor)
+  redLightMaterial.color.set(redLightColor)
 
   const baseMesh = new Mesh(baseGeometries, baseMaterial)
   const glassMesh = new Mesh(glassGeometries, screenMaterial)
@@ -267,6 +284,22 @@ const createDefaultPlane = (color) => {
   selectorMesh.name = 'selector'
   selectorMesh.visible = false
 
+  const greenLightMesh = new Mesh(greenLightGeometry, greenLightMaterial)
+  const redLightMesh = new Mesh(redLightGeometry, redLightMaterial)
+
+  // Create lights.
+  const greenLight = new PointLight(0x00ff00, 1.2, 3)
+  greenLight.name = 'green'
+  greenLight.translateX(1.7)
+  greenLight.translateY(0)
+  greenLight.translateZ(-0.6)
+
+  const redLight = new PointLight(0xff0000, 1.2, 3)
+  redLight.name = 'red'
+  redLight.translateX(-1.7)
+  redLight.translateY(0)
+  redLight.translateZ(-0.6)
+
   plane.add(
     baseMesh,
     glassMesh,
@@ -274,18 +307,17 @@ const createDefaultPlane = (color) => {
     blackStaticMesh,
     blackDynamicMesh,
     brownMesh,
-    selectorMesh
+    selectorMesh,
+    greenLightMesh,
+    redLightMesh,
+    greenLight,
+    redLight
   )
 
   return plane
 }
 
-/**
- * @todo when plane is on the ground, tilt it slightly and stop the
- * bobbing/pitching.
- *
- * @todo initial direction is wrong :D when z: -6
- */
+
 export default class Airplane {
 
   /**
@@ -502,6 +534,26 @@ export default class Airplane {
         child.rotation.y += 0.01
         child.position.y += bob
       }
+
+      if (child.name === 'green') {
+        if (this._tick % 120 === 0) {
+          child.visible = true
+        }
+
+        if (this._tick % 120 === 4) {
+          child.visible = false
+        }
+      }
+
+      if (child.name === 'red') {
+        if (this._tick % 120 === 40) {
+          child.visible = true
+        }
+
+        if (this._tick % 120 === 44) {
+          child.visible = false
+        }
+      }
     })
 
     this._tick++
@@ -607,7 +659,7 @@ export default class Airplane {
     this._isGhost = true
 
     this._model.children.forEach(child => {
-      if (child.material.name === 'base') {
+      if (child.material && child.material.name === 'base') {
         child.material.color.set(ghostColor)
       }
 
@@ -623,7 +675,7 @@ export default class Airplane {
     this._isGhost = false
 
     this._model.children.forEach(child => {
-      if (child.material.name === 'base') {
+      if (child.material && child.material.name === 'base') {
         child.material.color.set(this._color)
       }
 
