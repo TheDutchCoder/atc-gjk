@@ -4,6 +4,8 @@ import TWEEN from '@tweenjs/tween.js'
 import {
   Mesh,
   Group,
+  PointLight,
+  Object3D,
 } from 'three'
 
 import { helvetikerBold } from '#/fonts'
@@ -72,10 +74,20 @@ class AirStrip {
   /**
    * The mesh for the green lights.
    */
+  _greenLightMeshes = null
+
+  /**
+   * The green lights.
+   */
   _greenLights = null
 
   /**
    * The mesh for the red lights.
+   */
+  _redLightMeshes = null
+
+  /**
+   * The red lights.
    */
   _redLights = null
 
@@ -83,6 +95,11 @@ class AirStrip {
    * The label.
    */
   _label = null
+
+  /**
+   * Tracks time passed for continuous animations.
+   */
+   _tick = 0
 
   /**
    * Initialize the trees.
@@ -101,9 +118,12 @@ class AirStrip {
     this._airstrip = null
     this._strips = null
     this._stripes = null
+    this._greenLightMeshes = null
+    this._redLightMeshes = null
     this._greenLights = null
     this._redLights = null
     this._label = null
+    this._tick = 0
   }
 
   /**
@@ -111,6 +131,8 @@ class AirStrip {
    */
   create () {
     this._airstrip = new Group()
+    this._greenLights = new Group()
+    this._redLights = new Group()
 
     const stripsGeometries = []
     const stripeGeometries = []
@@ -170,6 +192,33 @@ class AirStrip {
       labelGeometry.translate(tile.position.x * 10, 0.2 + (tile.position.y * 5), tile.position.z * 10)
 
       labelGeometries.push(labelGeometry)
+
+      const greenPivot = new Object3D()
+      const greenLight = new PointLight(0x00ff00, 1.2, 3)
+      greenLight.translateX(-1.5)
+      greenLight.translateZ(4)
+      greenLight.visible = false
+
+      greenPivot.add(greenLight)
+      greenPivot.translateX(tile.position.x * 10)
+      greenPivot.translateY(0.5)
+      greenPivot.translateZ(tile.position.z * 10)
+      greenPivot.rotateY(tile.direction * Math.PI / -4)
+
+      const redPivot = new Object3D()
+      const redLight = new PointLight(0xff0000, 1.2, 3)
+      redLight.translateX(1.5)
+      redLight.translateZ(-4)
+      redLight.visible = false
+
+      redPivot.add(redLight, redLight)
+      redPivot.translateX(tile.position.x * 10)
+      redPivot.translateY(0.5)
+      redPivot.translateZ(tile.position.z * 10)
+      redPivot.rotateY(tile.direction * Math.PI / -4)
+
+      this._greenLights.add(greenPivot)
+      this._redLights.add(redPivot)
     })
 
     if (this._tiles.length) {
@@ -181,17 +230,53 @@ class AirStrip {
 
       this._strips = new Mesh(mergedStripGeometries, stripMaterial)
       this._stripes = new Mesh(mergedStripeGeometries, stripeMaterial)
-      this._greenLights = new Mesh(mergedGreenLightsGeometries, greenLightMaterial)
-      this._redLights = new Mesh(mergedRedLightsGeometries, redLightMaterial)
+      this._greenLightMeshes = new Mesh(mergedGreenLightsGeometries, greenLightMaterial)
+      this._redLightMeshes = new Mesh(mergedRedLightsGeometries, redLightMaterial)
       this._labels = new Mesh(mergedLabelGeometries, labelMaterial)
 
-      this._greenLights.position.y = 0.2
-      this._redLights.position.y = 0.2
+      this._greenLightMeshes.position.y = 0.2
+      this._redLightMeshes.position.y = 0.2
 
-      this._airstrip.add(this._strips, this._stripes, this._greenLights, this._redLights, this._labels)
+      this._airstrip.add(this._strips, this._stripes, this._greenLightMeshes, this._redLightMeshes, this._labels, this._greenLights, this._redLights)
     }
 
     return this._airstrip
+  }
+
+  _animate = () => {
+    this._greenLights.children.forEach(light => {
+      const f = this._tick % 120
+      if (f === 0 || f === 10 || f === 20 || f === 30 || f === 40) {
+        light.translateX(0.5)
+      }
+
+      if (f === 41) {
+        light.children[0].visible = false
+      }
+
+      if (f === 119) {
+        light.children[0].visible = true
+        light.translateX(-2.5)
+      }
+    })
+
+    this._redLights.children.forEach(light => {
+      const f = this._tick % 120
+      if (f === 50 || f === 60 || f === 70 || f === 80 || f === 90) {
+        light.translateX(0.5)
+      }
+
+      if (f === 91) {
+        light.children[0].visible = false
+      }
+
+      if (f === 49) {
+        light.children[0].visible = true
+        light.translateX(-2.5)
+      }
+    })
+
+    this._tick++
   }
 
   /**
