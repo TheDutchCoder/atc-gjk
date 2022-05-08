@@ -67,8 +67,9 @@ const backClasses = computed(() => {
   const base = [
     'blur-[2px]',
     !isPrimary.value && !isSecondary.value && 'bg-gray-800',
-    isPrimary.value && 'bg-blue-800',
-    isSecondary.value && 'bg-blue-600',
+    isDisabled.value && 'bg-gray-600',
+    isPrimary.value && !isDisabled.value && 'bg-blue-800',
+    isSecondary.value && !isDisabled.value && 'bg-blue-600',
   ]
 
   switch (size.value) {
@@ -102,8 +103,9 @@ const backClasses = computed(() => {
 const midClasses = computed(() => {
   const base = [
     !isPrimary.value && !isSecondary.value && 'group-hover:bg-gray-300',
-    isPrimary.value && 'bg-blue-800 group-hover:bg-blue-900',
-    isSecondary.value && 'bg-blue-400 group-hover:bg-blue-500',
+    isDisabled.value && 'bg-gray-400',
+    isPrimary.value && !isDisabled.value && 'bg-blue-800 group-hover:bg-blue-900',
+    isSecondary.value && !isDisabled.value && 'bg-blue-400 group-hover:bg-blue-500',
   ]
 
   switch (size.value) {
@@ -143,9 +145,9 @@ const midClasses = computed(() => {
 const frontClasses = computed(() => {
   const base = [
     !isPrimary.value && !isSecondary.value && !isDisabled.value && 'text-gray-800 group-hover:bg-gray-100',
-    isDisabled.value && 'bg-gray-200 border-gray-200 text-gray-400 cursor-not-allowed',
-    isPrimary.value && 'bg-blue-500 border-blue-700 text-white group-hover:bg-blue-600',
-    isSecondary.value && 'bg-blue-200 border-blue-300 text-blue-700 group-hover:bg-blue-300',
+    isDisabled.value && 'bg-gray-200 border-gray-300 text-gray-400 cursor-not-allowed',
+    isPrimary.value && !isDisabled.value && 'bg-blue-500 border-blue-700 text-white group-hover:bg-blue-600',
+    isSecondary.value && !isDisabled.value && 'bg-blue-200 border-blue-300 text-blue-700 group-hover:bg-blue-300',
   ]
 
   switch (size.value) {

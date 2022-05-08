@@ -264,6 +264,7 @@
                   <ActionButton
                     size="control"
                     :is-primary="selectedPlane?._targetDirection === -1"
+                    :is-disabled="selectedPlane?._isGhost"
                     @click="setDirection(-1)"
                   >
                     45
@@ -272,6 +273,7 @@
                     size="control"
                     class="row-span-2"
                     :is-primary="selectedPlane?._targetDirection === 0 && selectedPlane?._targetAltitude !== 0"
+                    :is-disabled="selectedPlane?._isGhost"
                     @click="setDirection(0); setHeight(selectedPlane?._position.y)"
                   >
                     &uarr;
@@ -279,6 +281,7 @@
                   <ActionButton
                     size="control"
                     :is-primary="selectedPlane?._targetDirection === 1"
+                    :is-disabled="selectedPlane?._isGhost"
                     @click="setDirection(1)"
                   >
                     45
@@ -286,6 +289,7 @@
                   <ActionButton
                     size="control"
                     :is-primary="selectedPlane?._targetDirection === -2"
+                    :is-disabled="selectedPlane?._isGhost"
                     @click="setDirection(-2)"
                   >
                     90
@@ -293,6 +297,7 @@
                   <ActionButton
                     size="control"
                     :is-primary="selectedPlane?._targetDirection === 2"
+                    :is-disabled="selectedPlane?._isGhost"
                     @click="setDirection(2)"
                   >
                     90
@@ -300,6 +305,7 @@
                   <ActionButton
                     size="control"
                     :is-primary="selectedPlane?._targetDirection === -3"
+                    :is-disabled="selectedPlane?._isGhost"
                     @click="setDirection(-3)"
                   >
                     135
@@ -307,6 +313,7 @@
                   <ActionButton
                     size="control"
                     :is-primary="selectedPlane?._targetDirection === 0 && selectedPlane?._targetAltitude === 0"
+                    :is-disabled="selectedPlane?._isGhost"
                     @click="setDirection(0); setHeight(0)"
                   >
                     L
@@ -314,6 +321,7 @@
                   <ActionButton
                     size="control"
                     :is-primary="selectedPlane?._targetDirection === 3"
+                    :is-disabled="selectedPlane?._isGhost"
                     @click="setDirection(3)"
                   >
                     135
@@ -321,6 +329,7 @@
                   <ActionButton
                     size="control"
                     :is-primary="selectedPlane?._targetDirection === -4"
+                    :is-disabled="selectedPlane?._isGhost"
                     @click="setDirection(-4)"
                   >
                     180
@@ -334,6 +343,7 @@
                   <ActionButton
                     size="control"
                     :is-primary="selectedPlane?._targetDirection === 4"
+                    :is-disabled="selectedPlane?._isGhost"
                     @click="setDirection(4)"
                   >
                     180
@@ -351,6 +361,7 @@
                     size="control"
                     :is-secondary="selectedPlane?._position.y === height && selectedPlane?._targetAltitude !== height"
                     :is-primary="selectedPlane?._targetAltitude === height"
+                    :is-disabled="selectedPlane?._isGhost"
                     @click="setHeight(height)"
                   >
                     {{ height }}

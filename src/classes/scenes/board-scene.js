@@ -114,7 +114,7 @@ export default class BoardScene extends Scene {
       })
 
       // Move clouds planes every hour
-      if (this._tick.value % 6 === 0 && this._tick.value > 0) {
+      if (this._tick.value % Math.floor(96 / this._board._width) === 0 && this._tick.value > 0) {
         await this._clouds.next()
       }
 
