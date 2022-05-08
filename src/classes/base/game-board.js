@@ -5,6 +5,7 @@ import Dirt from '#/classes/tiles/dirt'
 import Forest from '#/classes/tiles/forest'
 import Airfield from '#/classes/tiles/airfield'
 import TrainTracks from '#/classes/tiles/train-tracks'
+import Powerline from '#/classes/tiles/powerline'
 import Clouds from '#/classes/pieces/clouds'
 import Airplane from '#/classes/pieces/airplane'
 

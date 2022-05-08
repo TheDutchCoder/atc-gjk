@@ -8,31 +8,31 @@
     "target": "es6",
     "module": "es6",
     "baseUrl": ".",
-    "resolveJsonModule": true,
+    "moduleResolution": "node",
     "paths": {
-      "#": [
-        "./src"
-      ],
       "#blocks": [
-        "./src/blocks"
+        "src/blocks"
       ],
       "#elements": [
-        "./src/elements"
+        "src/elements"
       ],
       "#instances": [
-        "./src/instances"
+        "src/instances"
       ],
       "#geometries": [
-        "./src/geometries"
+        "src/geometries"
       ],
       "#materials": [
-        "./src/materials"
+        "src/materials"
       ],
       "#colors": [
-        "./src/colors"
+        "src/colors"
       ],
       "#tools": [
-        "./src/tools"
+        "src/tools"
+      ],
+      "#": [
+        "src"
       ]
     }
   },

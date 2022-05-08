@@ -9,6 +9,7 @@ import Rocks from '#/classes/props/rocks'
 import Clouds from '#/classes/pieces/clouds'
 import Airstrip from '#/classes/props/airstrip'
 import Tracks from '#/classes/props/tracks'
+import Powerlines from '#/classes/props/powerline'
 
 import { service } from '#/state-machines/main'
 
@@ -63,6 +64,7 @@ export default class GameScene {
     Clouds,
     Airstrip,
     Tracks,
+    Powerlines,
   ]
 
   _airplanes = ref([])
