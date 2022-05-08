@@ -22,6 +22,7 @@ import {
 
 import {
   randomRoundNumber,
+  getNextPosition,
 } from '#tools'
 
 const colors = [ROCK_1, ROCK_2, ROCK_3, ROCK_4]
@@ -59,6 +60,11 @@ class Clouds {
   _tick = 0
 
   /**
+   * Pauses idle animations while updating positions.
+   */
+  _pause = false
+
+  /**
    * Initialize the clouds.
    */
   constructor () { }
@@ -85,7 +91,7 @@ class Clouds {
     let amounts = 0
 
     this._tiles.forEach(tile => {
-      const amount = randomRoundNumber(8, 12)
+      const amount = randomRoundNumber(12, 24)
       amounts += amount
 
       const color = colors[randomRoundNumber(0, colors.length - 1)]
@@ -94,9 +100,9 @@ class Clouds {
       for (let i = 0; i < amount; i++) {
         this._instances.push({
           pos: {
-            x: -3 + (Math.random() * 6),
-            y: -0.2 + Math.random() * 0.4,
-            z: -3 + (Math.random() * 6),
+            x: -4.8 + (Math.random() * 9.6),
+            y: -0.4 + Math.random() * 0.8,
+            z: -4.8 + (Math.random() * 9.6),
           },
           rot: {
             x: (Math.PI * 2) * Math.random(),
@@ -119,18 +125,24 @@ class Clouds {
     this._clouds = new InstancedMesh(dodecahedronGeometry, cloudMaterial, amounts)
 
     this._animate = () => {
-      this._instances.forEach((instance, index) => {
-        const { isReady } = instance
+      if (!this._pause) {
+        this._instances.forEach((instance, index) => {
+          const { isReady } = instance
 
-        if (isReady) {
-          this.updateInstance(instance, index)
-        }
-      })
+          if (isReady) {
+            this.updateInstance(instance, index)
+          }
+        })
 
-      this._tick++
+        this._tick++
+      }
     }
 
     return this._clouds
+  }
+
+  async next (delay = 0) {
+    await this.animateNext(delay)
   }
 
   /**
@@ -162,6 +174,24 @@ class Clouds {
     this._clouds.instanceColor.needsUpdate = true
   }
 
+  updateInstancePosition (instance, index, from) {
+    const { pos, altitude, scale, rot, animation } = instance
+    const { x: rotX, y: rotY, z: rotZ } = rot
+    const { direction, speed } = animation
+
+    const bob = Math.sin((this._tick + index * 50) / 10 / Math.PI) / 20
+
+    dummy.position.set(pos.x + (from.x * 10), (altitude * 5) + ((pos.y + bob) * (scale)), pos.z + (from.z * 10))
+    dummy.rotation.set(rotX, rotY, rotZ + ((this._tick / speed) * direction))
+    dummy.scale.setScalar(scale)
+
+    dummy.updateMatrixWorld(true)
+
+    this._clouds.setMatrixAt(index, dummy.matrixWorld)
+
+    this._clouds.instanceMatrix.needsUpdate = true
+  }
+
   /**
    * Shows the clouds with an animation.
    */
@@ -187,6 +217,35 @@ class Clouds {
             resolve()
           })
           .delay(randomRoundNumber(1000, 1250))
+          .start()
+      })
+    })
+  }
+
+  async animateNext () {
+    if (!this._tiles.length) {
+      return Promise.resolve()
+    }
+
+    return new Promise((resolve) => {
+      this._pause = true
+      this._instances.forEach((instance, index) => {
+        const nextPosition = getNextPosition(instance.tile.position, instance.tile.direction)
+
+        const from = instance.tile.position
+        const to = nextPosition
+
+        this.updateInstancePosition(instance, index, from)
+
+        new TWEEN.Tween(from)
+          .to(to, 500)
+          .easing(TWEEN.Easing.Cubic.InOut)
+          .onUpdate(() => this.updateInstancePosition(instance, index, from))
+          .onComplete(() => {
+            this._pause = false
+            resolve()
+          })
+          .delay(randomRoundNumber(250, 500))
           .start()
       })
     })

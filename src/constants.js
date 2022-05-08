@@ -46,7 +46,7 @@ export const clouds = {
       max: 1,
     },
     size: {
-      min: 1,
+      min: 2,
       max: 2,
     },
   },
@@ -66,7 +66,7 @@ export const clouds = {
       max: 3,
     },
     size: {
-      min: 2,
+      min: 3,
       max: 5,
     },
   },
