@@ -86,7 +86,7 @@ export default class GameScene {
    */
   _animate = () => {
     Clouds._animate()
-    // Airplanes._animate()
+    Airstrip._animate()
 
     this._airplanes.value.forEach(plane => plane?.animate())
   }
