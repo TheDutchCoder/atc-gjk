@@ -122,6 +122,10 @@ export default class GameBoard {
       })
     }
 
+    this._tiles[1][1] = new Powerline({ position: { x: 1, y: 0, z: 1 }, direction: 0 })
+    this._tiles[1][2] = new Powerline({ position: { x: 1, y: 0, z: 2 }, direction: 0 })
+    this._tiles[1][3] = new Powerline({ position: { x: 1, y: 0, z: 3 }, direction: 0 })
+
     /**
      * Airfields need to be 2 tiles from the edges to allow planes to have
      * enough space to turn.

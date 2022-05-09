@@ -6,17 +6,16 @@ import {
   InstancedMesh,
   Euler,
   Object3D,
-  Mesh,
 } from 'three'
 
 import {
   POLE,
-  GREEN_LIGHT,
+  PEG,
+  LINE,
 } from '#colors'
 
 import {
   defaultMaterial,
-  glassMaterial,
 } from '#materials'
 
 import {
@@ -65,14 +64,24 @@ class Powerlines {
   _pegs = null
 
   /**
+   * Local instances for the lines.
+   */
+  _lines = null
+
+  /**
    * The group that represents an individual powerline.
    */
   _powerline = new Group()
 
   /**
-   * Configurations for each instance.
+   * Configurations for each pole instance.
    */
-  _instances = []
+  _poleInstances = []
+
+  /**
+   * Configurations for each pole instance.
+   */
+  _beamInstances = []
 
   /**
    * Initialize the trees.
@@ -91,8 +100,9 @@ class Powerlines {
     this._pole = null
     this._beam = null
     this._pegs = null
+    this._lines = null
     this._powerline = new Group()
-    this._instances = []
+    this._poleInstances = []
   }
 
   /**
@@ -100,9 +110,12 @@ class Powerlines {
    */
   create () {
     const pegGeometries = []
+    const lineGeometries = []
 
     this._tiles.forEach(tile => {
-      this._instances.push({
+      const isHorizontal = tile.direction === 2 || tile.direction === 6
+
+      this._poleInstances.push({
         pos: {
           x: 0,
           y: 0,
@@ -110,7 +123,7 @@ class Powerlines {
         },
         rot: {
           x: 0,
-          y: 0,
+          y: isHorizontal ? Math.PI / 2 : 0,
           z: 0,
         },
         scale: 1,
@@ -119,13 +132,13 @@ class Powerlines {
     })
 
     if (this._tiles.length) {
-      this._pole = new InstancedMesh(poleGeometry.clone(), defaultMaterial, 1)
+      this._pole = new InstancedMesh(poleGeometry.clone(), defaultMaterial, this._tiles.length)
       this._pole.geometry.scale(0.25, 10, 0.25)
       this._pole.geometry.computeBoundingBox()
       this._pole.geometry.translate(0, this._pole.geometry.boundingBox.min.y * -1, 0)
       this._pole.castShadow = true
 
-      this._beam = new InstancedMesh(boxGeometry.clone(), defaultMaterial, 1)
+      this._beam = new InstancedMesh(boxGeometry.clone(), defaultMaterial, this._tiles.length)
       this._beam.geometry.scale(3, 0.2, 0.2)
       this._beam.geometry.computeBoundingBox()
       this._beam.geometry.translate(0, this._beam.geometry.boundingBox.min.y * -1, 0)
@@ -139,19 +152,23 @@ class Powerlines {
         pegGeometry.translate(0, 9.45, 0)
 
         pegGeometries.push(pegGeometry)
+
+        const lineGeometry = boxGeometry.clone()
+        lineGeometry.scale(0.1, 10, 0.1)
+        lineGeometry.rotateX(Math.PI / 2)
+        lineGeometry.translate(-1.2 + (i * 0.8), 0, 0)
+        lineGeometry.translate(0, 9.45, 0)
+
+        lineGeometries.push(lineGeometry)
       }
 
       const mergedPegGeometries = mergeBufferGeometries(pegGeometries)
+      const mergedLineGeometries = mergeBufferGeometries(lineGeometries)
 
-      this._pegs = new InstancedMesh(mergedPegGeometries, glassMaterial, 4)
+      this._pegs = new InstancedMesh(mergedPegGeometries, defaultMaterial, 4)
+      this._lines = new InstancedMesh(mergedLineGeometries, defaultMaterial, 4)
 
-      // this._pegs = new InstancedMesh(cylinderGeometry.clone(), glassMaterial, 4)
-      // this._pegs.geometry.scale(0.15, 0.5, 0.15)
-      // this._pegs.geometry.computeBoundingBox()
-      // this._pegs.geometry.translate(0, this._pegs.geometry.boundingBox.min.y * -1, 0)
-      // this._pegs.geometry.translate(0, 11, 0)
-
-      this._powerline.add(this._pole, this._beam, this._pegs)
+      this._powerline.add(this._pole, this._beam, this._pegs, this._lines)
     }
 
     return this._powerline
@@ -164,10 +181,10 @@ class Powerlines {
     const { pos, rot, scale, tile } = instance
     const { x: posX, y: posY, z: posZ } = pos
     const { x: rotX, y: rotY, z: rotZ } = rot
-    const euler = new Euler(rotX, rotY, rotZ, 'XYZ')
+    // const euler = new Euler(rotX, rotY, rotZ, 'XYZ')
 
     dummy.position.set(posX + (tile.position.x * 10), (posY + (tile.position.y * 5)) * scale, posZ + (tile.position.z * 10))
-    dummy.setRotationFromEuler(euler)
+    dummy.rotation.set(rotX, rotY, rotZ)
     dummy.scale.set(from.x, from.y, from.z)
     dummy.updateMatrixWorld(true)
 
@@ -178,7 +195,12 @@ class Powerlines {
     this._beam.setColorAt(index, POLE)
 
     this._pegs.setMatrixAt(index, dummy.matrixWorld)
-    this._pegs.setColorAt(index, GREEN_LIGHT)
+    this._pegs.setColorAt(index, PEG)
+
+    // dummy.updateMatrixWorld(true)
+
+    this._lines.setMatrixAt(index, dummy.matrixWorld)
+    this._lines.setColorAt(index, LINE)
 
     dummy.updateMatrixWorld(true)
 
@@ -188,6 +210,8 @@ class Powerlines {
     this._beam.instanceColor.needsUpdate = true
     this._pegs.instanceMatrix.needsUpdate = true
     this._pegs.instanceColor.needsUpdate = true
+    this._lines.instanceMatrix.needsUpdate = true
+    this._lines.instanceColor.needsUpdate = true
   }
 
   /**
@@ -199,7 +223,7 @@ class Powerlines {
     }
 
     return new Promise((resolve) => {
-      this._instances.forEach((instance, index) => {
+      this._poleInstances.forEach((instance, index) => {
         const { scale } = instance
         const from = { x: 0, y: 0, z: 0 }
         const to = { x: scale, y: scale, z: scale }
@@ -223,7 +247,7 @@ class Powerlines {
     }
 
     return new Promise((resolve) => {
-      this._instances.forEach((instance, index) => {
+      this._poleInstances.forEach((instance, index) => {
         const { scale } = instance
         const from = { x: scale, y: scale, z: scale }
         const to = { x: 0, y: 0, z: 0 }
