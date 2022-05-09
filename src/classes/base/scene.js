@@ -71,6 +71,8 @@ export default class GameScene {
 
   _clouds = Clouds
 
+  _powerlines = Powerlines
+
   /**
    * The board in this scene (if any).
    */
@@ -169,6 +171,8 @@ export default class GameScene {
     this._lights = []
     this._models = []
     this._fog = null
+    this._clouds = null
+    this._powerlines = null
 
     // Reset all reactive properties.
     this._airplanes.value = []
