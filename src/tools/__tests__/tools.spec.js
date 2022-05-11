@@ -410,13 +410,13 @@ suite('tools', () => {
       { position: { x: -2, y: 0, z: 2 }, direction: 3, name: 'AP3' },
     ]
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1000; i++) {
       let result = getRandomDestination(width, height, maxHeight, airfields)
 
       // Destination is not an airport
-      if (!result.position.y === 0) {
+      if (result.position.y !== 0) {
         expect(result.position.x === -2 || result.position.x === 2 || result.position.x === 0).toBeTruthy()
-        expect(result.position.y).toBeGreaterThanOrEqual(1)
+        expect(result.position.y).toBeGreaterThanOrEqual(3)
         expect(result.position.y).toBeLessThanOrEqual(8)
         expect(result.position.z === -3 || result.position.z === 3 || result.position.z === 0).toBeTruthy()
       }
