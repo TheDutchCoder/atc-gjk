@@ -187,6 +187,8 @@ export default class BoardScene extends Scene {
         }
 
         // Check for collisions with other planes that are not this plane.
+        // @todo make this easier. Check for position, not individual coordinates.
+        // Also check for next position and check against each other?
         this._airplanes.value.forEach(plane2 => {
           if (plane1._id !== plane2._id) {
             const { x: p2X, y: p2Y, z: p2Z } = plane2._position

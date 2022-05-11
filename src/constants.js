@@ -39,6 +39,12 @@ export const airfields = {
   },
 }
 
+export const powerlines = {
+  EASY: 2,
+  NORMAL: 3,
+  HARD: 5,
+}
+
 export const clouds = {
   EASY: {
     count: {

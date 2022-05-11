@@ -1,6 +1,7 @@
 import { suite, expect, test } from 'vitest'
 import {
   checkForAvailableSpots,
+  checkForAvailableRanges,
   randomItemFromArray,
   randomRoundNumber,
   randomNumber,
@@ -33,6 +34,35 @@ suite('tools', () => {
       { x: 2, y: 1 },
       { x: 0, y: 2 },
       { x: 2, y: 2 },
+    ])
+  })
+
+  test('checkForAvailableRanges', () => {
+    const board = [
+      [null, '--', null, null, null],
+      ['--', null, null, null, null],
+      [null, '--', null, null, null],
+      [null, '--', null, '--', null],
+      [null, null, null, '--', null],
+    ]
+
+    expect(checkForAvailableRanges(board, 3, true)).toEqual([
+      { start: { x: 2, y: 0, z: 0 }, end: { x: 4, y: 0, z: 0 } },
+      { start: { x: 1, y: 0, z: 1 }, end: { x: 3, y: 0, z: 1 } },
+      { start: { x: 2, y: 0, z: 1 }, end: { x: 4, y: 0, z: 1 } },
+      { start: { x: 2, y: 0, z: 2 }, end: { x: 4, y: 0, z: 2 } },
+      { start: { x: 0, y: 0, z: 4 }, end: { x: 2, y: 0, z: 4 } },
+    ])
+
+    expect(checkForAvailableRanges(board, 3, false)).toEqual([
+      { start: { x: 2, y: 0, z: 0 }, end: { x: 2, y: 0, z: 2 } },
+      { start: { x: 3, y: 0, z: 0 }, end: { x: 3, y: 0, z: 2 } },
+      { start: { x: 4, y: 0, z: 0 }, end: { x: 4, y: 0, z: 2 } },
+      { start: { x: 2, y: 0, z: 1 }, end: { x: 2, y: 0, z: 3 } },
+      { start: { x: 4, y: 0, z: 1 }, end: { x: 4, y: 0, z: 3 } },
+      { start: { x: 0, y: 0, z: 2 }, end: { x: 0, y: 0, z: 4 } },
+      { start: { x: 2, y: 0, z: 2 }, end: { x: 2, y: 0, z: 4 } },
+      { start: { x: 4, y: 0, z: 2 }, end: { x: 4, y: 0, z: 4 } },
     ])
   })
 
@@ -429,3 +459,20 @@ suite('tools', () => {
     expect(getDirectionFactors(7)).toEqual({ x: 1, z: 1 })
   })
 })
+
+
+/**
+ * Notes
+ *
+ * Exits always 3+ in height
+ * 1 block buffer around APs
+ */
+// const board = [
+//   [null, null, null, null, null, null, null],
+//   [null, null, null, '==', '==', '==', null],
+//   [null, '==', '==', '==', 'AP', '==', null],
+//   [null, '==', 'AP', '==', '==', '==', null],
+//   [null, '==', '==', '==', null, null, null],
+//   [null, null, null, null, null, null, null],
+//   [null, null, null, null, null, null, null],
+// ]
