@@ -745,13 +745,13 @@ onMounted(() => {
 
     stats.begin()
 
-    if (service.state.hasTag('intro') && IntroSceneRef._scene) {
+    if (service.state.hasTag('intro') && IntroSceneRef?._scene) {
       renderer.render(IntroSceneRef._scene, camera)
 
       if (delta > interval) {
         IntroSceneRef._animate()
       }
-    } else if (service.state.hasTag('board') && BoardSceneRef._scene) {
+    } else if (service.state.hasTag('board') && BoardSceneRef?._scene) {
 
       if (isMouseDown) {
         raycaster.setFromCamera( pointer, camera )

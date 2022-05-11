@@ -5,6 +5,7 @@ import Dirt from '#/classes/tiles/dirt'
 import Forest from '#/classes/tiles/forest'
 import Airfield from '#/classes/tiles/airfield'
 import TrainTracks from '#/classes/tiles/train-tracks'
+import Powerline from '#/classes/tiles/powerline'
 import Clouds from '#/classes/pieces/clouds'
 import Airplane from '#/classes/pieces/airplane'
 
@@ -13,9 +14,10 @@ import {
   getRandomStart,
   getRandomDestination,
   getRandomCloudStart,
+  checkForAvailableRanges,
 } from '#tools/index'
 
-import { difficulties, dimensions, airfields, clouds, airplanes } from '#/constants'
+import { difficulties, dimensions, airfields, clouds, airplanes, powerlines } from '#/constants'
 import { getRandomTile, randomItemFromArray } from '#/tools'
 
 /**
@@ -136,9 +138,39 @@ export default class GameBoard {
         const airfield = { position: tile, direction: randomRoundNumber(0, 7), name: `AP${airfields.length + 1}` }
 
         airfields.push(airfield)
+
+        // Place the airfield and place forests around it for buffer.
         this._tiles[z][x] = new Airfield(airfield)
+
+        this._tiles[z - 1][x - 1] = new Forest({ position: { x: x + minX - 1, y: 0, z: z + minZ - 1 } })
+        this._tiles[z - 1][x] = new Forest({ position: { x: x + minX, y: 0, z: z + minZ - 1 } })
+        this._tiles[z - 1][x + 1] = new Forest({ position: { x: x + minX + 1, y: 0, z: z + minZ - 1 } })
+
+        this._tiles[z][x - 1] = new Forest({ position: { x: x + minX - 1, y: 0, z: z + minZ } })
+        this._tiles[z][x + 1] = new Forest({ position: { x: x + minX + 1, y: 0, z: z + minZ } })
+
+        this._tiles[z + 1][x - 1] = new Forest({ position: { x: x + minX - 1, y: 0, z: z + minZ + 1 } })
+        this._tiles[z + 1][x] = new Forest({ position: { x: x + minX, y: 0, z: z + minZ + 1 } })
+        this._tiles[z + 1][x + 1] = new Forest({ position: { x: x + minX + 1, y: 0, z: z + minZ + 1 } })
       }
     }
+
+    /**
+     * Powerlines appear as a continuois line of 3-5 tiles.
+     */
+     const powerlinesAlongX = Math.random() > 0.5
+     const powerlinesLength = powerlines[this._difficulty]
+     const ranges = checkForAvailableRanges(this._tiles, powerlinesLength, powerlinesAlongX)
+     const range = randomItemFromArray(ranges)
+     console.log(range)
+
+     for (let i = 0; i < powerlinesLength; i++) {
+       if (powerlinesAlongX) {
+         this._tiles[range.start.z][range.start.x + 1] = new Powerline({ position: { x: range.start.x + minX + i, y: 0, z: range.start.z + minZ }, direction: 2 })
+       } else {
+         this._tiles[range.start.z + i][range.start.x] = new Powerline({ position: { x: range.start.x + minX, y: 0, z: range.start.z + minZ + i }, direction: 0 })
+       }
+     }
 
     // Fill the rest with Forests (or other random tiles)
     this._tiles.forEach((row, z) => {

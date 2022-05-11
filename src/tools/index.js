@@ -122,6 +122,53 @@ export const checkForAvailableSpots = (board) => {
 }
 
 
+/**
+ * Takes a board and checks for available ranges on the board and returns an
+ * array of objects with x/y coordinates of the available spots.
+ */
+ export const checkForAvailableRanges = (board, range, horizontal) => {
+  let b = []
+
+  board.forEach((row, rowIndex) => {
+    row.forEach((cell, cellIndex) => {
+      if (horizontal) {
+        let a = true
+
+        for (let i = 0; i < range; i++) {
+          if (row[cellIndex + i] !== null) {
+            a = false
+          }
+        }
+
+        if (a) {
+          b.push({
+            start: { x: cellIndex, y: 0, z: rowIndex },
+            end: { x: cellIndex + (range - 1), y: 0, z: rowIndex },
+          })
+        }
+      } else {
+        let a = true
+
+        for (let i = 0; i < range; i++) {
+          if (!board[rowIndex + i] || board[rowIndex + i][cellIndex] !== null) {
+            a = false
+          }
+        }
+
+        if (a) {
+          b.push({
+            start: { x: cellIndex, y: 0, z: rowIndex },
+            end: { x: cellIndex, y: 0, z: rowIndex + (range - 1) },
+          })
+        }
+      }
+    }
+  )})
+
+  return b
+}
+
+
 export const getRandomTile = (board, width, depth, offset = 0) => {
 
   // Exit early if no spots are available at all.
@@ -476,7 +523,7 @@ export const getRandomDestination = (width, depth, maxHeight, airports) => {
   const optionsZ2 = [minZ, maxZ, 0]
 
   const x = randomItemFromArray(optionsX)
-  const y = Math.ceil(Math.random() * maxHeight)
+  const y = randomRoundNumber(3, maxHeight)
   const z = x === 0 ? randomItemFromArray(optionsZ1) : randomItemFromArray(optionsZ2)
 
   const position = { x, y, z }

@@ -123,7 +123,7 @@ export default class BoardScene extends Scene {
       await moveSun
 
       this.checkObstructions()
-      // this.checkCollisions()
+      this.checkCollisions()
       this.checkDestinations()
       this.checkOutOfBounds()
       this.checkOutOfFuel()
@@ -143,7 +143,7 @@ export default class BoardScene extends Scene {
       let isInCloud = false
       let isLeaving = false
 
-      // Check if the plane is in any of the clouds
+      // Check if the plane is in any of the clouds.
       Clouds._tiles.forEach(cloud => {
         const { x: cX, y: cY, z: cZ } = cloud.position
 
@@ -163,6 +163,10 @@ export default class BoardScene extends Scene {
     })
   }
 
+  /**
+   * Checks collisions between a plane and any collidable object like the
+   * ground, anotehr plane, or obstacles.
+   */
   checkCollisions () {
     this._airplanes.value.forEach(plane1 => {
       const { x: p1X, y: p1Y, z: p1Z } = plane1._position
@@ -183,12 +187,23 @@ export default class BoardScene extends Scene {
         }
 
         // Check for collisions with other planes that are not this plane.
+        // @todo make this easier. Check for position, not individual coordinates.
+        // Also check for next position and check against each other?
         this._airplanes.value.forEach(plane2 => {
           if (plane1._id !== plane2._id) {
             const { x: p2X, y: p2Y, z: p2Z } = plane2._position
             if (p1X === p2X && p1Y === p2Y && p1Z === p2Z) {
               service.send('LOSE')
             }
+          }
+        })
+
+        // Check for collisions with powerlines.
+        this._powerlines._tiles.forEach(powerline => {
+          const { position: { x, z } } = powerline
+
+          if (p1X === x && p1Z === z && p1Y <= 2) {
+            service.send('LOSE')
           }
         })
       }

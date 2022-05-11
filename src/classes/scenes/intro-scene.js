@@ -15,6 +15,7 @@ import {
 import Dirt from '#/classes/tiles/dirt'
 import Forest from '#/classes/tiles/forest'
 import TrainTracks from '#/classes/tiles/train-tracks'
+import Powerline from '#/classes/tiles/powerline'
 import Airfield from '#/classes/tiles/airfield'
 import Clouds from '#/classes/pieces/clouds'
 import Airplane from '#/classes/pieces/airplane'
@@ -23,7 +24,8 @@ import controls from '../../controls'
 import Scene from '#/classes/base/scene'
 
 // const introScene = new GameScene()
-const tiles = [Forest, TrainTracks, Airfield]
+// const tiles = [Forest, TrainTracks, Airfield]
+const tiles = [Powerline]
 const RandomTile = randomItemFromArray(tiles)
 
 export default class IntroScene extends Scene {
@@ -61,7 +63,7 @@ export default class IntroScene extends Scene {
     this.addLight(dirLight2)
 
     // Create a random tile.
-    new RandomTile()
+    new RandomTile({ position: { x: 0, y: 0, z: 0 }, direction: 2 })
 
     // Add an airplane.
     const airplane = new Airplane({
@@ -77,7 +79,7 @@ export default class IntroScene extends Scene {
     Dirt.add()
 
     // Add some clouds.
-    Clouds.add({ position: { x: 0, y: 2, z: 0 } })
+    // Clouds.add({ position: { x: 0, y: 2, z: 0 } })
 
     // Fog.
     const fog = new Fog(new Color(0x9bc8e9), 15, 30)

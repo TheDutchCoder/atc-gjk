@@ -244,43 +244,47 @@ class AirStrip {
   }
 
   _animate = () => {
-    this._greenLights.children.forEach(light => {
-      if (this._tick >= 160) {
-        const f = this._tick % 160
-        if (f === 0 || f === 10 || f === 20 || f === 30 || f === 40) {
-          light.children[0].visible = true
-          light.translateX(0.5)
-        }
+    if (this._greenLights) {
+      this._greenLights.children.forEach(light => {
+        if (this._tick >= 160) {
+          const f = this._tick % 160
+          if (f === 0 || f === 10 || f === 20 || f === 30 || f === 40) {
+            light.children[0].visible = true
+            light.translateX(0.5)
+          }
 
-        if (f === 41) {
-          light.children[0].visible = false
-        }
+          if (f === 41) {
+            light.children[0].visible = false
+          }
 
-        if (f === 159) {
-          light.children[0].visible = true
-          light.translateX(-2.5)
+          if (f === 159) {
+            light.children[0].visible = true
+            light.translateX(-2.5)
+          }
         }
-      }
-    })
+      })
+    }
 
-    this._redLights.children.forEach(light => {
-      if (this._tick >= 160) {
-        const f = this._tick % 160
-        if (f === 50 || f === 60 || f === 70 || f === 80 || f === 90) {
-          light.children[0].visible = true
-          light.translateX(0.5)
-        }
+    if (this._redLights) {
+      this._redLights.children.forEach(light => {
+        if (this._tick >= 160) {
+          const f = this._tick % 160
+          if (f === 50 || f === 60 || f === 70 || f === 80 || f === 90) {
+            light.children[0].visible = true
+            light.translateX(0.5)
+          }
 
-        if (f === 91) {
-          light.children[0].visible = false
-        }
+          if (f === 91) {
+            light.children[0].visible = false
+          }
 
-        if (f === 49) {
-          light.children[0].visible = true
-          light.translateX(-2.5)
+          if (f === 49) {
+            light.children[0].visible = true
+            light.translateX(-2.5)
+          }
         }
-      }
-    })
+      })
+    }
 
     this._tick++
   }

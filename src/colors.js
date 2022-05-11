@@ -40,3 +40,7 @@ export const LANDING_STRIP = new Color(0x000000)
 export const STRIPE = new Color(0xff9a00)
 export const RED_LIGHT = new Color(0xff0000)
 export const GREEN_LIGHT = new Color(0x00ff00)
+
+export const POLE = new Color(0xad827b)
+export const PEG = new Color(0x40e0d0)
+export const LINE = new Color(0x000000)
