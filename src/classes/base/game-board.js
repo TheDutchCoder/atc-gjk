@@ -15,6 +15,7 @@ import {
   getRandomDestination,
   getRandomCloudStart,
   checkForAvailableRanges,
+  distributeArray,
 } from '#tools/index'
 
 import { difficulties, dimensions, airfields, clouds, airplanes, powerlines } from '#/constants'
@@ -206,6 +207,8 @@ export default class GameBoard {
      * 2. Destination position and direction (could be an airport!)
      * 3. Departure time
      */
+    const queue = distributeArray(2, (96 - (this._width + 4)), this._airplanes, 2)
+
     for (let i = 0; i < this._airplanes; i++) {
       const start = getRandomStart(this._width, this._depth, airplanes[this._difficulty].height, airfields)
       let end = getRandomDestination(this._width, this._depth, airplanes[this._difficulty].height, airfields)
@@ -219,7 +222,7 @@ export default class GameBoard {
         id: uuidv4(),
         start: start,
         end: end,
-        startTime: randomRoundNumber(0, (96 - (this._width + 4))),
+        startTime: queue[i],
         fuel: randomRoundNumber(20, 35),
       }))
     }
