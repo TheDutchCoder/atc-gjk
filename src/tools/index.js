@@ -586,3 +586,18 @@ export const getDirectionFactors = (direction = 0) => {
     return { x: 1, z: 1 }
   }
 }
+
+export const distributeArray = (min, max, amount, offset = 0) => {
+  const factor = (max - min) / (amount - 1)
+  const result = []
+  let current = min
+
+  for (let i = 0; i < amount; i++) {
+    const add = randomRoundNumber(-offset, offset)
+    result.push(Math.floor(current) + add)
+
+    current += factor
+  }
+
+  return result
+}

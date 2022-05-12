@@ -18,6 +18,7 @@ import {
   getRandomAirport,
   getWindDirection,
   getDirectionFactors,
+  distributeArray,
 } from '#tools'
 
 suite('tools', () => {
@@ -457,6 +458,34 @@ suite('tools', () => {
     expect(getDirectionFactors(5)).toEqual({ x: 1, z: -1 })
     expect(getDirectionFactors(6)).toEqual({ x: 1, z: 0 })
     expect(getDirectionFactors(7)).toEqual({ x: 1, z: 1 })
+  })
+
+  test('distrubuteArray no offset', () => {
+    const result1 = distributeArray(2, 10, 5, 0)
+    const result2 = distributeArray(0, 90, 10, 0)
+    const result3 = distributeArray(10, 20, 3, 0)
+
+    expect(result1).toEqual([2, 4, 6, 8, 10])
+    expect(result2).toEqual([0, 10, 20, 30, 40, 50, 60, 70, 80, 90])
+    expect(result3).toEqual([10, 15, 20])
+  })
+
+  test('distrubuteArray with offset', () => {
+    const result1 = distributeArray(2, 10, 5, 1)
+    const numbers1 = [2, 4, 6, 8, 10]
+
+    result1.forEach((value, index) => {
+      expect(value).toBeGreaterThanOrEqual(numbers1[index] - 1)
+      expect(value).toBeLessThanOrEqual(numbers1[index] + 1)
+    })
+
+    const result2 = distributeArray(0, 90, 10, 2)
+    const numbers2 = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90]
+
+    result2.forEach((value, index) => {
+      expect(value).toBeGreaterThanOrEqual(numbers2[index] - 2)
+      expect(value).toBeLessThanOrEqual(numbers2[index] + 2)
+    })
   })
 })
 
