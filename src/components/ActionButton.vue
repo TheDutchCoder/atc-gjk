@@ -3,6 +3,7 @@
   <button
     class="relative group select-none"
     :class="baseClasses"
+    @click="playSound()"
   >
     <span
       class="absolute inset-0 bg-opacity-50 transition-transform transform"
@@ -24,6 +25,7 @@
 
 <script setup>
 import { toRefs, computed } from 'vue'
+import { click1Sound, click2Sound, click3Sound } from '#/sounds'
 
 const props = defineProps({
   size: {
@@ -192,4 +194,20 @@ const frontClasses = computed(() => {
       ]
   }
 })
+
+const playSound = () => {
+  switch (size.value) {
+    case 'lg':
+      click1Sound.play()
+      break
+    case 'md':
+      click2Sound.play()
+      break
+    case 'control':
+      click3Sound.play()
+      break
+    default:
+      click2Sound.play()
+  }
+}
 </script>

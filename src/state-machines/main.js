@@ -1,11 +1,29 @@
 import { createMachine, interpret, assign } from 'xstate'
 import { ref } from 'vue'
 
+import { backgroundMusic } from '../sounds'
+
+// TWEEN?
+const toggleMusic = (music) => {
+  if (!backgroundMusic.isPlaying) {
+    backgroundMusic.play()
+  }
+
+  if (music) {
+    backgroundMusic.gain.gain.setValueAtTime(0.2, backgroundMusic.context.currentTime)
+    backgroundMusic.gain.gain.exponentialRampToValueAtTime(0.0001, backgroundMusic.context.currentTime + 2)
+  } else {
+    backgroundMusic.gain.gain.setValueAtTime(0.0001, backgroundMusic.context.currentTime)
+    backgroundMusic.gain.gain.exponentialRampToValueAtTime(0.2, backgroundMusic.context.currentTime + 2)
+  }
+}
+
 export const mainMachine = createMachine({
   id: 'main',
   initial: 'loading',
   context: {
     difficulty: 0,
+    music: false,
   },
   states: {
     loading: {
@@ -23,6 +41,9 @@ export const mainMachine = createMachine({
       tags: 'intro',
       on: {
         INTRO_OUT: 'introOut',
+        TOGGLE_MUSIC: {
+          actions: ['toggleMusic'],
+        },
         DIFFICULTY: {
           actions: ['setDifficulty'],
         },
@@ -83,6 +104,12 @@ export const mainMachine = createMachine({
   actions: {
     setDifficulty: assign({
       difficulty: (ctx) => (ctx.difficulty + 1) % 3,
+    }),
+    toggleMusic: assign({
+      music: (ctx) => {
+        toggleMusic(ctx.music)
+        return !ctx.music
+      },
     }),
   },
 })

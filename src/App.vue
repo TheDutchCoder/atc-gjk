@@ -59,7 +59,7 @@
           size="lg"
           @click="service.send('INTRO_OUT')"
         >
-          Play
+          New Game
         </ActionButton>
       </div>
     </transition>
@@ -69,7 +69,7 @@
       enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)] delay-200"
       enter-from-class="scale-50 opacity-0"
       enter-to-class="scale-100 opacity-100"
-      leave-active-class="transition duration-500 ease-in delay-100"
+      leave-active-class="transition duration-500 ease-in delay-200"
       leave-from-class="scale-100 opacity-100"
       leave-to-class="scale-95 opacity-0"
     >
@@ -83,6 +83,25 @@
           @click="service.send('DIFFICULTY')"
         >
           {{ difficulties[state.context.difficulty] }}
+        </ActionButton>
+      </div>
+    </transition>
+
+    <!-- Sounds -->
+    <transition
+      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)] delay-300"
+      enter-from-class="scale-50 opacity-0"
+      enter-to-class="scale-100 opacity-100"
+      leave-active-class="transition duration-500 ease-in delay-100"
+      leave-from-class="scale-100 opacity-100"
+      leave-to-class="scale-95 opacity-0"
+    >
+      <div
+        v-if="state.matches('introIdle')"
+        class="fixed top-3 left-2"
+      >
+        <ActionButton @click="service.send('TOGGLE_MUSIC')">
+          Music: {{ state.context.music ? 'on' : 'off' }}
         </ActionButton>
       </div>
     </transition>
@@ -513,6 +532,7 @@ import BoardScene from '#/classes/scenes/board-scene'
 import { Raycaster, Vector2, Color, Fog } from 'three'
 
 import ActionButton from '#/components/ActionButton.vue'
+import { click1Sound, wooshSound, airplane1Sound } from '#/sounds'
 
 let IntroSceneRef = null
 let BoardSceneRef = null
@@ -805,6 +825,7 @@ const logStats = () => {
 }
 
 const nextTick = async () => {
+  click1Sound.play()
   await BoardSceneRef.nextTick()
 }
 
@@ -841,11 +862,26 @@ watch(
 // )
 
 const selectPlane = (plane) => {
+  if (wooshSound.isPlaying) {
+    wooshSound.stop()
+  }
+
+  wooshSound.play()
+
+  if (!airplane1Sound.isPlaying) {
+    airplane1Sound.play()
+  }
+
+  airplane1Sound.gain.gain.setValueAtTime(0.0001, airplane1Sound.context.currentTime)
+  airplane1Sound.gain.gain.exponentialRampToValueAtTime(0.15, airplane1Sound.context.currentTime + 0.75)
+
   BoardSceneRef.selectPlane(plane._id)
 
   selectedPlane.value = BoardSceneRef._airplanes.value.find(plane => plane._isSelected)
 
   if (selectedPlane.value) {
+    // airplane1Sound.play()
+
     const fromControls = controls.target
     const toControls = selectedPlane.value._model.position
 
@@ -868,6 +904,9 @@ const selectPlane = (plane) => {
         controls.update()
       })
       .start()
+  } else {
+    airplane1Sound.gain.gain.setValueAtTime(0.15, airplane1Sound.context.currentTime)
+    airplane1Sound.gain.gain.exponentialRampToValueAtTime(0.0001, airplane1Sound.context.currentTime + 1.5)
   }
 }
 
