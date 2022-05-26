@@ -225,6 +225,14 @@ export default class BoardScene extends Scene {
             service.send('LOSE')
           }
         })
+
+        // Check for collisions with Hot Air Balloons.
+        this._balloons.value.forEach(balloon => {
+          const { x: p2X, y: p2Y, z: p2Z } = balloon._position
+          if (p1X === p2X && p1Y === p2Y && p1Z === p2Z) {
+            service.send('LOSE')
+          }
+        })
       }
     })
   }
