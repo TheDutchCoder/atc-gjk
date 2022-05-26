@@ -1,5 +1,3 @@
-// import { ref, watch } from 'vue'
-
 import TWEEN from '@tweenjs/tween.js'
 
 import {

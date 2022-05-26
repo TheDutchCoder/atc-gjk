@@ -69,6 +69,8 @@ export default class GameScene {
 
   _airplanes = ref([])
 
+  _balloons = ref([])
+
   _clouds = Clouds
 
   _powerlines = Powerlines
@@ -93,6 +95,7 @@ export default class GameScene {
     Airstrip._animate()
 
     this._airplanes.value.forEach(plane => plane?.animate())
+    this._balloons.value.forEach(balloon => balloon?.animate())
   }
 
   /**
@@ -141,6 +144,14 @@ export default class GameScene {
     this._scene.add(airplane._model)
   }
 
+  /**
+   * Adds a balloon to the scene.
+   */
+  addBalloon (balloon) {
+    this._balloons.value.push(balloon)
+    this._scene.add(balloon._model)
+  }
+
   removeAirplane (airplane) {
     this._airplanes.value = this._airplanes.value.filter(plane => plane._id !== airplane._id)
 
@@ -176,6 +187,7 @@ export default class GameScene {
 
     // Reset all reactive properties.
     this._airplanes.value = []
+    this._balloons.value = []
     this._tick.value = -1
     this._score.value = 0
 
@@ -188,7 +200,11 @@ export default class GameScene {
    * Triggers all the "in" animations for the game elements.
    */
   async animateIn () {
-    await Promise.all([...this._elements, ...this._airplanes.value].map(prop => prop.animateIn()))
+    await Promise.all([
+      ...this._elements,
+      ...this._airplanes.value,
+      ...this._balloons.value,
+    ].map(prop => prop.animateIn()))
 
     return Promise.resolve()
   }
@@ -197,7 +213,11 @@ export default class GameScene {
    * Triggers all the "out" animations for the game elements.
    */
   async animateOut () {
-    await Promise.all([...this._elements, ...this._airplanes.value].map(prop => prop.animateOut()))
+    await Promise.all([
+      ...this._elements,
+      ...this._airplanes.value,
+      ...this._balloons.value,
+    ].map(prop => prop.animateOut()))
 
     return Promise.resolve()
   }

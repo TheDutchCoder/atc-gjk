@@ -8,6 +8,7 @@ import TrainTracks from '#/classes/tiles/train-tracks'
 import Powerline from '#/classes/tiles/powerline'
 import Clouds from '#/classes/pieces/clouds'
 import Airplane from '#/classes/pieces/airplane'
+import HotAirBalloon from '#/classes/pieces/hot-air-balloon'
 
 import {
   randomRoundNumber,
@@ -18,7 +19,7 @@ import {
   distributeArray,
 } from '#tools/index'
 
-import { difficulties, dimensions, airfields, clouds, airplanes, powerlines } from '#/constants'
+import { difficulties, dimensions, airfields, clouds, airplanes, balloons, powerlines } from '#/constants'
 import { getRandomTile, randomItemFromArray } from '#/tools'
 
 /**
@@ -57,9 +58,19 @@ export default class GameBoard {
   _airplanes = 0
 
   /**
+   * The amount of hot air balloons.
+   */
+  _balloons = 0
+
+  /**
    * The complete queue of all airplanes during the game.
    */
   _airplanesQueue = []
+
+  /**
+   * The complete queue of all balloons during the game.
+   */
+  _balloonsQueue = []
 
   /**
    * The tiles that make up the board.
@@ -91,6 +102,7 @@ export default class GameBoard {
     this._airfields = randomRoundNumber(airfields[this._difficulty].min, airfields[this._difficulty].max)
     this._clouds = randomRoundNumber(clouds[this._difficulty].count.min, clouds[this._difficulty].count.max)
     this._airplanes = airplanes[this._difficulty].amount
+    this._balloons = balloons[this._difficulty].amount
   }
 
   /**
@@ -197,6 +209,21 @@ export default class GameBoard {
           Clouds.add({ position: { x: (start.position.x + x), y: start.position.y, z: (start.position.z + z) }, direction: start.direction })
         }
       }
+    }
+
+    // Seed some hot air balloons as obstacles.
+    const balloonsQueue = distributeArray(2, (96 - (this._width + 4)), this._airplanes, 2)
+
+    for (let i = 0; i < this._balloons; i++) {
+      let start = getRandomStart(this._width, this._depth, balloons[this._difficulty].height)
+      let end = getRandomDestination(this._width, this._depth, balloons[this._difficulty].height)
+      end.position.y = start.position.y
+
+      this._balloonsQueue.push(new HotAirBalloon({
+        id: uuidv4(),
+        start: start,
+        startTime: balloonsQueue[i],
+      }))
     }
 
     /**

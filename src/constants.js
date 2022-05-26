@@ -3,11 +3,6 @@ export const difficulties = [
   'NORMAL',
   'HARD',
 ]
-// export const difficulties = {
-//   EASY: 'EASY',
-//   NORMAL: 'NORMAL',
-//   HARD: 'HARD',
-// }
 
 export const dimensions = {
   EASY: {
@@ -82,6 +77,12 @@ export const airplanes = {
   EASY: { amount: 24, height: 6 },
   NORMAL: { amount: 48, height: 7 },
   HARD: { amount: 96, height: 8 },
+}
+
+export const balloons = {
+  EASY: { amount: 10, height: 6 },
+  NORMAL: { amount: 15, height: 7 },
+  HARD: { amount: 20, height: 8 },
 }
 
 export const flightStatusses = {
