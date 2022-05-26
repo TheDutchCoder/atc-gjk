@@ -487,6 +487,7 @@ export const getRandomCloudStart = (width, depth, maxHeight) => {
 
 export const getRandomStart = (width, depth, maxHeight, airports) => {
   const isAirport = Math.random() > 0.7
+  const minHeight = 3
 
   const minX = Math.ceil(0 - (width / 2)) - 1
   const maxX = Math.abs(minX)
@@ -498,7 +499,7 @@ export const getRandomStart = (width, depth, maxHeight, airports) => {
   const optionsZ2 = [minZ, maxZ, 0]
 
   const x = randomItemFromArray(optionsX)
-  const y = Math.ceil(Math.random() * maxHeight)
+  const y = minHeight + Math.floor(Math.random() * (maxHeight - minHeight))
   const z = x === 0 ? randomItemFromArray(optionsZ1) : randomItemFromArray(optionsZ2)
 
   const position = { x, y, z }
