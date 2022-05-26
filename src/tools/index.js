@@ -498,7 +498,7 @@ export const getRandomStart = (width, depth, maxHeight, airports) => {
   const optionsZ2 = [minZ, maxZ, 0]
 
   const x = randomItemFromArray(optionsX)
-  const y = Math.ceil(Math.random() * maxHeight)
+  const y = randomRoundNumber(3, maxHeight)
   const z = x === 0 ? randomItemFromArray(optionsZ1) : randomItemFromArray(optionsZ2)
 
   const position = { x, y, z }
