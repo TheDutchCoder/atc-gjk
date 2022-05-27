@@ -279,7 +279,6 @@ export default class HotAirBalloon {
    */
   async next (delay = 0, scale = 1) {
     const nextPosition = getNextPosition(this._position, this._direction)
-    console.log(this._position, nextPosition)
 
     // Move the model on the board (this should be animated).
     await this.animateNext(delay, scale)

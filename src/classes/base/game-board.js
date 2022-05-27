@@ -212,7 +212,7 @@ export default class GameBoard {
     }
 
     // Seed some hot air balloons as obstacles.
-    const balloonsQueue = distributeArray(2, (96 - (this._width + 4)), this._balloons, 2)
+    const timeQueue = distributeArray(2, (96 - (this._width + 4)), this._balloons + this._airplanes, 2)
 
     for (let i = 0; i < this._balloons; i++) {
       let start = getRandomStart(this._width, this._depth, balloons[this._difficulty].height)
@@ -222,11 +222,9 @@ export default class GameBoard {
       this._balloonsQueue.push(new HotAirBalloon({
         id: uuidv4(),
         start: start,
-        startTime: balloonsQueue[i],
+        startTime: randomItemFromArray(timeQueue, true),
       }))
     }
-
-    console.log(balloonsQueue, this._balloonsQueue)
 
     /**
      * Seed the airplanes.
@@ -236,8 +234,6 @@ export default class GameBoard {
      * 2. Destination position and direction (could be an airport!)
      * 3. Departure time
      */
-    const queue = distributeArray(2, (96 - (this._width + 4)), this._airplanes, 2)
-
     for (let i = 0; i < this._airplanes; i++) {
       const start = getRandomStart(this._width, this._depth, airplanes[this._difficulty].height, airfields)
       let end = getRandomDestination(this._width, this._depth, airplanes[this._difficulty].height, airfields)
@@ -251,7 +247,7 @@ export default class GameBoard {
         id: uuidv4(),
         start: start,
         end: end,
-        startTime: queue[i],
+        startTime: randomItemFromArray(timeQueue, true),
         fuel: randomRoundNumber(20, 35),
       }))
     }
