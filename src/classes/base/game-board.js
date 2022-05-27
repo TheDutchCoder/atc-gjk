@@ -212,7 +212,7 @@ export default class GameBoard {
     }
 
     // Seed some hot air balloons as obstacles.
-    const balloonsQueue = distributeArray(2, (96 - (this._width + 4)), this._airplanes, 2)
+    const balloonsQueue = distributeArray(2, (96 - (this._width + 4)), this._balloons, 2)
 
     for (let i = 0; i < this._balloons; i++) {
       let start = getRandomStart(this._width, this._depth, balloons[this._difficulty].height)
@@ -225,6 +225,8 @@ export default class GameBoard {
         startTime: balloonsQueue[i],
       }))
     }
+
+    console.log(balloonsQueue, this._balloonsQueue)
 
     /**
      * Seed the airplanes.

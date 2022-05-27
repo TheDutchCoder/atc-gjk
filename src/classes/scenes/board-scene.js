@@ -8,7 +8,6 @@ import { service } from '#/state-machines/main'
 import {
   HemisphereLight,
   DirectionalLight,
-  DirectionalLightHelper,
   Fog,
   Color,
   Object3D,
@@ -30,7 +29,6 @@ export default class BoardScene extends Scene {
     pivot2.name = 'sun'
 
     const dirLight1 = new DirectionalLight(0xffffff, 0.3)
-    const helper = new DirectionalLightHelper(dirLight1, 5)
     pivot2.add(dirLight1)
 
     dirLight1.position.set(0, 60, 0)
@@ -46,7 +44,6 @@ export default class BoardScene extends Scene {
 
     const dirLight2 = new DirectionalLight(0xb0e1ed, 0.2)
     dirLight1.name = 'sunlight'
-    const helper2 = new DirectionalLightHelper(dirLight2, 5)
     dirLight2.position.set(-20, 25, -10)
 
     const pivot = new Object3D()
@@ -55,8 +52,6 @@ export default class BoardScene extends Scene {
 
     this.addLight(hemiLight)
     this.addLight(pivot2)
-    this.addLight(helper)
-    this.addLight(helper2)
     this.addLight(dirLight2)
 
     const fog = new Fog(new Color(0x9bc8e9), 15, 350)

@@ -18,43 +18,112 @@ import {
 
 import {
   boxGeometry,
-  // coneGeometry,
+  sphereGeometry,
+  cylinderGeometry,
 } from '#geometries'
 
 import {
-  // setPoint,
+  setPoint,
   getPrevPosition,
   getNextPosition,
 } from '#tools'
 
-const createDefaultBalloon = (color) => {
-  const hullGeometry = boxGeometry.clone()
-  hullGeometry.scale(1, 1, 2)
+import {
+  BALLOON,
+  BASKET,
+  ROPE,
+} from '#colors'
+
+const createDefaultBalloon = () => {
+  const balloonGeometry = sphereGeometry.clone()
+  balloonGeometry.scale(1.25, 1.25, 1.25)
+  balloonGeometry.translate(0, 0.75, 0)
 
   /**
    * Geometries that will receive the base color.
    */
   const baseGeometries = mergeBufferGeometries([
-    hullGeometry,
+    balloonGeometry,
   ])
 
-  const plane = new Group()
-  plane.name = 'plane'
+  const basketGeometry = boxGeometry.clone()
+  basketGeometry.scale(0.75, 0.6, 0.75)
+  basketGeometry.translate(0, -2, 0)
+  setPoint(0, basketGeometry, 0.1, 0, 0.1)
+  setPoint(1, basketGeometry, 0.1, 0, -0.1)
+  setPoint(4, basketGeometry, -0.1, 0, 0.1)
+  setPoint(5, basketGeometry, -0.1, 0, -0.1)
+
+  /**
+   * Geometries that will receive the basket color.
+   */
+   const basketGeometries = mergeBufferGeometries([
+    basketGeometry,
+  ])
+
+  const ropeGeometry1 = cylinderGeometry.clone()
+  ropeGeometry1.scale(0.03, 2, 0.03)
+  ropeGeometry1.translate(0.65, -0.8, 0.65)
+  ropeGeometry1.rotateX(0.15)
+  ropeGeometry1.rotateZ(-0.15)
+
+  const ropeGeometry2 = cylinderGeometry.clone()
+  ropeGeometry2.scale(0.03, 2, 0.03)
+  ropeGeometry2.translate(-0.65, -0.8, 0.65)
+  ropeGeometry2.rotateX(0.15)
+  ropeGeometry2.rotateZ(0.15)
+
+  const ropeGeometry3 = cylinderGeometry.clone()
+  ropeGeometry3.scale(0.03, 2, 0.03)
+  ropeGeometry3.translate(-0.65, -0.8, -0.65)
+  ropeGeometry3.rotateX(-0.15)
+  ropeGeometry3.rotateZ(0.15)
+
+  const ropeGeometry4 = cylinderGeometry.clone()
+  ropeGeometry4.scale(0.03, 2, 0.03)
+  ropeGeometry4.translate(0.65, -0.8, -0.65)
+  ropeGeometry4.rotateX(-0.15)
+  ropeGeometry4.rotateZ(-0.15)
+
+  /**
+   * Geometries that will receive the basket color.
+   */
+   const ropeGeometries = mergeBufferGeometries([
+    ropeGeometry1,
+    ropeGeometry2,
+    ropeGeometry3,
+    ropeGeometry4,
+  ])
+
+  const balloon = new Group()
+  balloon.name = 'balloon'
 
   /**
    * Assign materials to the meshes.
    */
   const baseMaterial = defaultMaterial.clone()
-  baseMaterial.color.set(color)
+  baseMaterial.color.set(BALLOON)
   baseMaterial.name = 'base'
 
-  const baseMesh = new Mesh(baseGeometries, baseMaterial)
+  const basketMaterial = defaultMaterial.clone()
+  basketMaterial.color.set(BASKET)
+  basketMaterial.name = 'basket'
 
-  plane.add(
-    baseMesh
+  const ropeMaterial = defaultMaterial.clone()
+  ropeMaterial.color.set(ROPE)
+  ropeMaterial.name = 'basket'
+
+  const baseMesh = new Mesh(baseGeometries, baseMaterial)
+  const basketMesh = new Mesh(basketGeometries, basketMaterial)
+  const ropeMesh = new Mesh(ropeGeometries, ropeMaterial)
+
+  balloon.add(
+    baseMesh,
+    basketMesh,
+    ropeMesh
   )
 
-  return plane
+  return balloon
 }
 
 
@@ -131,7 +200,7 @@ export default class HotAirBalloon {
   }
 
   /**
-   * Animates the airplane into the scene.
+   * Animates the airballoon into the scene.
    */
   animateIn (delay = 1250, speed = 500) {
     return new Promise((resolve) => {
