@@ -8,7 +8,6 @@ import { service } from '#/state-machines/main'
 import {
   HemisphereLight,
   DirectionalLight,
-  DirectionalLightHelper,
   Fog,
   Color,
   Object3D,
@@ -30,7 +29,6 @@ export default class BoardScene extends Scene {
     pivot2.name = 'sun'
 
     const dirLight1 = new DirectionalLight(0xffffff, 0.3)
-    const helper = new DirectionalLightHelper(dirLight1, 5)
     pivot2.add(dirLight1)
 
     dirLight1.position.set(0, 60, 0)
@@ -46,7 +44,6 @@ export default class BoardScene extends Scene {
 
     const dirLight2 = new DirectionalLight(0xb0e1ed, 0.2)
     dirLight1.name = 'sunlight'
-    const helper2 = new DirectionalLightHelper(dirLight2, 5)
     dirLight2.position.set(-20, 25, -10)
 
     const pivot = new Object3D()
@@ -55,8 +52,6 @@ export default class BoardScene extends Scene {
 
     this.addLight(hemiLight)
     this.addLight(pivot2)
-    this.addLight(helper)
-    this.addLight(helper2)
     this.addLight(dirLight2)
 
     const fog = new Fog(new Color(0x9bc8e9), 15, 350)
@@ -90,6 +85,19 @@ export default class BoardScene extends Scene {
       // Move existing planes every 15 minutes.
       const movePlanes = Promise.all(this._airplanes.value.map(plane => plane.next()))
 
+      let moveBalloons
+
+      // Move existing balloons every 60 minutes.
+      if (this._tick.value % 4 === 0) {
+        moveBalloons = await Promise.all(this._balloons.value.map(balloon => balloon.next()))
+      }
+
+      // Spawn new balloons when their schedule says so.
+      const spawnBalloons = Promise.all(this._board._balloonsQueue.filter(balloon => balloon._startTime === this._tick.value).map(balloon => {
+        this.addBalloon(balloon)
+        return balloon.animateIn(0, 500)
+      }))
+
       // Spawn new planes when their schedule says so.
       const spawnPlanes = Promise.all(this._board._airplanesQueue.filter(plane => plane._startTime === this._tick.value).map(plane => {
         this.addAirplane(plane)
@@ -119,7 +127,13 @@ export default class BoardScene extends Scene {
       }
 
       await movePlanes
+
+      if (moveBalloons) {
+        await moveBalloons
+      }
+
       await spawnPlanes
+      await spawnBalloons
       await moveSun
 
       this.checkObstructions()
@@ -203,6 +217,14 @@ export default class BoardScene extends Scene {
           const { position: { x, z } } = powerline
 
           if (p1X === x && p1Z === z && p1Y <= 2) {
+            service.send('LOSE')
+          }
+        })
+
+        // Check for collisions with Hot Air Balloons.
+        this._balloons.value.forEach(balloon => {
+          const { x: p2X, y: p2Y, z: p2Z } = balloon._position
+          if (p1X === p2X && p1Y === p2Y && p1Z === p2Z) {
             service.send('LOSE')
           }
         })

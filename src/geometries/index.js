@@ -1,11 +1,13 @@
 import {
   BoxGeometry,
+  SphereGeometry,
   ConeGeometry,
   DodecahedronGeometry,
   CylinderGeometry,
 } from 'three'
 
 export const boxGeometry = new BoxGeometry(1, 1, 1)
+export const sphereGeometry = new SphereGeometry(1, 10, 10)
 export const coneGeometry = new ConeGeometry(0.3, 2, 4)
 export const dodecahedronGeometry = new DodecahedronGeometry(1, 0)
 export const cylinderGeometry = new CylinderGeometry(1, 1, 1, 8)

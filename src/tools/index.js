@@ -485,8 +485,8 @@ export const getRandomCloudStart = (width, depth, maxHeight) => {
 }
 
 
-export const getRandomStart = (width, depth, maxHeight, airports) => {
-  const isAirport = Math.random() > 0.7
+export const getRandomStart = (width, depth, maxHeight, airports = []) => {
+  const isAirport = airports.length ? Math.random() > 0.7 : false
 
   const minX = Math.ceil(0 - (width / 2)) - 1
   const maxX = Math.abs(minX)
@@ -510,8 +510,8 @@ export const getRandomStart = (width, depth, maxHeight, airports) => {
   }
 }
 
-export const getRandomDestination = (width, depth, maxHeight, airports) => {
-  const isAirport = Math.random() > 0.3
+export const getRandomDestination = (width, depth, maxHeight, airports = []) => {
+  const isAirport = airports.length ? Math.random() > 0.3 : false
 
   const minX = Math.ceil(0 - (width / 2)) -1
   const maxX = Math.abs(minX)
