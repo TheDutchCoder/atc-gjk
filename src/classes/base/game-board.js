@@ -17,7 +17,7 @@ import {
   getRandomCloudStart,
   checkForAvailableRanges,
   distributeArray,
-} from '#tools/index'
+} from '#tools'
 
 import { difficulties, dimensions, airfields, clouds, airplanes, balloons, powerlines } from '#/constants'
 import { getRandomTile, randomItemFromArray } from '#/tools'
@@ -235,14 +235,25 @@ export default class GameBoard {
      * 3. Departure time
      */
     for (let i = 0; i < this._airplanes; i++) {
-      const start = getRandomStart(this._width, this._depth, airplanes[this._difficulty].height, airfields)
-      let end = getRandomDestination(this._width, this._depth, airplanes[this._difficulty].height, airfields)
+      let start
+      let end
+      const startTime = randomItemFromArray(timeQueue, true)
 
-      while (start.name === end.name) {
+      // Make sure the start location and time doesn't interfere with a balloon.
+      do {
+        start = getRandomStart(this._width, this._depth, airplanes[this._difficulty].height, airfields)
+      } while (this._balloonsQueue.filter(balloon => {
+        return JSON.stringify(balloon._start.position) === JSON.stringify(start.position) &&
+          balloon._startTime >= startTime - 4 &&
+          balloon._startTime <= startTime + 4
+      }).length)
+
+      // Make sure the start and end locations aren't the same.
+      do {
         end = getRandomDestination(this._width, this._depth, airplanes[this._difficulty].height, airfields)
-      }
+      } while (start.name === end.name)
 
-      // Add airplanes to the queue
+      // Add airplanes to the queue.
       this._airplanesQueue.push(new Airplane({
         id: uuidv4(),
         start: start,
