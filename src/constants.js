@@ -80,9 +80,9 @@ export const airplanes = {
 }
 
 export const balloons = {
-  EASY: { amount: 10, height: 6 },
-  NORMAL: { amount: 15, height: 7 },
-  HARD: { amount: 20, height: 8 },
+  EASY: { amount: 3, height: 6 },
+  NORMAL: { amount: 5, height: 7 },
+  HARD: { amount: 7, height: 8 },
 }
 
 export const flightStatusses = {
