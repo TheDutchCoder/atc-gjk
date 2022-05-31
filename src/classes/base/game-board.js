@@ -237,11 +237,16 @@ export default class GameBoard {
     for (let i = 0; i < this._airplanes; i++) {
       let start
       let end
+      const startTime = randomItemFromArray(timeQueue, true)
 
-      // Make sure the start location doesn't interfere with a balloon.
+      // Make sure the start location and time doesn't interfere with a balloon.
       do {
         start = getRandomStart(this._width, this._depth, airplanes[this._difficulty].height, airfields)
-      } while (this._balloonsQueue.filter(balloon => JSON.stringify(balloon._start.position) === JSON.stringify(start.position)).length)
+      } while (this._balloonsQueue.filter(balloon => {
+        return JSON.stringify(balloon._start.position) === JSON.stringify(start.position) &&
+          balloon._startTime >= startTime - 4 &&
+          balloon._startTime <= startTime + 4
+      }).length)
 
       // Make sure the start and end locations aren't the same.
       do {
