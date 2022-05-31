@@ -518,12 +518,12 @@ import { service, state } from '#/state-machines/main'
 // import { gameMachine } from '#/state-machines/game'
 // import { useMachine } from '@xstate/vue'
 
-import renderer, { initRenderer, initStats, stats } from '#/renderer'
+import renderer, { initRenderer, stats } from '#/renderer'
 import controls, { resetControls } from '#/controls'
 import camera from '#/camera'
 import clock from '#/clock'
 
-import { formatTime, mapDirection, getDirectionFactors, lerpColor } from '#/tools'
+import { formatTime, getDirectionFactors, lerpColor } from '#/tools'
 import { flightStatusses, difficulties } from '#/constants'
 
 import IntroScene from '#/classes/scenes/intro-scene'
@@ -637,12 +637,12 @@ onMounted(() => {
           const factor = tick / 96
           const sin = Math.sin(factor * Math.PI)
 
-          color1.value = lerpColor('#4a6263', '#ecfeff', sin)
-          color2.value = lerpColor('#1d3743', '#7dd3fc', sin)
+          color1.value = lerpColor('#7ba2a4', '#ecfeff', sin)
+          color2.value = lerpColor('#498baa', '#7dd3fc', sin)
 
-          const fog = lerpColor('#1d3743', '#9bc8e9', sin)
-          const hemi = lerpColor('#1d3743', '#9bc8e9', sin)
-          const sunlight = lerpColor('#c09db2', '#f4efd4', sin)
+          const fog = lerpColor('#3e728a', '#9bc8e9', sin)
+          const hemi = lerpColor('#3e728a', '#9bc8e9', sin)
+          const sunlight = lerpColor('#e9c4aa', '#f4efd4', sin)
 
           BoardSceneRef._scene.fog = new Fog(new Color(fog), 15, 350)
           BoardSceneRef._scene.children.forEach(child => {
@@ -818,26 +818,10 @@ onMounted(() => {
   service.send('INTRO_IN')
 })
 
-const logStats = () => {
-  Object.values(renderer.info).forEach(item => {
-    console.table({ item })
-  })
-}
 
 const nextTick = async () => {
   click1Sound.play()
   await BoardSceneRef.nextTick()
-}
-
-const showQuit = ref(false)
-const quit = () => {
-  showQuit.value = true
-}
-
-const quit2 = () => {
-  console.log('quit')
-  showQuit.value = false
-  service.send('GAME_OUT')
 }
 
 const selectedPlane = ref(null)
@@ -948,13 +932,6 @@ const grad = computed(() => {
   return { 'background': `conic-gradient(#3b82f6 ${(subTick.value / 30) * 360}deg, transparent ${(subTick.value / 30) * 360}deg)` }
 })
 const foo = computed(() => `radial-gradient(${color1.value}, ${color2.value})`)
-
-// watch(
-//   foo,
-//   (f) => {
-//     console.log(f)
-//   }
-// )
 
 </script>
 
