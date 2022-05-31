@@ -31,6 +31,10 @@ import {
   flightStatusses,
 } from '#/constants'
 
+import {
+  PLANE,
+} from '#/colors'
+
 const ghostColor = new Color(0xffffff)
 
 const createDefaultPlane = (color) => {
@@ -438,7 +442,7 @@ export default class Airplane {
     this._takenOff = this._position.y !== 0
     this._id = id
     this._name = 'GJK'
-    this._color = new Color(Math.random() * 0xffffff)
+    this._color = PLANE
     this._fuel = fuel
     this._startTime = startTime
 
