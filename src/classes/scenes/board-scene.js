@@ -185,21 +185,7 @@ export default class BoardScene extends Scene {
     this._airplanes.value.forEach(plane1 => {
       const { x: p1X, y: p1Y, z: p1Z } = plane1._position
 
-      // Check for collisions with the ground (if there's no airfield).
       if (plane1._takenOff) {
-        if (p1Y === 0) {
-          Airstrip._tiles.forEach(tile => {
-            const { x, y, z } = tile.position
-
-            if (p1X === x && p1Z === z && plane1._direction === tile.direction) {
-              console.log('plane landed on airport, check if it\'s the right airport!')
-            } else {
-              console.log(`plane crashed at ${x}, ${y}, ${z}`)
-              service.send('LOSE')
-            }
-          })
-        }
-
         // Check for collisions with other planes that are not this plane.
         // @todo make this easier. Check for position, not individual coordinates.
         // Also check for next position and check against each other?
@@ -234,7 +220,7 @@ export default class BoardScene extends Scene {
 
   checkDestinations () {
     this._airplanes.value.forEach(plane => {
-      if (plane._takenOff) {
+      if (plane._takenOff && plane._flightStatus === flightStatusses.IN_FLIGHT) {
         const { x: curX, y: curY, z: curZ } = plane._position
         const curD = plane._direction
 
@@ -250,10 +236,11 @@ export default class BoardScene extends Scene {
           } else {
             plane.setExited()
           }
-        } else if (curY === 0) {
-          console.log('game over!')
-          plane.setCrashed()
-          service.send('LOSE')
+        } else {
+          if (curY === 0) {
+            plane.setCrashed()
+            service.send('LOSE')
+          }
         }
       }
     })
@@ -269,7 +256,7 @@ export default class BoardScene extends Scene {
 
       if (
         (curX <= minX || curX >= maxX || curZ <= minZ || curZ >= maxZ) &&
-        plane._flightStatus !== flightStatusses.APPROACHING &&
+        plane._flightStatus === flightStatusses.IN_FLIGHT &&
         plane._startTime < this._tick.value
       ) {
         this._score.value -= 500

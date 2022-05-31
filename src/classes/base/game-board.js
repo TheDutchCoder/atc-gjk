@@ -255,7 +255,7 @@ export default class GameBoard {
         id: uuidv4(),
         start: start,
         end: end,
-        startTime: randomItemFromArray(timeQueue, true),
+        startTime,
         fuel: randomRoundNumber(20, 35),
       }))
     }
