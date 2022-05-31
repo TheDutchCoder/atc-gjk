@@ -20,7 +20,7 @@ import {
 } from '#tools'
 
 import { difficulties, dimensions, airfields, clouds, airplanes, balloons, powerlines } from '#/constants'
-import { getRandomTile, randomItemFromArray } from '#/tools'
+import { getRandomTile, randomItemFromArray } from '#tools'
 
 /**
  * Basic class for any game board.
@@ -152,19 +152,16 @@ export default class GameBoard {
 
         airfields.push(airfield)
 
-        // Place the airfield and place forests around it for buffer.
+        // Place the airfield and place 2 forests tiles around it for buffer.
         this._tiles[z][x] = new Airfield(airfield)
 
-        this._tiles[z - 1][x - 1] = new Forest({ position: { x: x + minX - 1, y: 0, z: z + minZ - 1 } })
-        this._tiles[z - 1][x] = new Forest({ position: { x: x + minX, y: 0, z: z + minZ - 1 } })
-        this._tiles[z - 1][x + 1] = new Forest({ position: { x: x + minX + 1, y: 0, z: z + minZ - 1 } })
-
-        this._tiles[z][x - 1] = new Forest({ position: { x: x + minX - 1, y: 0, z: z + minZ } })
-        this._tiles[z][x + 1] = new Forest({ position: { x: x + minX + 1, y: 0, z: z + minZ } })
-
-        this._tiles[z + 1][x - 1] = new Forest({ position: { x: x + minX - 1, y: 0, z: z + minZ + 1 } })
-        this._tiles[z + 1][x] = new Forest({ position: { x: x + minX, y: 0, z: z + minZ + 1 } })
-        this._tiles[z + 1][x + 1] = new Forest({ position: { x: x + minX + 1, y: 0, z: z + minZ + 1 } })
+        for (let dx = -2; dx <= 2; dx++) {
+          for (let dz = -2; dz <= 2; dz++) {
+            if (dx !== 0 || dz !== 0) {
+              this._tiles[z + dz][x + dx] = new Forest({ position: { x: x + minX + dx, y: 0, z: z + minZ + dz } })
+            }
+          }
+        }
       }
     }
 
