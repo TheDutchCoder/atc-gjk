@@ -539,7 +539,7 @@ import BoardScene from '#/classes/scenes/board-scene'
 import { Raycaster, Vector2, Color, Fog } from 'three'
 
 import ActionButton from '#/components/ActionButton.vue'
-import { click1Sound, wooshSound, airplane1Sound } from '#/sounds'
+import { click1Sound } from '#/sounds'
 
 let IntroSceneRef = null
 let BoardSceneRef = null
@@ -853,26 +853,11 @@ watch(
 // )
 
 const selectPlane = (plane) => {
-  if (wooshSound.isPlaying) {
-    wooshSound.stop()
-  }
-
-  wooshSound.play()
-
-  if (!airplane1Sound.isPlaying) {
-    airplane1Sound.play()
-  }
-
-  airplane1Sound.gain.gain.setValueAtTime(0.0001, airplane1Sound.context.currentTime)
-  airplane1Sound.gain.gain.exponentialRampToValueAtTime(0.15, airplane1Sound.context.currentTime + 0.75)
-
   BoardSceneRef.selectPlane(plane._id)
 
   selectedPlane.value = BoardSceneRef._airplanes.value.find(plane => plane._isSelected)
 
   if (selectedPlane.value) {
-    // airplane1Sound.play()
-
     const fromControls = controls.target
     const toControls = selectedPlane.value._model.position
 
@@ -895,9 +880,6 @@ const selectPlane = (plane) => {
         controls.update()
       })
       .start()
-  } else {
-    airplane1Sound.gain.gain.setValueAtTime(0.15, airplane1Sound.context.currentTime)
-    airplane1Sound.gain.gain.exponentialRampToValueAtTime(0.0001, airplane1Sound.context.currentTime + 1.5)
   }
 }
 
