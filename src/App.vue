@@ -484,11 +484,11 @@
           class="fixed z-50 inset-0 flex items-center justify-center"
         >
           <div class="absolute inset-0 bg-blue-300 bg-opacity-80" />
-          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block text-center">
+          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block text-center max-w-sm">
             <h2 class="text-base font-bold">
               You won{{ score < 0 ? ' (sort of)' : '' }}! {{ score < 0 ? '😅' : '🎉' }}
             </h2>
-            <p class="mt-2 text-sm">
+            <p class="text-gray-500 mt-2">
               You scored a total of <span
                 class="font-bold"
                 :class="score < 0 ? 'text-rose-500' : score > 0 ? 'text-green-500' : 'text-blue-500'"
