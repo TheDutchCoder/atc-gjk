@@ -15,7 +15,6 @@ import {
 
 import Clouds from '#/classes/pieces/clouds'
 import controls from '../../controls'
-import Airstrip from '#/classes/props/airstrip'
 
 import { flightStatusses } from '#/constants'
 
