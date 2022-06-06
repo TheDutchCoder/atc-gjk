@@ -409,10 +409,13 @@
             class="absolute inset-0 bg-blue-300 bg-opacity-80"
             @click.self="service.send('CANCEL')"
           />
-          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block">
+          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block text-center max-w-sm">
             <h2 class="text-base font-bold">
               Are you sure you want to quit?
             </h2>
+            <p class="text-gray-500 mt-2">
+              You'll have to start a new game if you quit.
+            </p>
             <div class="flex space-x-4 items-center justify-center mt-6">
               <ActionButton
                 size="sm"
@@ -447,14 +450,18 @@
           class="fixed z-50 inset-0 flex items-center justify-center"
         >
           <div class="absolute inset-0 bg-blue-300 bg-opacity-80" />
-          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block">
+          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block text-center max-w-sm">
             <h2 class="text-base font-bold">
-              You lost!
+              Oh boy, that didn't go well!
             </h2>
+            <p class="text-gray-500 mt-2">
+              It looks like you've lost the game. Go hang your head in shame!
+            </p>
             <div class="flex space-x-4 items-center justify-center mt-6">
               <ActionButton
                 size="sm"
                 is-primary
+                @click="service.send('DONE')"
               >
                 Admit Defeat
               </ActionButton>
