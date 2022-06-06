@@ -930,6 +930,7 @@ watch(
   state,
   (newState) => {
     if (newState.matches('gamePlaying.lose') || newState.matches('gamePlaying.win') || newState.matches('gameOut')) {
+      selectedPlane.value = null
       clearInterval(subTickTimer.value)
     }
   }
