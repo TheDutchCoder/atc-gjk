@@ -9,22 +9,28 @@ import {
   Group,
   Color,
   PointLight,
+  InstancedMesh,
+  Object3D,
 } from 'three'
 
 import {
   defaultMaterial,
   glassMaterial,
+  smokeMaterial,
 } from '#materials'
 
 import {
   boxGeometry,
   coneGeometry,
+  dodecahedronGeometry,
 } from '#geometries'
 
 import {
   setPoint,
   getPrevPosition,
   getNextPosition,
+  randomRoundNumber,
+  randomNumber,
 } from '#tools'
 
 import {
@@ -36,8 +42,9 @@ import {
 } from '#/colors'
 
 const ghostColor = new Color(0xffffff)
+const dummy = new Object3D()
 
-const createDefaultPlane = (color) => {
+const createDefaultPlane = (color, _this) => {
   const hullGeometry = boxGeometry.clone()
   hullGeometry.scale(1, 1, 2)
   setPoint(0, hullGeometry, -0.2, -0.1)
@@ -240,6 +247,16 @@ const createDefaultPlane = (color) => {
   redLightGeometry.scale(0.1, 0.1, 0.1)
   redLightGeometry.translate(-1.7, 0, -0.5)
 
+  // Smoke.
+  // const smokeGeometry = dodecahedronGeometry.clone()
+  // smokeGeometry.scale(0.1, 0.1, 0.1)
+  // smokeGeometry.rotateX(Math.PI)
+  // smokeGeometry.translate(0.55, 0.2, -0.1)
+
+  // const smokeGeometries = mergeBufferGeometries([
+  //   smokeGeometry,
+  // ])
+
 
   const plane = new Group()
   plane.name = 'plane'
@@ -258,6 +275,7 @@ const createDefaultPlane = (color) => {
   const selectorMaterial = defaultMaterial.clone()
   const greenLightMaterial = glassMaterial.clone()
   const redLightMaterial = glassMaterial.clone()
+  // const smokeMaterial = defaultMaterial.clone()
 
   const screenColor = new Color(0xe2eff4)
   const propColor = new Color(0x000000)
@@ -266,6 +284,7 @@ const createDefaultPlane = (color) => {
   const selectorColor = new Color(0x00ff00)
   const greenLightColor = new Color(0x00ff00)
   const redLightColor = new Color(0xff0000)
+  // const smokeColor = new Color(0x111111)
 
   screenMaterial.color.set(screenColor)
   engineMaterial.color.set(engineColor)
@@ -274,6 +293,7 @@ const createDefaultPlane = (color) => {
   selectorMaterial.color.set(selectorColor)
   greenLightMaterial.color.set(greenLightColor)
   redLightMaterial.color.set(redLightColor)
+  // smokeMaterial.color.set(smokeColor)
 
   const baseMesh = new Mesh(baseGeometries, baseMaterial)
   const glassMesh = new Mesh(glassGeometries, screenMaterial)
@@ -288,6 +308,31 @@ const createDefaultPlane = (color) => {
 
   const greenLightMesh = new Mesh(greenLightGeometry, greenLightMaterial)
   const redLightMesh = new Mesh(redLightGeometry, redLightMaterial)
+
+  // const smokeMesh = new Mesh(smokeGeometries, smokeMaterial)
+  const amount = 10
+
+  for (let i = 0; i < amount; i++) {
+    _this._instances.push({
+      pos: {
+        x: i % 2 === 0 ? 0.55 : -0.55,
+        y: 0.2,
+        z: -0.1 + Math.floor(i / 2) * 0.15,
+      },
+      rot: {
+        x: (Math.PI * 2) * Math.random(),
+        y: (Math.PI * 2) * Math.random(),
+        z: (Math.PI * 2) * Math.random(),
+      },
+      animation: {
+        direction: (Math.random() > 0.5 ? 1 : - 1),
+        speed: randomRoundNumber(200, 300),
+      },
+      scale: randomNumber(0.1, 0.2),
+    })
+  }
+
+  const smoke = new InstancedMesh(dodecahedronGeometry, smokeMaterial, amount)
 
   // Create lights.
   const greenLight = new PointLight(0x00ff00, 1.2, 3)
@@ -313,8 +358,11 @@ const createDefaultPlane = (color) => {
     greenLightMesh,
     redLightMesh,
     greenLight,
-    redLight
+    redLight,
+    smoke
   )
+
+  _this._smoke = smoke
 
   return plane
 }
@@ -426,6 +474,13 @@ export default class Airplane {
    * The status of the plane.
    */
   _flightStatus = flightStatusses.SCHEDULED
+
+  /**
+   * Instances for the smoke.
+   */
+  _instances = []
+
+  _smoke = new Object3D()
 
   /**
    * AnimateIn
@@ -558,17 +613,45 @@ export default class Airplane {
       }
     })
 
+    this._instances.forEach((instance, index) => {
+      // console.log(instance)
+      this.updateInstance(instance, index)
+    })
+
     this._tick++
   }
 
   /**
+   * Updates the smoke animation.
+   */
+   updateInstance (instance, index) {
+    const { pos, rot, scale, animation } = instance
+    const { x: posX, y: posY } = pos
+    const { x: rotX, y: rotY, z: rotZ } = rot
+    const { direction } = animation
+
+    const fraction = ((this._tick + (index * -10)) % 200) / 200
+
+    const dPos = fraction * 2 + (index < 5 ? 0.4 : 0)
+
+    dummy.position.set(posX, posY, -0.1 + dPos)
+    dummy.rotation.set(rotX, rotY, rotZ + ((this._tick / 100) * direction))
+
+    const sc = (Math.sin(fraction * (Math.PI))) * scale
+    dummy.scale.setScalar(sc)
+
+    dummy.updateMatrixWorld(true)
+
+    this._smoke.setMatrixAt(index, dummy.matrixWorld)
+
+    this._smoke.instanceMatrix.needsUpdate = true
+  }
+
+  /**
    * Creates the airplane at the start position and direction.
-   *
-   * @todo create at airfield.
-   * @todo add updatePosition?
    */
   create () {
-    const plane = createDefaultPlane(this._color)
+    const plane = createDefaultPlane(this._color, this)
 
     plane.position.x = this._position.x * 10
     plane.position.z = this._position.z * 10
