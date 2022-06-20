@@ -275,16 +275,14 @@ const createDefaultPlane = (color, _this) => {
   const selectorMaterial = defaultMaterial.clone()
   const greenLightMaterial = glassMaterial.clone()
   const redLightMaterial = glassMaterial.clone()
-  // const smokeMaterial = defaultMaterial.clone()
 
-  const screenColor = new Color(0xe2eff4)
+  const screenColor = new Color(0xaadff3)
   const propColor = new Color(0x000000)
   const nutColor = new Color(0x99684a)
   const engineColor = new Color(0xffffff)
   const selectorColor = new Color(0x00ff00)
   const greenLightColor = new Color(0x00ff00)
   const redLightColor = new Color(0xff0000)
-  // const smokeColor = new Color(0x111111)
 
   screenMaterial.color.set(screenColor)
   engineMaterial.color.set(engineColor)
@@ -309,7 +307,6 @@ const createDefaultPlane = (color, _this) => {
   const greenLightMesh = new Mesh(greenLightGeometry, greenLightMaterial)
   const redLightMesh = new Mesh(redLightGeometry, redLightMaterial)
 
-  // const smokeMesh = new Mesh(smokeGeometries, smokeMaterial)
   const amount = 10
 
   for (let i = 0; i < amount; i++) {
@@ -347,6 +344,117 @@ const createDefaultPlane = (color, _this) => {
   redLight.translateY(0)
   redLight.translateZ(-0.6)
 
+  // Pilot.
+  const pilot = new Group()
+
+  const bodyGeometry = boxGeometry.clone()
+  bodyGeometry.scale(0.5, 0.5, 0.5)
+  bodyGeometry.translate(0, 0.35, -0.2)
+
+  const headGeometry = boxGeometry.clone()
+  headGeometry.scale(0.3, 0.3, 0.3)
+  headGeometry.translate(0, 0.75, -0.15)
+
+  const earLeftGeometry = boxGeometry.clone()
+  earLeftGeometry.scale(0.1, 0.1, 0.07)
+  earLeftGeometry.translate(0.15, 0.75, -0.17)
+
+  const earRightGeometry = earLeftGeometry.clone()
+  earRightGeometry.translate(-0.3, 0, 0)
+
+  const bodyMaterial = defaultMaterial.clone()
+  const bodyColor = new Color(0x473f3c)
+  bodyMaterial.color.set(bodyColor)
+
+  const bodyMesh = new Mesh(bodyGeometry, bodyMaterial)
+
+  const headMaterial = defaultMaterial.clone()
+  const headColor = new Color(0xf8e2d3)
+  headMaterial.color.set(headColor)
+
+  const goggleLeftGeometry = boxGeometry.clone()
+  goggleLeftGeometry.scale(0.13, 0.13, 0.13)
+  goggleLeftGeometry.translate(0.10, 0.75, -0.32)
+
+  const goggleRightGeometry = goggleLeftGeometry.clone()
+  goggleRightGeometry.translate(-0.20, 0, 0)
+
+  const strapGeometry = boxGeometry.clone()
+  strapGeometry.scale(0.34, 0.02, 0.34)
+  strapGeometry.translate(0, 0.75, -0.15)
+
+  const hairGeometry = boxGeometry.clone()
+  hairGeometry.scale(0.32, 0.1, 0.31)
+  hairGeometry.translate(0, 0.9, -0.12)
+
+  const hairSmallGeometry = boxGeometry.clone()
+  hairSmallGeometry.scale(0.1, 0.1, 0.1)
+  hairSmallGeometry.translate(0.14, 0.95, -0.22)
+
+  const hair3Geometry = hairSmallGeometry.clone()
+  hair3Geometry.translate(0.05, 0.04, 0.05)
+
+  const hair4Geometry = hairSmallGeometry.clone()
+  hair4Geometry.translate(0.02, 0.06, 0.15)
+
+  const hair5Geometry = hairSmallGeometry.clone()
+  hair5Geometry.translate(-0.1, 0, 0.25)
+
+  const hair6Geometry = hairSmallGeometry.clone()
+  hair6Geometry.translate(-0.2, 0.08, 0.18)
+
+  const hair7Geometry = hairSmallGeometry.clone()
+  hair7Geometry.translate(-0.25, 0.04, 0.21)
+
+  const hair8Geometry = hairSmallGeometry.clone()
+  hair8Geometry.translate(-0.12, 0.08, 0.07)
+
+  const hair9Geometry = hairSmallGeometry.clone()
+  hair9Geometry.translate(-0.22, 0, 0)
+
+  const hair10Geometry = hairSmallGeometry.clone()
+  hair10Geometry.translate(-0.15, 0.04, -0.022)
+
+  const hair11Geometry = hairSmallGeometry.clone()
+  hair11Geometry.translate(-0.30, 0.04, 0.042)
+
+  const hairGeometries = mergeBufferGeometries([
+    hairGeometry,
+    hairSmallGeometry,
+    hair3Geometry,
+    hair4Geometry,
+    hair5Geometry,
+    hair6Geometry,
+    hair7Geometry,
+    hair8Geometry,
+    hair9Geometry,
+    hair10Geometry,
+    hair11Geometry,
+  ])
+
+  const hairMaterial = defaultMaterial.clone()
+  const hairColor = new Color(0xd6d6d6)
+  hairMaterial.color.set(hairColor)
+
+  const headMesh = new Mesh(headGeometry, headMaterial)
+  const earLeftMesh = new Mesh(earLeftGeometry, headMaterial)
+  const earRightMesh = new Mesh(earRightGeometry, headMaterial)
+  const goggleLeftMesh = new Mesh(goggleLeftGeometry, bodyMaterial)
+  const goggleRightMesh = new Mesh(goggleRightGeometry, bodyMaterial)
+  const strapMesh = new Mesh(strapGeometry, bodyMaterial)
+  const hairMesh = new Mesh(hairGeometries, hairMaterial)
+
+  pilot.add(
+    bodyMesh,
+    headMesh,
+    earLeftMesh,
+    earRightMesh,
+    goggleLeftMesh,
+    goggleRightMesh,
+    strapMesh,
+    hairMesh
+  )
+
   plane.add(
     baseMesh,
     glassMesh,
@@ -359,7 +467,8 @@ const createDefaultPlane = (color, _this) => {
     redLightMesh,
     greenLight,
     redLight,
-    smoke
+    smoke,
+    pilot
   )
 
   _this._smoke = smoke
