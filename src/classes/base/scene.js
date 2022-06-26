@@ -6,6 +6,7 @@ import Dirt from '#/classes/tiles/dirt'
 import Grass from '#/classes/tiles/grass'
 import Trees from '#/classes/props/trees'
 import Rocks from '#/classes/props/rocks'
+import Teepees from '#/classes/props/teepees'
 import Clouds from '#/classes/pieces/clouds'
 import Airstrip from '#/classes/props/airstrip'
 import Tracks from '#/classes/props/tracks'
@@ -61,6 +62,7 @@ export default class GameScene {
     Grass,
     Trees,
     Rocks,
+    Teepees,
     Clouds,
     Airstrip,
     Tracks,

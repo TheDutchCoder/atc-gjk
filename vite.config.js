@@ -9,6 +9,7 @@ export default defineConfig({
     alias: {
       '#': path.resolve(__dirname, './src'),
       '#blocks': path.resolve(__dirname, './src/blocks'),
+      '#classes': path.resolve(__dirname, './src/classes'),
       '#elements': path.resolve(__dirname, './src/elements'),
       '#instances': path.resolve(__dirname, './src/instances'),
       '#geometries': path.resolve(__dirname, './src/geometries'),

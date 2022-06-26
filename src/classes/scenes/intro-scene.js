@@ -14,6 +14,7 @@ import {
 
 import Dirt from '#/classes/tiles/dirt'
 import Forest from '#/classes/tiles/forest'
+import Teepee from '#/classes/tiles/teepee'
 import TrainTracks from '#/classes/tiles/train-tracks'
 // import Powerline from '#/classes/tiles/powerline'
 import Airfield from '#/classes/tiles/airfield'
@@ -24,7 +25,8 @@ import controls from '../../controls'
 import Scene from '#/classes/base/scene'
 
 // const introScene = new GameScene()
-const tiles = [Forest, TrainTracks, Airfield]
+// const tiles = [Forest, TrainTracks, Airfield, Teepee]
+const tiles = [Teepee]
 const RandomTile = randomItemFromArray(tiles)
 
 export default class IntroScene extends Scene {
