@@ -20,14 +20,25 @@ import {
   distributeArray,
 } from '#tools'
 
-import { difficulties, dimensions, airfields, clouds, airplanes, balloons, powerlines } from '#/constants'
-import { getRandomTile, randomItemFromArray } from '#tools'
+import {
+  difficulties,
+  dimensions,
+  airfields,
+  clouds,
+  airplanes,
+  balloons,
+  powerlines,
+} from '#/constants'
 
-const fillers = [
-  Forest,
-  Forest,
-  Forest,
-  Teepee,
+import {
+  getRandomTile,
+  randomItemFromArray,
+  getRandomDistribution,
+} from '#tools'
+
+const fillerDistribution = [
+  { weight: 0.95, value: Forest },
+  { weight: 0.05, value: Teepee },
 ]
 
 /**
@@ -166,7 +177,7 @@ export default class GameBoard {
         for (let dx = -2; dx <= 2; dx++) {
           for (let dz = -2; dz <= 2; dz++) {
             if (dx !== 0 || dz !== 0) {
-              const tile = randomItemFromArray(fillers)
+              const tile = getRandomDistribution(fillerDistribution)
               this._tiles[z + dz][x + dx] = new tile({ position: { x: x + minX + dx, y: 0, z: z + minZ + dz } })
             }
           }
@@ -194,7 +205,7 @@ export default class GameBoard {
     this._tiles.forEach((row, z) => {
       row.forEach((tile, x) => {
         if (!tile) {
-          const tile = randomItemFromArray(fillers)
+          const tile = getRandomDistribution(fillerDistribution)
           return new tile({ position: { x: x + minX, y: 0, z: z + minZ } })
         }
       })

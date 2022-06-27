@@ -6,6 +6,7 @@ import {
   randomRoundNumber,
   randomNumber,
   randomCoordinate,
+  getRandomDistribution,
   getRandomTile,
   getStartDirection,
   getEndDirection,
@@ -189,6 +190,24 @@ suite('tools', () => {
         (number.x <= -2 || number.x > 2) && (number.z <= -2 || number.z >= 2)
       )
     )).length).toBe(1000)
+  })
+
+  test('getRandomDistribution', () => {
+    const distribution1 = [{ weight: 0.5, value: 'foo' }, { weight: 0.5, value: 'bar' }]
+    let value = 0.4
+
+    expect(getRandomDistribution(distribution1, value)).toBe('foo')
+
+    value = 0.6
+    expect(getRandomDistribution(distribution1, value)).toBe('bar')
+
+    value = 2
+    expect(getRandomDistribution(distribution1, value)).toBe(null)
+
+    value = -1.3
+    expect(getRandomDistribution(distribution1, value)).toBe(null)
+
+    expect(getRandomDistribution()).toBe(null)
   })
 
   test('getRandomTile, 1 space', () => {

@@ -209,6 +209,26 @@ export const getRandomTile = (board, width, depth, offset = 0) => {
   }
 }
 
+export const getRandomDistribution = (distribution = [], value) => {
+  if (!distribution.length) {
+    return null
+  }
+
+  const internalValue = value ? value : Math.random()
+  let total = 0
+  let index = -1
+
+  distribution.forEach((val, i) => {
+    if (internalValue >= total && internalValue <= (total + val.weight)) {
+      index = i
+    }
+
+    total += val.weight
+  })
+
+  return index === -1 ? null : distribution[index].value
+}
+
 
 
 
