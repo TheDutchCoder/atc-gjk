@@ -13,8 +13,8 @@
       "#blocks": [
         "src/blocks"
       ],
-      "#classes": [
-        "src/classes"
+      "#classes/*": [
+        "src/classes/*"
       ],
       "#elements": [
         "src/elements"

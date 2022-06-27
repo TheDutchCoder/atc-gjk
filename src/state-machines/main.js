@@ -29,7 +29,17 @@ export const mainMachine = createMachine({
     loading: {
       on: {
         INTRO_IN: 'introIn',
+        EDIT_IN: 'editIn',
       },
+    },
+    editIn: {
+      tags: 'edit',
+      on: {
+        DONE: 'editIdle',
+      },
+    },
+    editIdle: {
+      tags: 'edit',
     },
     introIn: {
       tags: 'intro',

@@ -534,6 +534,7 @@ import { formatTime, getDirectionFactors, lerpColor } from '#/tools'
 import { flightStatusses, difficulties } from '#/constants'
 
 import IntroScene from '#/classes/scenes/intro-scene'
+import EditScene from '#/classes/scenes/edit-scene'
 import BoardScene from '#/classes/scenes/board-scene'
 
 import { Raycaster, Vector2, Color, Fog } from 'three'
@@ -541,6 +542,7 @@ import { Raycaster, Vector2, Color, Fog } from 'three'
 import ActionButton from '#/components/ActionButton.vue'
 import { click1Sound } from '#/sounds'
 
+let EditSceneRef = null
 let IntroSceneRef = null
 let BoardSceneRef = null
 
@@ -595,6 +597,18 @@ onMounted(() => {
 
   // Refactor
   service.onTransition(async (state) => {
+    if (state.changed && state.matches('editIn')) {
+      controls.autoRotate = false
+
+      EditSceneRef = new EditScene()
+      EditSceneRef.start()
+      EditSceneRef.render()
+
+      await EditSceneRef.animateIn()
+
+      service.send('DONE')
+    }
+
     /**
      * The intro should animate in.
      */
@@ -778,6 +792,12 @@ onMounted(() => {
       if (delta > interval) {
         IntroSceneRef._animate()
       }
+    } else if (service.state.hasTag('edit') && EditSceneRef?._scene) {
+      renderer.render(EditSceneRef._scene, camera)
+
+      if (delta > interval) {
+        EditSceneRef._animate()
+      }
     } else if (service.state.hasTag('board') && BoardSceneRef?._scene) {
 
       if (isMouseDown) {
@@ -823,6 +843,7 @@ onMounted(() => {
   window.addEventListener('mouseup', onMouseUp)
 
   service.send('INTRO_IN')
+  // service.send('EDIT_IN')
 })
 
 

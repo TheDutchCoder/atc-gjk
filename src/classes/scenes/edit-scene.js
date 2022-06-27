@@ -11,20 +11,15 @@ import {
 } from '#tools'
 
 import Dirt from '#/classes/tiles/dirt'
-import Forest from '#/classes/tiles/forest'
 import Teepee from '#/classes/tiles/teepee'
-import TrainTracks from '#/classes/tiles/train-tracks'
-import Airfield from '#/classes/tiles/airfield'
-import Clouds from '#/classes/pieces/clouds'
-import Airplane from '#/classes/pieces/airplane'
 import controls from '../../controls'
 
 import Scene from '#/classes/base/scene'
 
-const tiles = [Forest, TrainTracks, Airfield, Teepee]
+const tiles = [Teepee]
 const RandomTile = randomItemFromArray(tiles)
 
-export default class IntroScene extends Scene {
+export default class EditeScene extends Scene {
   start = () => {
     // Global light.
     const hemiLight = new HemisphereLight(0xffffff, 0x080802, 0.7)
@@ -61,21 +56,8 @@ export default class IntroScene extends Scene {
     // Create a random tile.
     new RandomTile({ position: { x: 0, y: 0, z: 0 }, direction: 2 })
 
-    // Add an airplane.
-    const airplane = new Airplane({
-      id: 0,
-      start: { position: { x: 0, y: 1, z: 0 }, direction: 1, name: '' },
-      end: { position: { x: 0, y: 0, z: 0 }, direction: 1, name: '' },
-      fuel: 100,
-    })
-
-    this.addAirplane(airplane)
-
     // Add the dirt base.
     Dirt.add()
-
-    // Add some clouds.
-    Clouds.add({ position: { x: 0, y: 2, z: 0 } })
 
     // Fog.
     const fog = new Fog(new Color(0x9bc8e9), 15, 30)

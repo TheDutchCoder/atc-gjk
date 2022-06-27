@@ -3,6 +3,8 @@ import TWEEN from '@tweenjs/tween.js'
 import {
   InstancedMesh,
   Object3D,
+  Group,
+  Mesh,
 } from 'three'
 
 import {
@@ -16,7 +18,7 @@ import {
 } from '#materials'
 
 import {
-  boxGeometry,
+  teepeeGeometries,
 } from '#geometries'
 
 import {
@@ -27,6 +29,23 @@ import {
 
 const colors = [TEEPEE_1, TEEPEE_2, TEEPEE_3]
 const dummy = new Object3D()
+
+// const createTeepees = () => {
+//   const teepees = new Group()
+//   teepees.name = 'teepees'
+
+//   const baseMaterial = defaultMaterial.clone()
+//   baseMaterial.color.set(TEEPEE_1)
+//   baseMaterial.name = 'base'
+
+//   const baseMesh = new Mesh(teepeeGeometries, baseMaterial)
+
+//   teepees.add(
+//     baseMesh
+//   )
+
+//   return teepees
+// }
 
 /**
  * Teepees class.
@@ -92,7 +111,7 @@ class Teepees {
     })
 
     if (this._tiles.length) {
-      this._teepee = new InstancedMesh(boxGeometry, defaultMaterial, amounts)
+      this._teepee = new InstancedMesh(teepeeGeometries, defaultMaterial, amounts)
       this._teepee.castShadow = true
       this._teepee.receiveShadow = true
     }
