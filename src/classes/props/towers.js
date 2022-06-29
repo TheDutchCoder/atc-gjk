@@ -6,9 +6,7 @@ import {
 } from 'three'
 
 import {
-  TEEPEE_1,
-  TEEPEE_2,
-  TEEPEE_3,
+  TOWER,
 } from '#colors'
 
 import {
@@ -16,7 +14,7 @@ import {
 } from '#materials'
 
 import {
-  teepeeGeometries,
+  towerGeometries,
 } from '#geometries'
 
 import {
@@ -25,40 +23,23 @@ import {
   randomCoordinate,
 } from '#tools'
 
-const colors = [TEEPEE_1, TEEPEE_2, TEEPEE_3]
+const colors = [TOWER]
 const dummy = new Object3D()
 
-// const createTeepees = () => {
-//   const teepees = new Group()
-//   teepees.name = 'teepees'
-
-//   const baseMaterial = defaultMaterial.clone()
-//   baseMaterial.color.set(TEEPEE_1)
-//   baseMaterial.name = 'base'
-
-//   const baseMesh = new Mesh(teepeeGeometries, baseMaterial)
-
-//   teepees.add(
-//     baseMesh
-//   )
-
-//   return teepees
-// }
-
 /**
- * Teepees class.
+ * Tower class.
  */
-class Teepees {
+class Towers {
 
   /**
-   * The tiles that contains teepees.
+   * The tiles that contains tower.
    */
   _tiles = []
 
   /**
-   * The local teepees instance.
+   * The local tower instance.
    */
-  _teepee = new Object3D()
+  _tower = new Object3D()
 
   /**
    * The configurations for each instance.
@@ -66,7 +47,7 @@ class Teepees {
   _instances = []
 
   /**
-   * Initialize the teepees.
+   * Initialize the tower.
    */
   constructor () { }
 
@@ -79,7 +60,7 @@ class Teepees {
 
   reset () {
     this._tiles = []
-    this._teepee = new Object3D()
+    this._tower = new Object3D()
     this._instances = []
   }
 
@@ -95,7 +76,7 @@ class Teepees {
 
       for (let i = 0; i < amount; i++) {
         this._instances.push({
-          pos: randomCoordinate(-1.5, 1.5, tile.exclude),
+          pos: randomCoordinate(-3, -3, tile.exclude),
           rot: {
             x: 0,
             y: (Math.PI / 2) * Math.random(),
@@ -109,12 +90,12 @@ class Teepees {
     })
 
     if (this._tiles.length) {
-      this._teepee = new InstancedMesh(teepeeGeometries, defaultMaterial, amounts)
-      this._teepee.castShadow = true
-      this._teepee.receiveShadow = true
+      this._tower = new InstancedMesh(towerGeometries, defaultMaterial, amounts)
+      this._tower.castShadow = true
+      this._tower.receiveShadow = true
     }
 
-    return this._teepee
+    return this._tower
   }
 
   updateInstance (instance, index, from) {
@@ -127,11 +108,11 @@ class Teepees {
     dummy.scale.set(from.x, from.y, from.z)
     dummy.updateMatrixWorld(true)
 
-    this._teepee.setMatrixAt(index, dummy.matrixWorld)
-    this._teepee.setColorAt(index, color)
+    this._tower.setMatrixAt(index, dummy.matrixWorld)
+    this._tower.setColorAt(index, color)
 
-    this._teepee.instanceMatrix.needsUpdate = true
-    this._teepee.instanceColor.needsUpdate = true
+    this._tower.instanceMatrix.needsUpdate = true
+    this._tower.instanceColor.needsUpdate = true
   }
 
   animateIn () {
@@ -183,6 +164,6 @@ class Teepees {
   }
 }
 
-const teepees = new Teepees()
+const towers = new Towers()
 
-export default teepees
+export default towers

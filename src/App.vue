@@ -842,8 +842,8 @@ onMounted(() => {
   window.addEventListener('mousedown', onMouseDown)
   window.addEventListener('mouseup', onMouseUp)
 
-  service.send('INTRO_IN')
-  // service.send('EDIT_IN')
+  // service.send('INTRO_IN')
+  service.send('EDIT_IN')
 })
 
 
