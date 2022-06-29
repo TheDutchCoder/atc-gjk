@@ -79,7 +79,7 @@ class Towers {
           pos: randomCoordinate(-3, -3, tile.exclude),
           rot: {
             x: 0,
-            y: (Math.PI / 2) * Math.random(),
+            y: (Math.PI / -2) * Math.random(),
             z: 0,
           },
           scale: 1,
