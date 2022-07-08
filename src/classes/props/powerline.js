@@ -165,8 +165,8 @@ class Powerlines {
       const mergedPegGeometries = mergeBufferGeometries(pegGeometries)
       const mergedLineGeometries = mergeBufferGeometries(lineGeometries)
 
-      this._pegs = new InstancedMesh(mergedPegGeometries, defaultMaterial, 4)
-      this._lines = new InstancedMesh(mergedLineGeometries, defaultMaterial, 4)
+      this._pegs = new InstancedMesh(mergedPegGeometries, defaultMaterial, this._tiles.length)
+      this._lines = new InstancedMesh(mergedLineGeometries, defaultMaterial, this._tiles.length)
 
       this._powerline.add(this._pole, this._beam, this._pegs, this._lines)
     }
