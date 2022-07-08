@@ -10,18 +10,19 @@ import {
   randomItemFromArray,
 } from '#tools'
 
-import Dirt from '#/classes/tiles/dirt'
-import Forest from '#/classes/tiles/forest'
-import Teepee from '#/classes/tiles/teepee'
-import TrainTracks from '#/classes/tiles/train-tracks'
-import Airfield from '#/classes/tiles/airfield'
-import Clouds from '#/classes/pieces/clouds'
-import Airplane from '#/classes/pieces/airplane'
+import Dirt from '#classes/tiles/dirt'
+import Forest from '#classes/tiles/forest'
+import Teepee from '#classes/tiles/teepee'
+import HuntingTower from '#classes/tiles/hunting-tower'
+import TrainTracks from '#classes/tiles/train-tracks'
+import Airfield from '#classes/tiles/airfield'
+import Clouds from '#classes/pieces/clouds'
+import Airplane from '#classes/pieces/airplane'
 import controls from '../../controls'
 
-import Scene from '#/classes/base/scene'
+import Scene from '#classes/base/scene'
 
-const tiles = [Forest, TrainTracks, Airfield, Teepee]
+const tiles = [Forest, TrainTracks, Airfield, Teepee, HuntingTower]
 const RandomTile = randomItemFromArray(tiles)
 
 export default class IntroScene extends Scene {
