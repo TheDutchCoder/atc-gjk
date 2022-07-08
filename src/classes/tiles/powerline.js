@@ -1,8 +1,8 @@
-import GameTile from '#/classes/base/game-tile'
+import GameTile from '#classes/base/game-tile'
 
-import Grass from '#/classes/tiles/grass'
-import Rocks from '#/classes/props/rocks'
-import Powerlines from '#/classes/props/powerline'
+import Grass from '#classes/tiles/grass'
+import Rocks from '#classes/props/rocks'
+import Powerlines from '#classes/props/powerline'
 
 /**
  * Powerline tile.

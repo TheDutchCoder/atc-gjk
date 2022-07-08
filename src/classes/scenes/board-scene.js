@@ -1,6 +1,6 @@
 import TWEEN from '@tweenjs/tween.js'
 
-import Scene from '#/classes/base/scene'
+import Scene from '#classes/base/scene'
 import GameBoard from '#classes/base/game-board'
 
 import { service } from '#/state-machines/main'
@@ -13,7 +13,7 @@ import {
   Object3D,
 } from 'three'
 
-import Clouds from '#/classes/pieces/clouds'
+import Clouds from '#classes/pieces/clouds'
 import controls from '../../controls'
 
 import { flightStatusses } from '#/constants'
