@@ -55,6 +55,7 @@ export const teepeeGeometries = mergeBufferGeometries([
  * Twoer.
  */
 //  const towerGeometry = new ConeGeometry(0.75, 2, 5)
+logGeometry.scale(0.8, 0.8, 0.8)
 const towerGeometry1 = logGeometry.clone()
 towerGeometry1.computeBoundingBox()
 towerGeometry1.rotateX(0.1)
@@ -143,18 +144,6 @@ const beam14 = beam11.clone()
 beam14.rotateY(-1/4 * Math.PI * 2)
 beam14.translate(0, 0.1, 0)
 
-//  const towerGeometry2 = logGeometry.clone()
-//  towerGeometry2.scale(1, 1, 1)
-//  towerGeometry2.computeBoundingBox()
-//  towerGeometry2.translate(1, towerGeometry2.boundingBox.min.y / 2, 0)
-//  towerGeometry2.rotateY(1/3 * (Math.PI * 2))
-
-//  const towerGeometry3 = logGeometry.clone()
-//  towerGeometry3.scale(1.2, 1.2, 1.2)
-//  towerGeometry3.computeBoundingBox()
-//  towerGeometry3.translate(1, towerGeometry3.boundingBox.min.y / 2, 0)
-//  towerGeometry3.rotateY(2/3 * (Math.PI * 2))
-
  export const towerGeometries = mergeBufferGeometries([
    towerGeometry1,
    towerGeometry2,
@@ -167,13 +156,12 @@ beam14.translate(0, 0.1, 0)
    beam3,
    beam4,
    beam5,
-  //  beam6,
    beam7,
    beam8,
-  //  beam9,
    beam10,
    beam11,
    beam12,
    beam13,
-  //  beam14,
  ])
+
+ towerGeometries.translate(0, -0.5, 0)
