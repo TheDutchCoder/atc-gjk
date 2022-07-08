@@ -76,13 +76,19 @@ export const clouds = {
 export const airplanes = {
   EASY: { amount: 24, height: 6 },
   NORMAL: { amount: 48, height: 7 },
-  HARD: { amount: 96, height: 8 },
+  HARD: { amount: 64, height: 8 },
 }
 
 export const balloons = {
   EASY: { amount: 3, height: 6 },
   NORMAL: { amount: 5, height: 7 },
   HARD: { amount: 7, height: 8 },
+}
+
+export const timers = {
+  EASY: 1000,
+  NORMAL: 1500,
+  HARD: 2000,
 }
 
 export const flightStatusses = {

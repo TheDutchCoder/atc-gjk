@@ -531,11 +531,11 @@ import camera from '#/camera'
 import clock from '#/clock'
 
 import { formatTime, getDirectionFactors, lerpColor } from '#/tools'
-import { flightStatusses, difficulties } from '#/constants'
+import { flightStatusses, difficulties, timers } from '#/constants'
 
-import IntroScene from '#/classes/scenes/intro-scene'
-import EditScene from '#/classes/scenes/edit-scene'
-import BoardScene from '#/classes/scenes/board-scene'
+import IntroScene from '#classes/scenes/intro-scene'
+import EditScene from '#classes/scenes/edit-scene'
+import BoardScene from '#classes/scenes/board-scene'
 
 import { Raycaster, Vector2, Color, Fog } from 'three'
 
@@ -652,7 +652,7 @@ onMounted(() => {
 
           subTickTimer.value = setInterval(() => {
             subTick.value++
-          }, 1000)
+          }, timers[difficulties[state.context.difficulty]])
 
           // Update colors.
           const factor = tick / 96
@@ -661,9 +661,9 @@ onMounted(() => {
           color1.value = lerpColor('#7ba2a4', '#ecfeff', sin)
           color2.value = lerpColor('#498baa', '#7dd3fc', sin)
 
-          const fog = lerpColor('#3e728a', '#9bc8e9', sin)
+          const fog = lerpColor('#5a7683', '#a6daef', sin)
           const hemi = lerpColor('#3e728a', '#9bc8e9', sin)
-          const sunlight = lerpColor('#e9c4aa', '#f4efd4', sin)
+          const sunlight = lerpColor('#f19ac1', '#f5ecc1', sin)
 
           BoardSceneRef._scene.fog = new Fog(new Color(fog), 15, 350)
           BoardSceneRef._scene.children.forEach(child => {
@@ -842,8 +842,8 @@ onMounted(() => {
   window.addEventListener('mousedown', onMouseDown)
   window.addEventListener('mouseup', onMouseUp)
 
-  // service.send('INTRO_IN')
-  service.send('EDIT_IN')
+  service.send('INTRO_IN')
+  // service.send('EDIT_IN')
 })
 
 
