@@ -1,15 +1,16 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import Label from '#/classes/tiles/label'
-import Dirt from '#/classes/tiles/dirt'
-import Forest from '#/classes/tiles/forest'
-import Teepee from '#/classes/tiles/teepee'
-import Airfield from '#/classes/tiles/airfield'
-import TrainTracks from '#/classes/tiles/train-tracks'
-import Powerline from '#/classes/tiles/powerline'
-import Clouds from '#/classes/pieces/clouds'
-import Airplane from '#/classes/pieces/airplane'
-import HotAirBalloon from '#/classes/pieces/hot-air-balloon'
+import Label from '#classes/tiles/label'
+import Dirt from '#classes/tiles/dirt'
+import Forest from '#classes/tiles/forest'
+import Teepee from '#classes/tiles/teepee'
+import HuntingTower from '#classes/tiles/hunting-tower'
+import Airfield from '#classes/tiles/airfield'
+import TrainTracks from '#classes/tiles/train-tracks'
+import Powerline from '#classes/tiles/powerline'
+import Clouds from '#classes/pieces/clouds'
+import Airplane from '#classes/pieces/airplane'
+import HotAirBalloon from '#classes/pieces/hot-air-balloon'
 
 import {
   randomRoundNumber,
@@ -37,8 +38,9 @@ import {
 } from '#tools'
 
 const fillerDistribution = [
-  { weight: 0.95, value: Forest },
-  { weight: 0.05, value: Teepee },
+  { weight: 0.88, value: Forest },
+  { weight: 0.07, value: Teepee },
+  { weight: 0.05, value: HuntingTower },
 ]
 
 /**
