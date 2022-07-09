@@ -1,7 +1,7 @@
 import TWEEN from '@tweenjs/tween.js'
 
-import Scene from '#/classes/base/scene'
-import GameBoard from '#/classes/base/game-board'
+import Scene from '#classes/base/scene'
+import GameBoard from '#classes/base/game-board'
 
 import { service } from '#/state-machines/main'
 
@@ -13,10 +13,11 @@ import {
   Object3D,
 } from 'three'
 
-import Clouds from '#/classes/pieces/clouds'
+import Clouds from '#classes/pieces/clouds'
 import controls from '../../controls'
 
-import { flightStatusses } from '#/constants'
+import { flightStatusses, quality } from '#/constants'
+import { state } from '#/state-machines/main'
 
 export default class BoardScene extends Scene {
   start () {
@@ -28,18 +29,19 @@ export default class BoardScene extends Scene {
     pivot2.name = 'sun'
 
     const dirLight1 = new DirectionalLight(0xffffff, 0.3)
-    pivot2.add(dirLight1)
 
     dirLight1.position.set(0, 60, 0)
     dirLight1.castShadow = true
-    dirLight1.shadow.mapSize.width = 2048
-    dirLight1.shadow.mapSize.height = 2048
+    dirLight1.shadow.mapSize.width = quality[state.value.context.quality].shadows
+    dirLight1.shadow.mapSize.height = quality[state.value.context.quality].shadows
     dirLight1.shadow.camera.near = 0.5
     dirLight1.shadow.camera.far = 500
     dirLight1.shadow.camera.top = 90
     dirLight1.shadow.camera.bottom = -120
     dirLight1.shadow.camera.left = -90
     dirLight1.shadow.camera.right = 90
+
+    pivot2.add(dirLight1)
 
     const dirLight2 = new DirectionalLight(0xb0e1ed, 0.2)
     dirLight1.name = 'sunlight'
@@ -56,7 +58,7 @@ export default class BoardScene extends Scene {
     const fog = new Fog(new Color(0x9bc8e9), 15, 350)
 
     pivot2.rotation.x = Math.PI / 4 // How high the sun is in the sky
-    pivot2.rotation.z = Math.PI // The progress of the sun relative to time (0 is noon)
+    pivot2.rotation.z = Math.PI * 1.6 // The progress of the sun relative to time (0 is noon)
 
     const board = new GameBoard(service.state.context.difficulty)
     board.generate()
@@ -110,7 +112,7 @@ export default class BoardScene extends Scene {
         const sun = this._lights.find(light => light.name === 'sun')
 
         const from = { rot: sun.rotation.z }
-        const to = { rot: sun.rotation.z + ((Math.PI * 2) * (1 / 96)) }
+        const to = { rot: sun.rotation.z + ((Math.PI * 0.8) * (1 / 96)) }
 
         new TWEEN.Tween(from)
         .to(to, 500)

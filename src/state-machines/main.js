@@ -3,6 +3,8 @@ import { ref } from 'vue'
 
 import { backgroundMusic } from '../sounds'
 
+import { qualities } from '#/constants'
+
 // TWEEN?
 const toggleMusic = (music) => {
   if (!backgroundMusic.isPlaying) {
@@ -18,18 +20,41 @@ const toggleMusic = (music) => {
   }
 }
 
+const toggleQuality = (quality) => {
+  let index = qualities.findIndex((q) => q === quality)
+  index = (index + 1) % qualities.length
+
+  return qualities[index]
+}
+
+const storedContext = localStorage.getItem('atc-context')
+const defaultContext = {
+  difficulty: 0,
+  music: false,
+  quality: 'MEDIUM',
+  settings: false,
+}
+const context = storedContext ? Object.assign({}, JSON.parse(storedContext), { settings: false, music: false }) : defaultContext
+
 export const mainMachine = createMachine({
   id: 'main',
   initial: 'loading',
-  context: {
-    difficulty: 0,
-    music: false,
-  },
+  context,
   states: {
     loading: {
       on: {
         INTRO_IN: 'introIn',
+        EDIT_IN: 'editIn',
       },
+    },
+    editIn: {
+      tags: 'edit',
+      on: {
+        DONE: 'editIdle',
+      },
+    },
+    editIdle: {
+      tags: 'edit',
     },
     introIn: {
       tags: 'intro',
@@ -44,8 +69,14 @@ export const mainMachine = createMachine({
         TOGGLE_MUSIC: {
           actions: ['toggleMusic'],
         },
+        TOGGLE_QUALITY: {
+          actions: ['toggleQuality'],
+        },
         DIFFICULTY: {
           actions: ['setDifficulty'],
+        },
+        TOGGLE_SETTINGS: {
+          actions: ['toggleSettings'],
         },
       },
     },
@@ -110,6 +141,14 @@ export const mainMachine = createMachine({
         toggleMusic(ctx.music)
         return !ctx.music
       },
+    }),
+    toggleQuality: assign({
+      quality: (ctx) => {
+        return toggleQuality(ctx.quality)
+      },
+    }),
+    toggleSettings: assign({
+      settings: (ctx) => !ctx.settings,
     }),
   },
 })

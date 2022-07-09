@@ -1,8 +1,8 @@
-import GameTile from '#/classes/base/game-tile'
+import GameTile from '#classes/base/game-tile'
 
-import Grass from '#/classes/tiles/grass'
-import Trees from '#/classes/props/trees'
-import Rocks from '#/classes/props/rocks'
+import Grass from '#classes/tiles/grass'
+import Trees from '#classes/props/trees'
+import Rocks from '#classes/props/rocks'
 
 /**
  * Forest tile.

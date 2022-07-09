@@ -1,15 +1,17 @@
 import { ref, watch } from 'vue'
 import { Scene } from 'three'
 
-import Label from '#/classes/tiles/label'
-import Dirt from '#/classes/tiles/dirt'
-import Grass from '#/classes/tiles/grass'
-import Trees from '#/classes/props/trees'
-import Rocks from '#/classes/props/rocks'
-import Clouds from '#/classes/pieces/clouds'
-import Airstrip from '#/classes/props/airstrip'
-import Tracks from '#/classes/props/tracks'
-import Powerlines from '#/classes/props/powerline'
+import Label from '#classes/tiles/label'
+import Dirt from '#classes/tiles/dirt'
+import Grass from '#classes/tiles/grass'
+import Trees from '#classes/props/trees'
+import Rocks from '#classes/props/rocks'
+import Teepees from '#classes/props/teepees'
+import Towers from '#classes/props/towers'
+import Clouds from '#classes/pieces/clouds'
+import Airstrip from '#classes/props/airstrip'
+import Tracks from '#classes/props/tracks'
+import Powerlines from '#classes/props/powerline'
 
 import { service } from '#/state-machines/main'
 
@@ -61,6 +63,8 @@ export default class GameScene {
     Grass,
     Trees,
     Rocks,
+    Teepees,
+    Towers,
     Clouds,
     Airstrip,
     Tracks,

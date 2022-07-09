@@ -1,14 +1,16 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import Label from '#/classes/tiles/label'
-import Dirt from '#/classes/tiles/dirt'
-import Forest from '#/classes/tiles/forest'
-import Airfield from '#/classes/tiles/airfield'
-import TrainTracks from '#/classes/tiles/train-tracks'
-import Powerline from '#/classes/tiles/powerline'
-import Clouds from '#/classes/pieces/clouds'
-import Airplane from '#/classes/pieces/airplane'
-import HotAirBalloon from '#/classes/pieces/hot-air-balloon'
+import Label from '#classes/tiles/label'
+import Dirt from '#classes/tiles/dirt'
+import Forest from '#classes/tiles/forest'
+import Teepee from '#classes/tiles/teepee'
+import HuntingTower from '#classes/tiles/hunting-tower'
+import Airfield from '#classes/tiles/airfield'
+import TrainTracks from '#classes/tiles/train-tracks'
+import Powerline from '#classes/tiles/powerline'
+import Clouds from '#classes/pieces/clouds'
+import Airplane from '#classes/pieces/airplane'
+import HotAirBalloon from '#classes/pieces/hot-air-balloon'
 
 import {
   randomRoundNumber,
@@ -19,8 +21,27 @@ import {
   distributeArray,
 } from '#tools'
 
-import { difficulties, dimensions, airfields, clouds, airplanes, balloons, powerlines } from '#/constants'
-import { getRandomTile, randomItemFromArray } from '#tools'
+import {
+  difficulties,
+  dimensions,
+  airfields,
+  clouds,
+  airplanes,
+  balloons,
+  powerlines,
+} from '#/constants'
+
+import {
+  getRandomTile,
+  randomItemFromArray,
+  getRandomDistribution,
+} from '#tools'
+
+const fillerDistribution = [
+  { weight: 0.88, value: Forest },
+  { weight: 0.07, value: Teepee },
+  { weight: 0.05, value: HuntingTower },
+]
 
 /**
  * Basic class for any game board.
@@ -158,7 +179,8 @@ export default class GameBoard {
         for (let dx = -2; dx <= 2; dx++) {
           for (let dz = -2; dz <= 2; dz++) {
             if (dx !== 0 || dz !== 0) {
-              this._tiles[z + dz][x + dx] = new Forest({ position: { x: x + minX + dx, y: 0, z: z + minZ + dz } })
+              const tile = getRandomDistribution(fillerDistribution)
+              this._tiles[z + dz][x + dx] = new tile({ position: { x: x + minX + dx, y: 0, z: z + minZ + dz } })
             }
           }
         }
@@ -172,7 +194,6 @@ export default class GameBoard {
      const powerlinesLength = powerlines[this._difficulty]
      const ranges = checkForAvailableRanges(this._tiles, powerlinesLength, powerlinesAlongX)
      const range = randomItemFromArray(ranges)
-     console.log(range)
 
      for (let i = 0; i < powerlinesLength; i++) {
        if (powerlinesAlongX) {
@@ -186,7 +207,8 @@ export default class GameBoard {
     this._tiles.forEach((row, z) => {
       row.forEach((tile, x) => {
         if (!tile) {
-          return new Forest({ position: { x: x + minX, y: 0, z: z + minZ } })
+          const tile = getRandomDistribution(fillerDistribution)
+          return new tile({ position: { x: x + minX, y: 0, z: z + minZ } })
         }
       })
     })

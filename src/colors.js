@@ -49,3 +49,9 @@ export const LINE = new Color(0x000000)
 export const BALLOON = new Color(0xe91a1a)
 export const BASKET = new Color(0x864a1c)
 export const ROPE = new Color(0x000000)
+
+export const TEEPEE_1 = new Color(0xf5f2ef)
+export const TEEPEE_2 = new Color(0xe8e3dd)
+export const TEEPEE_3 = new Color(0xe1e0df)
+
+export const TOWER = new Color(0xac837a)

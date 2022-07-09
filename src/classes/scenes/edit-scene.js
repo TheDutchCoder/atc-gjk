@@ -11,24 +11,15 @@ import {
 } from '#tools'
 
 import Dirt from '#classes/tiles/dirt'
-import Forest from '#classes/tiles/forest'
 import Teepee from '#classes/tiles/teepee'
-import HuntingTower from '#classes/tiles/hunting-tower'
-import TrainTracks from '#classes/tiles/train-tracks'
-import Airfield from '#classes/tiles/airfield'
-import Clouds from '#classes/pieces/clouds'
-import Airplane from '#classes/pieces/airplane'
 import controls from '../../controls'
 
 import Scene from '#classes/base/scene'
-import { state } from '#/state-machines/main'
 
-import { quality } from '#/constants'
-
-const tiles = [Forest, TrainTracks, Airfield, Teepee, HuntingTower]
+const tiles = [Teepee]
 const RandomTile = randomItemFromArray(tiles)
 
-export default class IntroScene extends Scene {
+export default class EditeScene extends Scene {
   start = () => {
     // Global light.
     const hemiLight = new HemisphereLight(0xffffff, 0x080802, 0.7)
@@ -39,19 +30,18 @@ export default class IntroScene extends Scene {
     pivot2.rotation.x = Math.PI / -3
     const dirLight1 = new DirectionalLight(0xffffff, 0.3)
     pivot2.add(dirLight1)
-    pivot2.name = 'sun'
 
     dirLight1.position.set(60, 0, 0)
     dirLight1.lookAt(pivot2.position)
     dirLight1.castShadow = true
-    dirLight1.shadow.mapSize.width = quality[state.value.context.quality].shadows
-    dirLight1.shadow.mapSize.height = quality[state.value.context.quality].shadows
+    dirLight1.shadow.mapSize.width = 2048
+    dirLight1.shadow.mapSize.height = 2048
     dirLight1.shadow.camera.near = 0.5
     dirLight1.shadow.camera.far = 500
-    dirLight1.shadow.camera.top = 30
-    dirLight1.shadow.camera.bottom = -30
-    dirLight1.shadow.camera.left = -30
-    dirLight1.shadow.camera.right = 30
+    dirLight1.shadow.camera.top = 90
+    dirLight1.shadow.camera.bottom = -120
+    dirLight1.shadow.camera.left = -90
+    dirLight1.shadow.camera.right = 90
 
     pivot2.rotation.y = Math.PI / -1.5
 
@@ -66,21 +56,8 @@ export default class IntroScene extends Scene {
     // Create a random tile.
     new RandomTile({ position: { x: 0, y: 0, z: 0 }, direction: 2 })
 
-    // Add an airplane.
-    const airplane = new Airplane({
-      id: 0,
-      start: { position: { x: 0, y: 1, z: 0 }, direction: 1, name: '' },
-      end: { position: { x: 0, y: 0, z: 0 }, direction: 1, name: '' },
-      fuel: 100,
-    })
-
-    this.addAirplane(airplane)
-
     // Add the dirt base.
     Dirt.add()
-
-    // Add some clouds.
-    Clouds.add({ position: { x: 0, y: 2, z: 0 } })
 
     // Fog.
     const fog = new Fog(new Color(0x9bc8e9), 15, 30)

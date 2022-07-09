@@ -39,11 +39,16 @@ module.exports = {
       '6': '1.5rem',
       '7': '1.75rem',
     },
+    minWidth: {
+      'xs': '20rem',
+      'sm': '24rem',
+    },
     // },
     extend: {
       boxShadow: {
         'lg': '0 2px 2px 0 rgba(31, 41, 55, 0.5)',
-        'block': '0 2px 3px 1px rgba(31, 41, 55, 0.3), inset 0 -4px 0 0 rgba(0, 0, 0, 0.1)',
+        'block': '0 2px 15px 1px rgba(31, 41, 55, 0.3)',
+        'button': '0 2px 3px 1px rgba(31, 41, 55, 0.3), inset 0 -4px 0 0 rgba(0, 0, 0, 0.1)',
       },
     },
   },

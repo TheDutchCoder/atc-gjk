@@ -59,12 +59,12 @@
           size="lg"
           @click="service.send('INTRO_OUT')"
         >
-          New Game
+          Play
         </ActionButton>
       </div>
     </transition>
 
-    <!-- Difficulty -->
+    <!-- Quality -->
     <transition
       enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)] delay-200"
       enter-from-class="scale-50 opacity-0"
@@ -78,31 +78,90 @@
         class="fixed top-3 right-2"
       >
         <ActionButton
-          :is-secondary="state.context.difficulty === 1"
-          :is-primary="state.context.difficulty === 2"
-          @click="service.send('DIFFICULTY')"
+          @click="service.send('TOGGLE_SETTINGS')"
         >
-          {{ difficulties[state.context.difficulty] }}
+          🛠
         </ActionButton>
       </div>
     </transition>
 
-    <!-- Sounds -->
     <transition
-      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)] delay-300"
+      enter-active-class="transition duration-250 ease-[cubic-bezier(.75,-0.4,.25,1.4)]"
       enter-from-class="scale-50 opacity-0"
       enter-to-class="scale-100 opacity-100"
-      leave-active-class="transition duration-500 ease-in delay-100"
+      leave-active-class="transition duration-250 ease-in"
       leave-from-class="scale-100 opacity-100"
       leave-to-class="scale-95 opacity-0"
     >
       <div
-        v-if="state.matches('introIdle')"
-        class="fixed top-3 left-2"
+        v-if="state.context.settings"
+        class="fixed inset-0 z-50 flex justify-center items-center"
       >
-        <ActionButton @click="service.send('TOGGLE_MUSIC')">
-          Music: {{ state.context.music ? 'on' : 'off' }}
-        </ActionButton>
+        <div
+          class="absolute inset-0 bg-slate-800/50"
+          @click.self="service.send('TOGGLE_SETTINGS')"
+        />
+        <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block text-center min-w-xs max-w-sm">
+          <h2 class="text-base font-bold">
+            🛠 Settings
+          </h2>
+          <div class="grid grid-cols-2 gap-4 text-left mt-8 text-sm">
+            <div class="font-bold">
+              Difficulty
+            </div>
+            <div class="flex w-full">
+              <ActionButton
+                is-secondary
+                size="sm"
+                class="flex-grow"
+                @click="service.send('DIFFICULTY')"
+              >
+                {{ difficulties[state.context.difficulty] }}
+              </ActionButton>
+            </div>
+
+            <div class="font-bold">
+              Shadows
+            </div>
+            <div class="flex w-full">
+              <ActionButton
+                is-secondary
+                size="sm"
+                class="flex-grow"
+                @click="service.send('TOGGLE_QUALITY')"
+              >
+                {{ state.context.quality }}
+              </ActionButton>
+            </div>
+
+            <div class="font-bold">
+              Music<sup class="text-red-500">*</sup>
+            </div>
+            <div class="flex w-full">
+              <ActionButton
+                is-secondary
+                size="sm"
+                class="flex-grow"
+                @click="service.send('TOGGLE_MUSIC')"
+              >
+                {{ state.context.music ? 'ON' : 'OFF' }}
+              </ActionButton>
+            </div>
+
+            <div class="col-span-2 text-xs text-gray-500">
+              <sup class="text-red-500">*</sup>Music can't be automatically enabled yet, so it will always be <span class="font-bold">off</span> by default.
+            </div>
+          </div>
+
+          <ActionButton
+            is-primary
+            size="sm"
+            class="mt-8"
+            @click="service.send('TOGGLE_SETTINGS')"
+          >
+            Close
+          </ActionButton>
+        </div>
       </div>
     </transition>
 
@@ -525,22 +584,24 @@ import { service, state } from '#/state-machines/main'
 // import { gameMachine } from '#/state-machines/game'
 // import { useMachine } from '@xstate/vue'
 
-import renderer, { initRenderer, stats } from '#/renderer'
+import renderer, { initRenderer, stats, initStats } from '#/renderer'
 import controls, { resetControls } from '#/controls'
 import camera from '#/camera'
 import clock from '#/clock'
 
 import { formatTime, getDirectionFactors, lerpColor } from '#/tools'
-import { flightStatusses, difficulties } from '#/constants'
+import { flightStatusses, difficulties, qualities, quality, timers } from '#/constants'
 
-import IntroScene from '#/classes/scenes/intro-scene'
-import BoardScene from '#/classes/scenes/board-scene'
+import IntroScene from '#classes/scenes/intro-scene'
+import EditScene from '#classes/scenes/edit-scene'
+import BoardScene from '#classes/scenes/board-scene'
 
 import { Raycaster, Vector2, Color, Fog } from 'three'
 
 import ActionButton from '#/components/ActionButton.vue'
 import { click1Sound } from '#/sounds'
 
+let EditSceneRef = null
 let IntroSceneRef = null
 let BoardSceneRef = null
 
@@ -595,6 +656,18 @@ onMounted(() => {
 
   // Refactor
   service.onTransition(async (state) => {
+    if (state.changed && state.matches('editIn')) {
+      controls.autoRotate = false
+
+      EditSceneRef = new EditScene()
+      EditSceneRef.start()
+      EditSceneRef.render()
+
+      await EditSceneRef.animateIn()
+
+      service.send('DONE')
+    }
+
     /**
      * The intro should animate in.
      */
@@ -638,7 +711,7 @@ onMounted(() => {
 
           subTickTimer.value = setInterval(() => {
             subTick.value++
-          }, 1000)
+          }, timers[difficulties[state.context.difficulty]])
 
           // Update colors.
           const factor = tick / 96
@@ -647,9 +720,9 @@ onMounted(() => {
           color1.value = lerpColor('#7ba2a4', '#ecfeff', sin)
           color2.value = lerpColor('#498baa', '#7dd3fc', sin)
 
-          const fog = lerpColor('#3e728a', '#9bc8e9', sin)
+          const fog = lerpColor('#5a7683', '#a6daef', sin)
           const hemi = lerpColor('#3e728a', '#9bc8e9', sin)
-          const sunlight = lerpColor('#e9c4aa', '#f4efd4', sin)
+          const sunlight = lerpColor('#f19ac1', '#f5ecc1', sin)
 
           BoardSceneRef._scene.fog = new Fog(new Color(fog), 15, 350)
           BoardSceneRef._scene.children.forEach(child => {
@@ -778,6 +851,12 @@ onMounted(() => {
       if (delta > interval) {
         IntroSceneRef._animate()
       }
+    } else if (service.state.hasTag('edit') && EditSceneRef?._scene) {
+      renderer.render(EditSceneRef._scene, camera)
+
+      if (delta > interval) {
+        EditSceneRef._animate()
+      }
     } else if (service.state.hasTag('board') && BoardSceneRef?._scene) {
 
       if (isMouseDown) {
@@ -823,6 +902,7 @@ onMounted(() => {
   window.addEventListener('mouseup', onMouseUp)
 
   service.send('INTRO_IN')
+  // service.send('EDIT_IN')
 })
 
 
@@ -922,6 +1002,32 @@ const grad = computed(() => {
   return { 'background': `conic-gradient(#3b82f6 ${(subTick.value / 30) * 360}deg, transparent ${(subTick.value / 30) * 360}deg)` }
 })
 const foo = computed(() => `radial-gradient(${color1.value}, ${color2.value})`)
+
+
+/**
+ * @todo
+ *
+ * This doesn't seem to work for some reason.
+ */
+watch(
+  state,
+  (newState, oldState) => {
+    localStorage.setItem('atc-context', JSON.stringify(newState.context))
+
+    if (newState.context.quality !== oldState.context.quality) {
+      console.log(IntroSceneRef)
+
+      IntroSceneRef._scene.children.forEach(child => {
+        if (child.name === 'sun') {
+          console.log(child.children[0].shadow)
+          // child.children[0].shadow.mapSize.width = quality[newState.context.quality].shadows
+          // child.children[0].shadow.mapSize.height = quality[newState.context.quality].shadows
+          // child.children[0].shadow.needsUpdate = true
+        }
+      })
+    }
+  }
+)
 
 </script>
 

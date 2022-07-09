@@ -1,23 +1,14 @@
 import GameTile from '#classes/base/game-tile'
 
 import Grass from '#classes/tiles/grass'
+import Trees from '#classes/props/trees'
 import Rocks from '#classes/props/rocks'
-import Powerlines from '#classes/props/powerline'
+import Towers from '#classes/props/towers'
 
 /**
- * Powerline tile.
+ * Forect with hunting tower tile.
  */
-export default class Forest extends GameTile {
-
-  /**
-   * All the tiles that are powerlines.
-   */
-  _tiles = []
-
-  /**
-   * The direction the airfield is facing.
-   */
-   _direction = 0
+export default class HuntingTower extends GameTile {
 
   /**
    * Initialize the tile.
@@ -25,10 +16,8 @@ export default class Forest extends GameTile {
    * @param {Object} position - The position of the tile.
    * @param {Number} direction - The direction the tile is facing (0-3).
    */
-  constructor ({ position = { x: 0, y: 0, z: 0 }, direction = 0 } = {}) {
+  constructor ({ position = { x: 0, y: 0, z: 0 } } = {}) {
     super({ position })
-
-    this._direction = direction
 
     this.create()
   }
@@ -38,8 +27,9 @@ export default class Forest extends GameTile {
    */
   create () {
     Grass.add({ position: this._position })
+    Trees.add({ position: this._position, exclude: { square: { start: { x: -4.5, z: -4.5 }, end: { x: -1.5, z: -1.5 } } } })
     Rocks.add({ position: this._position })
-    Powerlines.add({ position: this._position, direction: this._direction })
+    Towers.add({ position: this._position })
   }
 
 }

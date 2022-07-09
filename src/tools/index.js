@@ -209,6 +209,26 @@ export const getRandomTile = (board, width, depth, offset = 0) => {
   }
 }
 
+export const getRandomDistribution = (distribution = [], value) => {
+  if (!distribution.length) {
+    return null
+  }
+
+  const internalValue = value ? value : Math.random()
+  let total = 0
+  let index = -1
+
+  distribution.forEach((val, i) => {
+    if (internalValue >= total && internalValue <= (total + val.weight)) {
+      index = i
+    }
+
+    total += val.weight
+  })
+
+  return index === -1 ? null : distribution[index].value
+}
+
 
 
 
@@ -246,8 +266,8 @@ export const CubicBezier = (t, p0, p1, p2, p3) => {
  * @param {*} excludes
  * @returns
  */
-export const randomCoordinate = (min, max, excludes = { width: 0, direction: 0 }) => {
-  const { width, direction } = excludes
+export const randomCoordinate = (min, max, excludes = { width: 0, direction: 0, square: {} }) => {
+  const { width, direction, square } = excludes
   const offset = width / 2
 
   let funcX
@@ -256,21 +276,29 @@ export const randomCoordinate = (min, max, excludes = { width: 0, direction: 0 }
   let y = 0
   let z = randomNumber(min, max)
 
-  if (direction === 0 || direction == 4) {
-    funcX = (x) => (x > offset) || (x < -offset)
-    funcZ = () => true
-  } else if (direction === 3 || direction == 7) {
-    funcX = () => true
-    funcZ = (x, z) => (z > (x + offset)) || (z < (x - offset))
-  } else if (direction === 2 || direction == 6) {
-    funcX = () => true
-    funcZ = (_x, z) => (z > offset) || (z < -offset)
-  } else if (direction === 1 || direction == 5) {
-    funcX = () => true
-    funcZ = (x, z) => (z > (-x + offset)) || (z < (-x - offset))
+  if (square?.start) {
+    const { x: startX, z: startZ } = square.start
+    const { x: endX, z: endZ } = square.end
+
+    funcX = (x, z) => ((x >= startX || x <= endX) && (z <= startZ || z >= endZ)) || (x <= startX || x >= endX)
+    funcZ = (x, z) => ((z >= startZ || z <= endZ) && (x <= startX || x >= endX)) || (z <= startZ || z >= endZ)
+  } else {
+    if (direction === 0 || direction == 4) {
+      funcX = (x) => (x > offset) || (x < -offset)
+      funcZ = () => true
+    } else if (direction === 3 || direction == 7) {
+      funcX = () => true
+      funcZ = (x, z) => (z > (x + offset)) || (z < (x - offset))
+    } else if (direction === 2 || direction == 6) {
+      funcX = () => true
+      funcZ = (_x, z) => (z > offset) || (z < -offset)
+    } else if (direction === 1 || direction == 5) {
+      funcX = () => true
+      funcZ = (x, z) => (z > (-x + offset)) || (z < (-x - offset))
+    }
   }
 
-  while (!funcX(x)) {
+  while (!funcX(x, z)) {
     x = randomNumber(min, max)
   }
 

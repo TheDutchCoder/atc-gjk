@@ -5,6 +5,8 @@ import {
   randomItemFromArray,
   randomRoundNumber,
   randomNumber,
+  randomCoordinate,
+  getRandomDistribution,
   getRandomTile,
   getStartDirection,
   getEndDirection,
@@ -136,6 +138,76 @@ suite('tools', () => {
 
     expect(results.length).toBe(1000)
     expect(results.filter(number => number > -8 && number < 1).length).toBe(0)
+  })
+
+  test('randomCoordinate', () => {
+    const min = -10
+    const max = 3
+
+    const results = []
+
+    for (let i = 0; i < 1000; i++) {
+      results.push(randomCoordinate(min, max))
+    }
+
+    expect(results.length).toBe(1000)
+    expect(results.filter(number => number > -10 && number < 3).length).toBe(0)
+  })
+
+  test('randomCoordinate with exclusion (width, direction 0/4)', () => {
+    const min = -10
+    const max = 3
+    const excludes = { width: 2, direction: 0 }
+
+    const results = []
+
+    for (let i = 0; i < 1000; i++) {
+      results.push(randomCoordinate(min, max, excludes))
+    }
+
+    expect(results.length).toBe(1000)
+    expect(results.filter(number => ((number.x >= -10 && number.x <= -1) || (number.x >= 1 && number.x <= 3)) && ((number.z >= -10 && number.z <= 3))).length).toBe(1000)
+  })
+
+  test('randomCoordinate with exclusion (square)', () => {
+    const min = -10
+    const max = 3
+    const excludes = { square: { start: { x: -2, z: -2 }, end: { x: 2, z: 2 } } }
+
+    const results = []
+
+    for (let i = 0; i < 1000; i++) {
+      results.push(randomCoordinate(min, max, excludes))
+    }
+
+    expect(results.length).toBe(1000)
+    expect(results.filter(number => (
+      (number.x >= -10 && number.x <= 3) &&
+      (number.z >= -10 && number.z <= 3) &&
+      (
+        (number.x >= -2 && number.x <= 2) && (number.z <= -2 || number.z >= 2) ||
+        (number.z >= -2 && number.z <= 2) && (number.x <= -2 || number.x >= 2) ||
+        (number.x <= -2 || number.x > 2) && (number.z <= -2 || number.z >= 2)
+      )
+    )).length).toBe(1000)
+  })
+
+  test('getRandomDistribution', () => {
+    const distribution1 = [{ weight: 0.5, value: 'foo' }, { weight: 0.5, value: 'bar' }]
+    let value = 0.4
+
+    expect(getRandomDistribution(distribution1, value)).toBe('foo')
+
+    value = 0.6
+    expect(getRandomDistribution(distribution1, value)).toBe('bar')
+
+    value = 2
+    expect(getRandomDistribution(distribution1, value)).toBe(null)
+
+    value = -1.3
+    expect(getRandomDistribution(distribution1, value)).toBe(null)
+
+    expect(getRandomDistribution()).toBe(null)
   })
 
   test('getRandomTile, 1 space', () => {
