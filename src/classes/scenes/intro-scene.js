@@ -21,6 +21,9 @@ import Airplane from '#classes/pieces/airplane'
 import controls from '../../controls'
 
 import Scene from '#classes/base/scene'
+import { state } from '#/state-machines/main'
+
+import { quality } from '#/constants'
 
 const tiles = [Forest, TrainTracks, Airfield, Teepee, HuntingTower]
 const RandomTile = randomItemFromArray(tiles)
@@ -36,18 +39,19 @@ export default class IntroScene extends Scene {
     pivot2.rotation.x = Math.PI / -3
     const dirLight1 = new DirectionalLight(0xffffff, 0.3)
     pivot2.add(dirLight1)
+    pivot2.name = 'sun'
 
     dirLight1.position.set(60, 0, 0)
     dirLight1.lookAt(pivot2.position)
     dirLight1.castShadow = true
-    dirLight1.shadow.mapSize.width = 2048
-    dirLight1.shadow.mapSize.height = 2048
+    dirLight1.shadow.mapSize.width = quality[state.value.context.quality].shadows
+    dirLight1.shadow.mapSize.height = quality[state.value.context.quality].shadows
     dirLight1.shadow.camera.near = 0.5
     dirLight1.shadow.camera.far = 500
-    dirLight1.shadow.camera.top = 90
-    dirLight1.shadow.camera.bottom = -120
-    dirLight1.shadow.camera.left = -90
-    dirLight1.shadow.camera.right = 90
+    dirLight1.shadow.camera.top = 30
+    dirLight1.shadow.camera.bottom = -30
+    dirLight1.shadow.camera.left = -30
+    dirLight1.shadow.camera.right = 30
 
     pivot2.rotation.y = Math.PI / -1.5
 

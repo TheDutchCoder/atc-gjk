@@ -45,10 +45,25 @@ teepeeGeometry3.computeBoundingBox()
 teepeeGeometry3.translate(1, teepeeGeometry3.boundingBox.min.y / 2, 0)
 teepeeGeometry3.rotateY(2/3 * (Math.PI * 2))
 
+// const f1 = logGeometry.clone()
+// f1.scale(0.4, 0.5, 0.4)
+// f1.rotateX(-0.35)
+// f1.computeBoundingBox()
+// f1.translate(1, f1.boundingBox.min.y / 2, 0)
+
+// const f2 = logGeometry.clone()
+// f2.scale(0.4, 0.5, 0.4)
+// f2.rotateX(-0.35)
+// f2.rotateY(1/5 * (Math.PI * 2))
+// f2.computeBoundingBox()
+// f2.translate(1, f2.boundingBox.min.y / 2, 0)
+
 export const teepeeGeometries = mergeBufferGeometries([
   teepeeGeometry1,
   teepeeGeometry2,
   teepeeGeometry3,
+  // f1,
+  // f2,
 ])
 
 /**

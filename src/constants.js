@@ -91,6 +91,24 @@ export const timers = {
   HARD: 2000,
 }
 
+export const qualities = [
+  'LOW',
+  'MEDIUM',
+  'HIGH',
+]
+
+export const quality = {
+  LOW: {
+    shadows: 1024,
+  },
+  MEDIUM: {
+    shadows: 2048,
+  },
+  HIGH: {
+    shadows: 4096,
+  },
+}
+
 export const flightStatusses = {
   SCHEDULED: 'Scheduled',
   APPROACHING: 'Approaching',

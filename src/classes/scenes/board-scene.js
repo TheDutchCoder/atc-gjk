@@ -16,7 +16,8 @@ import {
 import Clouds from '#classes/pieces/clouds'
 import controls from '../../controls'
 
-import { flightStatusses } from '#/constants'
+import { flightStatusses, quality } from '#/constants'
+import { state } from '#/state-machines/main'
 
 export default class BoardScene extends Scene {
   start () {
@@ -31,8 +32,8 @@ export default class BoardScene extends Scene {
 
     dirLight1.position.set(0, 60, 0)
     dirLight1.castShadow = true
-    dirLight1.shadow.mapSize.width = 2048
-    dirLight1.shadow.mapSize.height = 2048
+    dirLight1.shadow.mapSize.width = quality[state.value.context.quality].shadows
+    dirLight1.shadow.mapSize.height = quality[state.value.context.quality].shadows
     dirLight1.shadow.camera.near = 0.5
     dirLight1.shadow.camera.far = 500
     dirLight1.shadow.camera.top = 90

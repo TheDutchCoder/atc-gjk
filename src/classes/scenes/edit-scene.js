@@ -11,12 +11,12 @@ import {
 } from '#tools'
 
 import Dirt from '#classes/tiles/dirt'
-import HuntingTower from '#classes/tiles/hunting-tower'
+import Teepee from '#classes/tiles/teepee'
 import controls from '../../controls'
 
 import Scene from '#classes/base/scene'
 
-const tiles = [HuntingTower]
+const tiles = [Teepee]
 const RandomTile = randomItemFromArray(tiles)
 
 export default class EditeScene extends Scene {
