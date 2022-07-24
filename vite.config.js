@@ -19,7 +19,6 @@ export default defineConfig({
     },
   },
   plugins: [vue()],
-  base: '/atc-gjk/',
   build: {
     target: 'esnext',
   },
