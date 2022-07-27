@@ -913,15 +913,6 @@ const nextTick = async () => {
 
 const selectedPlane = ref(null)
 
-watch(
-  selectedPlane,
-  (newPlane) => {
-    if (!newPlane) {
-      resetControls()
-    }
-  }
-)
-
 // Reset the camera if the selected plane is removed.
 // watch(
 //   BoardSceneRef?._airplanes,
@@ -936,31 +927,6 @@ const selectPlane = (plane) => {
   BoardSceneRef.selectPlane(plane._id)
 
   selectedPlane.value = BoardSceneRef._airplanes.value.find(plane => plane._isSelected)
-
-  if (selectedPlane.value) {
-    const fromControls = controls.target
-    const toControls = selectedPlane.value._model.position
-
-    new TWEEN.Tween(fromControls)
-      .to(toControls, 500)
-      .easing(TWEEN.Easing.Cubic.InOut)
-      .onUpdate(() => controls.target = fromControls)
-      .start()
-
-    const { x, y, z } = selectedPlane.value._model.position
-    const factors = getDirectionFactors(selectedPlane.value._direction)
-    const fromCamera = { x: camera.position.x, y: camera.position.y, z: camera.position.z }
-    const toCamera = { x: x + (20 * factors.x), y: y + 10, z: z + (20 * factors.z) }
-
-    new TWEEN.Tween(fromCamera)
-      .to(toCamera, 500)
-      .easing(TWEEN.Easing.Cubic.InOut)
-      .onUpdate(() => {
-        camera.position.set(fromCamera.x, fromCamera.y, fromCamera.z)
-        controls.update()
-      })
-      .start()
-  }
 }
 
 const setHeight = (height) => {

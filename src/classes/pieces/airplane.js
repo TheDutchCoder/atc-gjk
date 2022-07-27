@@ -39,7 +39,8 @@ import {
 
 import {
   PLANE,
-} from '#/colors'
+  PLANE_SELECTED,
+} from '#colors'
 
 const ghostColor = new Color(0xffffff)
 const dummy = new Object3D()
@@ -870,7 +871,7 @@ export default class Airplane {
 
     this._model.children.forEach(child => {
       if (child.material && child.material.name === 'base') {
-        child.material.color.set(this._color)
+        this._isSelected ? child.material.color.set(PLANE_SELECTED) : child.material.color.set(this._color)
       }
 
       if (child.material && child.material.name !== 'selector') {
@@ -909,6 +910,10 @@ export default class Airplane {
       if (child.name === 'selector') {
         child.visible = true
       }
+
+      if (child.material && child.material.name === 'base') {
+        child.material.color.set(PLANE_SELECTED)
+      }
     })
   }
 
@@ -918,6 +923,10 @@ export default class Airplane {
     this._model.children.forEach(child => {
       if (child.name === 'selector') {
         child.visible = false
+      }
+
+      if (child.material && child.material.name === 'base') {
+        child.material.color.set(this._color)
       }
     })
   }
