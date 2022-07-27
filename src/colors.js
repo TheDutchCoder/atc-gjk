@@ -36,7 +36,8 @@ export const PLANE_1 = new Color(0xff0000)
 export const PLANE_2 = new Color(0x00ff00)
 export const PLANE_3 = new Color(0x0000ff)
 export const PLANE = new Color(0x5252e7)
-export const PLANE_SELECTED = new Color(0xffff00)
+export const PLANE_SELECTED = new Color(0xff0000)
+export const PLANE_INDICATOR = new Color(0x000000)
 
 export const LANDING_STRIP = new Color(0x000000)
 export const STRIPE = new Color(0xff9a00)
@@ -47,7 +48,7 @@ export const POLE = new Color(0xad827b)
 export const PEG = new Color(0x40e0d0)
 export const LINE = new Color(0x000000)
 
-export const BALLOON = new Color(0xe91a1a)
+export const BALLOON = new Color(0xe9da1a)
 export const BASKET = new Color(0x864a1c)
 export const ROPE = new Color(0x000000)
 

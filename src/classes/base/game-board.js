@@ -98,6 +98,11 @@ export default class GameBoard {
    */
   _tiles = []
 
+  /**
+   * Indicator for selected plane.
+   */
+  _indicator = null
+
 
   /**
    * The current game tick.
@@ -279,6 +284,7 @@ export default class GameBoard {
         end: end,
         startTime,
         fuel: randomRoundNumber(20, 35),
+        showIndicator: true,
       }))
     }
 
