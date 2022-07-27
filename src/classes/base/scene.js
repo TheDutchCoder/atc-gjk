@@ -146,6 +146,7 @@ export default class GameScene {
   addAirplane (airplane) {
     this._airplanes.value.push(airplane)
     this._scene.add(airplane._model)
+    this._scene.add(airplane._indicator)
   }
 
   /**
@@ -160,7 +161,10 @@ export default class GameScene {
     this._airplanes.value = this._airplanes.value.filter(plane => plane._id !== airplane._id)
 
     const plane = this._scene.getObjectById(airplane._model.id)
+    const indicator = this._scene.getObjectById(airplane._indicator.id)
+
     this._scene.remove(plane)
+    this._scene.remove(indicator)
   }
 
   /**

@@ -40,12 +40,13 @@ import {
 import {
   PLANE,
   PLANE_SELECTED,
+  PLANE_INDICATOR,
 } from '#colors'
 
 const ghostColor = new Color(0xffffff)
 const dummy = new Object3D()
 
-const createDefaultPlane = (color, _this) => {
+const createDefaultPlane = (color, _this, showIndicator) => {
   const hullGeometry = boxGeometry.clone()
   hullGeometry.scale(1, 1, 2)
   setPoint(0, hullGeometry, -0.2, -0.1)
@@ -248,19 +249,10 @@ const createDefaultPlane = (color, _this) => {
   redLightGeometry.scale(0.1, 0.1, 0.1)
   redLightGeometry.translate(-1.7, 0, -0.5)
 
-  // Smoke.
-  // const smokeGeometry = dodecahedronGeometry.clone()
-  // smokeGeometry.scale(0.1, 0.1, 0.1)
-  // smokeGeometry.rotateX(Math.PI)
-  // smokeGeometry.translate(0.55, 0.2, -0.1)
-
-  // const smokeGeometries = mergeBufferGeometries([
-  //   smokeGeometry,
-  // ])
-
 
   const plane = new Group()
   plane.name = 'plane'
+
 
   /**
    * Assign materials to the meshes.
@@ -295,6 +287,7 @@ const createDefaultPlane = (color, _this) => {
   // smokeMaterial.color.set(smokeColor)
 
   const baseMesh = new Mesh(baseGeometries, baseMaterial)
+  baseMesh.castShadow = true
   const glassMesh = new Mesh(glassGeometries, screenMaterial)
   const metalMesh = new Mesh(metalGeometries, engineMaterial)
   const blackStaticMesh = new Mesh(blackStaticGeometries, propMaterial)
@@ -445,7 +438,19 @@ const createDefaultPlane = (color, _this) => {
   const strapMesh = new Mesh(strapGeometry, bodyMaterial)
   const hairMesh = new Mesh(hairGeometries, hairMaterial)
 
-  pilot.add(
+  // const pilotGroup = new Group()
+  // pilotGroup.name = 'pilot'
+
+  // const planeGroup = new Group()
+  // planeGroup.name = 'plane'
+
+  // const airplaneGroup = new Group()
+  // airplaneGroup.name = 'airplane'
+
+  // const indicatorGroup = new Group()
+  // indicatorGroup.name = 'indicator'
+
+  plane.add(
     bodyMesh,
     headMesh,
     earLeftMesh,
@@ -473,6 +478,30 @@ const createDefaultPlane = (color, _this) => {
   )
 
   _this._smoke = smoke
+
+
+  // Indicator
+  const indicatorGeometry = boxGeometry.clone()
+  indicatorGeometry.scale(1, 1, 1)
+
+  const indicatorMaterial = glassMaterial.clone()
+  indicatorMaterial.color.set(PLANE_INDICATOR)
+  indicatorMaterial.name = 'indicator'
+
+  const indicatorGeometries = mergeBufferGeometries([
+    hullGeometry.clone(),
+    wingsGeometry.clone(),
+    rudderGeometry.clone(),
+    engineGeometry.clone(),
+  ])
+
+  const indicatorMesh = new Mesh(indicatorGeometries, indicatorMaterial)
+  const indicator = new Group()
+
+  indicator.add(indicatorMesh)
+
+  _this._indicator = indicator
+  _this._indicator.visible = showIndicator
 
   return plane
 }
@@ -571,6 +600,11 @@ export default class Airplane {
   _model = null
 
   /**
+   * The model of the indicator.
+   */
+  _indicator = new Object3D()
+
+  /**
    * The tick used for animating the airplane.
    */
   _tick = 0
@@ -598,7 +632,7 @@ export default class Airplane {
    * AnimateIdle
    */
   constructor (options) {
-    const { id, start, end, fuel, startTime } = options
+    const { id, start, end, fuel, startTime, showIndicator } = options
     this._start = start
     this._end = end
     this._position = start.position
@@ -611,19 +645,24 @@ export default class Airplane {
     this._fuel = fuel
     this._startTime = startTime
 
-    this.create()
+    this.create(showIndicator)
 
     return this
   }
 
   animate = () => this.animateIdle()
 
-  updateAnimation (from) {
+  updateAnimation (from, toZero) {
     this._model.position.x = from.position.x * 10
     this._model.position.y = from.position.y * 5
     this._model.position.z = from.position.z * 10
 
+    this._indicator.position.x = from.position.x * 10
+    this._indicator.position.y = 0
+    this._indicator.position.z = from.position.z * 10
+
     this._model.scale.setScalar(from.scale)
+    this._indicator.scale.setScalar(toZero ? 0 : from.scale)
   }
 
   /**
@@ -645,12 +684,12 @@ export default class Airplane {
         to = { position: { ..._position }, direction: _direction, scale: 1 }
       }
 
-      this.updateAnimation(from)
+      this.updateAnimation(from, to.position.y < 1)
 
       new TWEEN.Tween(from)
         .to(to, speed)
         .easing(TWEEN.Easing.Elastic.Out)
-        .onUpdate(() => this.updateAnimation(from))
+        .onUpdate(() => this.updateAnimation(from, to.position.y < 1))
         .onComplete(resolve)
         .delay(delay)
         .start()
@@ -666,12 +705,12 @@ export default class Airplane {
       const from = { position: { x: this._model.position.x / 10, y: this._model.position.y / 5, z: this._model.position.z / 10 }, direction: this._direction, scale: 1 }
       const to = { position: getNextPosition(_position, _direction), direction: this._direction, scale: 0 }
 
-      this.updateAnimation(from)
+      this.updateAnimation(from, to.position.y < 1)
 
       new TWEEN.Tween(from)
         .to(to, speed)
         .easing(TWEEN.Easing.Elastic.In)
-        .onUpdate(() => this.updateAnimation(from))
+        .onUpdate(() => this.updateAnimation(from, to.position.y < 1))
         .onComplete(resolve)
         .delay(delay)
         .start()
@@ -724,7 +763,6 @@ export default class Airplane {
     })
 
     this._instances.forEach((instance, index) => {
-      // console.log(instance)
       this.updateInstance(instance, index)
     })
 
@@ -760,14 +798,19 @@ export default class Airplane {
   /**
    * Creates the airplane at the start position and direction.
    */
-  create () {
-    const plane = createDefaultPlane(this._color, this)
+  create (showIndicator) {
+    const plane = createDefaultPlane(this._color, this, showIndicator)
 
     plane.position.x = this._position.x * 10
     plane.position.z = this._position.z * 10
     plane.position.y = this._position.y * 5
 
+    this._indicator.position.x = this._position.x * 10
+    this._indicator.position.z = this._position.z * 10
+    this._indicator.position.y = 0
+
     plane.rotation.y = this._direction * (Math.PI / -4)
+    this._indicator.rotation.y = this._direction * (Math.PI / -4)
 
     if (!this._takenOff) {
       plane.rotateX(0.1)
@@ -819,6 +862,7 @@ export default class Airplane {
     // Update the plane's new direction.
     this._direction = (8 + (this._direction + dirMod)) % 8
     this._model.rotation.y = this._direction * (Math.PI / -4)
+    this._indicator.rotation.y = this._direction * (Math.PI / -4)
 
     // Reduce the plane's fuel
     this._fuel -= 1
@@ -843,7 +887,7 @@ export default class Airplane {
       new TWEEN.Tween(from)
         .to(to, 500)
         .easing(TWEEN.Easing.Cubic.InOut)
-        .onUpdate(() => this.updateAnimation(from, this._targetDirection > 0))
+        .onUpdate(() => this.updateAnimation(from, to.position.y < 1))
         .onComplete(resolve)
         .delay(delay)
         .start()

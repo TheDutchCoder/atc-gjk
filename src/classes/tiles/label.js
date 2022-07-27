@@ -10,7 +10,7 @@ import { helvetikerBold } from '#/fonts'
 
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 
-const labelMaterial = new MeshPhongMaterial({ color: 0xff0000, flatShading: true })
+const labelMaterial = new MeshPhongMaterial({ color: 0x4d89ea, flatShading: true })
 
 /**
  * Label game piece.

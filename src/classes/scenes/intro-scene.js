@@ -1,6 +1,7 @@
 import {
   HemisphereLight,
   DirectionalLight,
+  DirectionalLightHelper,
   Fog,
   Color,
   Object3D,
@@ -72,6 +73,7 @@ export default class IntroScene extends Scene {
       start: { position: { x: 0, y: 1, z: 0 }, direction: 1, name: '' },
       end: { position: { x: 0, y: 0, z: 0 }, direction: 1, name: '' },
       fuel: 100,
+      showIndicator: false,
     })
 
     this.addAirplane(airplane)

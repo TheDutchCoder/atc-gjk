@@ -913,16 +913,6 @@ const nextTick = async () => {
 
 const selectedPlane = ref(null)
 
-// Reset the camera if the selected plane is removed.
-// watch(
-//   BoardSceneRef?._airplanes,
-//   (planes) => {
-//     if (!planes.find(plane => plane._id === selectedPlane.value?._id)) {
-//       selectedPlane.value = null
-//     }
-//   }
-// )
-
 const selectPlane = (plane) => {
   BoardSceneRef.selectPlane(plane._id)
 
