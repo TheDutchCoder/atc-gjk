@@ -36,6 +36,7 @@ export const PLANE_1 = new Color(0xff0000)
 export const PLANE_2 = new Color(0x00ff00)
 export const PLANE_3 = new Color(0x0000ff)
 export const PLANE = new Color(0x5252e7)
+export const PLANE_SELECTED = new Color(0xffff00)
 
 export const LANDING_STRIP = new Color(0x000000)
 export const STRIPE = new Color(0xff9a00)
