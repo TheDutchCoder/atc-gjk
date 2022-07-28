@@ -86,11 +86,12 @@ export default class BoardScene extends Scene {
       // Move existing planes every 15 minutes.
       const movePlanes = Promise.all(this._airplanes.value.map(plane => plane.next()))
 
-      let moveBalloons
+      let moveBalloons = Promise.resolve()
+      let moveClouds = Promise.resolve()
 
       // Move existing balloons every 60 minutes.
       if (this._tick.value % 4 === 0) {
-        moveBalloons = await Promise.all(this._balloons.value.map(balloon => balloon.next()))
+        moveBalloons = Promise.all(this._balloons.value.map(balloon => balloon.next()))
       }
 
       // Spawn new balloons when their schedule says so.
@@ -124,18 +125,16 @@ export default class BoardScene extends Scene {
 
       // Move clouds planes every hour
       if (this._tick.value % Math.floor(96 / this._board._width) === 0 && this._tick.value > 0) {
-        await this._clouds.next()
+        moveClouds = this._clouds.next()
       }
 
       await movePlanes
-
-      if (moveBalloons) {
-        await moveBalloons
-      }
+      await moveBalloons
+      await moveClouds
+      await moveSun
 
       await spawnPlanes
       await spawnBalloons
-      await moveSun
 
       this.checkObstructions()
       this.checkCollisions()

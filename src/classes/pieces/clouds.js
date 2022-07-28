@@ -141,8 +141,8 @@ class Clouds {
     return this._clouds
   }
 
-  async next (delay = 0) {
-    await this.animateNext(delay)
+  next (delay = 0) {
+    this.animateNext(delay)
   }
 
   /**
