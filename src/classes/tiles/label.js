@@ -34,6 +34,7 @@ class Label {
 
   reset () {
     this._tiles = []
+    this._labels = new Group()
   }
 
   /**
