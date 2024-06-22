@@ -193,7 +193,7 @@ export default class BoardScene extends Scene {
           if (plane1._id !== plane2._id) {
             const { x: p2X, y: p2Y, z: p2Z } = plane2._position
             if (p1X === p2X && p1Y === p2Y && p1Z === p2Z) {
-              service.send('LOSE')
+              service.send({ type: 'LOSE', message: `Two of your airplanes collided with each other at (${p2X}, ${p2Z}).` })
             }
           }
         })
@@ -203,7 +203,7 @@ export default class BoardScene extends Scene {
           const { position: { x, z } } = powerline
 
           if (p1X === x && p1Z === z && p1Y <= 2) {
-            service.send('LOSE')
+            service.send({ type: 'LOSE', message: `An airplane collided with the powerlines at (${p1X}, ${p1Z}).` })
           }
         })
 
@@ -211,7 +211,7 @@ export default class BoardScene extends Scene {
         this._balloons.value.forEach(balloon => {
           const { x: p2X, y: p2Y, z: p2Z } = balloon._position
           if (p1X === p2X && p1Y === p2Y && p1Z === p2Z) {
-            service.send('LOSE')
+            service.send({ type: 'LOSE', message: `An airplane collided with a hot air balloon at (${p1X}, ${p1Z}).` })
           }
         })
       }
@@ -239,7 +239,7 @@ export default class BoardScene extends Scene {
         } else {
           if (curY === 0) {
             plane.setCrashed()
-            service.send('LOSE')
+            service.send({ type: 'LOSE', message: `An airplane crashed into the ground at (${curX}, ${curZ}).` })
           }
         }
       }
@@ -270,7 +270,7 @@ export default class BoardScene extends Scene {
     this._airplanes.value.forEach(plane => {
       if (plane._fuel <= 0) {
         console.log('game over!')
-        service.send('LOSE')
+        service.send({ type: 'LOSE', message: 'An airplane ran out of fuel.' })
       }
     })
   }
