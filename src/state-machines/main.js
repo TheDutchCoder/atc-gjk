@@ -16,7 +16,7 @@ const toggleMusic = (music) => {
     backgroundMusic.gain.gain.exponentialRampToValueAtTime(0.0001, backgroundMusic.context.currentTime + 2)
   } else {
     backgroundMusic.gain.gain.setValueAtTime(0.0001, backgroundMusic.context.currentTime)
-    backgroundMusic.gain.gain.exponentialRampToValueAtTime(0.2, backgroundMusic.context.currentTime + 2)
+    backgroundMusic.gain.gain.exponentialRampToValueAtTime(0.3, backgroundMusic.context.currentTime + 2)
   }
 }
 

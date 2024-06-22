@@ -277,11 +277,15 @@ export default class GameBoard {
         end = getRandomDestination(this._width, this._depth, airplanes[this._difficulty].height, airfields)
       } while (start.name === end.name)
 
+      // Give the airplane a random target altitude.
+      const targetAltitude = randomRoundNumber(1, airplanes[this._difficulty].height)
+
       // Add airplanes to the queue.
       this._airplanesQueue.push(new Airplane({
         id: uuidv4(),
         start: start,
         end: end,
+        targetAltitude: targetAltitude,
         startTime,
         fuel: randomRoundNumber(20, 35),
         showIndicator: true,

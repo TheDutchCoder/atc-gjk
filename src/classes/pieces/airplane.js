@@ -632,12 +632,12 @@ export default class Airplane {
    * AnimateIdle
    */
   constructor (options) {
-    const { id, start, end, fuel, startTime, showIndicator } = options
+    const { id, start, end, fuel, startTime, showIndicator, targetAltitude } = options
     this._start = start
     this._end = end
     this._position = start.position
     this._direction = start.direction
-    this._targetAltitude = this._position.y || 1
+    this._targetAltitude = targetAltitude || 1
     this._takenOff = this._position.y !== 0
     this._id = id
     this._name = 'GJK'

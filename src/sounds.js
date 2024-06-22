@@ -33,7 +33,7 @@ audioLoader.load(
   click1SoundFile,
   (audioBuffer) => {
     click1Sound.setBuffer(audioBuffer)
-    click1Sound.setVolume(0.8)
+    click1Sound.setVolume(0.6)
   }
 )
 
@@ -41,7 +41,7 @@ audioLoader.load(
   click1SoundFile,
   (audioBuffer) => {
     click2Sound.setBuffer(audioBuffer)
-    click2Sound.setVolume(0.8)
+    click2Sound.setVolume(0.6)
   }
 )
 
@@ -49,7 +49,7 @@ audioLoader.load(
   click1SoundFile,
   (audioBuffer) => {
     click3Sound.setBuffer(audioBuffer)
-    click3Sound.setVolume(0.8)
+    click3Sound.setVolume(0.6)
   }
 )
 
