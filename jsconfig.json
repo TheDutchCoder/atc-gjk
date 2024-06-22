@@ -1,0 +1,45 @@
+{
+  "typeAcquisition": {
+    "include": [
+      "three"
+    ]
+  },
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es6",
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "paths": {
+      "#blocks": [
+        "src/blocks"
+      ],
+      "#classes/*": [
+        "src/classes/*"
+      ],
+      "#elements": [
+        "src/elements"
+      ],
+      "#instances": [
+        "src/instances"
+      ],
+      "#geometries": [
+        "src/geometries"
+      ],
+      "#materials": [
+        "src/materials"
+      ],
+      "#colors": [
+        "src/colors"
+      ],
+      "#tools": [
+        "src/tools"
+      ],
+      "#": [
+        "src"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

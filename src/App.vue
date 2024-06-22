@@ -1,468 +1,1001 @@
 <template>
-  <div class="what">
-    <div v-if="state.matches('loading')" class="fixed top-1/2 left-1/2 bg-red-500">loading</div>
+  <div
+    id="three"
+  />
 
-    <div v-if="state.matches('idle')" class="stage">
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-      <div class="layer"></div>
-    </div>
-
-    <!-- <button
-      class="fixed top-1 right-1 rounded-md bg-gradient-to-br from-violet-500 to-purple-500 px-10 py-3 text-white font-bold m-auto shadow-lg"
-      @click="toggleDebugging"
-    >Debug</button> -->
-
-    <!-- <button
-      class="fixed top-1 right-36 rounded-md bg-gradient-to-br from-violet-500 to-purple-500 px-10 py-3 text-white font-bold m-auto shadow-lg"
-      @click="state.matches('idle') ? send('EDIT') : send('IDLE')"
-    >Edit</button> -->
-
-    <TestButton class="fixed top-2 right-4" text="Debug" @click="toggleDebugging">Debug</TestButton>
-    <TestButton class="fixed top-2 right-36" text="Editor" @click="state.matches('idle') ? send('EDIT') : send('IDLE')">Editor</TestButton>
-
+  <div>
     <transition
-      enter-active-class="transition duration-100 ease-out"
-      enter-from-class="transform scale-95 opacity-0"
-      enter-to-class="transform scale-100 opacity-100"
-      leave-active-class="transition duration-75 ease-in"
-      leave-from-class="transform scale-100 opacity-100"
-      leave-to-class="transform scale-95 opacity-0"
+      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)]"
+      enter-from-class="scale-50 opacity-0"
+      enter-to-class="scale-100 opacity-100"
+      leave-active-class="transition duration-500 ease-in"
+      leave-from-class="scale-100 opacity-100"
+      leave-to-class="scale-95 opacity-0"
     >
       <div
-        class="fixed bottom-4 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        v-if="state.matches('idle')"
+        v-if="state.matches('introIdle')"
+        class="absolute top-32 left-1/2 transform -translate-x-1/2"
       >
-        <!-- <button
-          class="rounded-md bg-gradient-to-r from-cyan-500 to-blue-500 px-10 py-3 text-white font-bold m-auto shadow-lg"
-          @click="send({ type: 'START' })"
-        >Start new game</button> -->
-
-        <TestButton text="Start a\a new game" @click="send({ type: 'START' })">Start a<br>new game</TestButton>
+        <h1 class="font-callout text-6xl stage">
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <div class="layer" />
+          <span class="opacity-0">Air Traffic Control</span>
+        </h1>
       </div>
     </transition>
 
-    <button v-if="state.matches('start')" class="fixed bottom-1 left-1 rounded-md bg-gradient-to-r from-red-500 to-orange-500 px-10 py-3 text-white font-bold m-auto mt-8" @click="showQuitDialog">Quit</button>
+    <!-- Play -->
     <transition
-      enter-active-class="transition duration-100 ease-out"
-      enter-from-class="transform scale-95 opacity-0"
-      enter-to-class="transform scale-100 opacity-100"
-      leave-active-class="transition duration-75 ease-in"
-      leave-from-class="transform scale-100 opacity-100"
-      leave-to-class="transform scale-95 opacity-0"
+      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)] delay-100"
+      enter-from-class="scale-50 opacity-0"
+      enter-to-class="scale-100 opacity-100"
+      leave-active-class="transition duration-500 ease-in delay-200"
+      leave-from-class="scale-100 opacity-100"
+      leave-to-class="scale-95 opacity-0"
     >
       <div
-        class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col space-y-4 items-center"
-        v-if="state.matches('start') && quitDialog"
+        v-if="state.matches('introIdle')"
+        class="fixed bottom-1/4 left-1/2 transform -translate-x-1/2"
       >
-        <div class="text-center text-red-700 bg-white rounded-lg p-10 shadow-xl bg-opacity-90">
-          <h1 class="font-bold font-callout text-2xl">Are you sure you want to quit?</h1>
-          <p>Your game will not be saved and you will lose all points.</p>
+        <ActionButton
+          size="lg"
+          @click="service.send('INTRO_OUT')"
+        >
+          Play
+        </ActionButton>
+      </div>
+    </transition>
 
-          <div class="space-x-2">
-          <button
-            class="rounded-md bg-gradient-to-r from-red-500 to-orange-500 px-10 py-3 text-white font-bold m-auto mt-8"
-            @click="quitGame"
-          >Quit the game</button>
-          <button
-            class="rounded-md bg-gradient-to-r from-green-500 to-lime-500 px-10 py-3 text-white font-bold m-auto mt-8"
-            @click="hideQuitDialog"
-          >Keep playing</button>
+    <!-- Quality -->
+    <transition
+      enter-active-class="transition duration-500 ease-[cubic-bezier(.75,-0.4,.25,1.4)] delay-200"
+      enter-from-class="scale-50 opacity-0"
+      enter-to-class="scale-100 opacity-100"
+      leave-active-class="transition duration-500 ease-in delay-200"
+      leave-from-class="scale-100 opacity-100"
+      leave-to-class="scale-95 opacity-0"
+    >
+      <div
+        v-if="state.matches('introIdle')"
+        class="fixed top-3 right-2"
+      >
+        <ActionButton
+          @click="service.send('TOGGLE_SETTINGS')"
+        >
+          🛠
+        </ActionButton>
+      </div>
+    </transition>
+
+    <transition
+      enter-active-class="transition duration-250 ease-[cubic-bezier(.75,-0.4,.25,1.4)]"
+      enter-from-class="scale-50 opacity-0"
+      enter-to-class="scale-100 opacity-100"
+      leave-active-class="transition duration-250 ease-in"
+      leave-from-class="scale-100 opacity-100"
+      leave-to-class="scale-95 opacity-0"
+    >
+      <div
+        v-if="state.context.settings"
+        class="fixed inset-0 z-50 flex justify-center items-center"
+      >
+        <div
+          class="absolute inset-0 bg-slate-800/50"
+          @click.self="service.send('TOGGLE_SETTINGS')"
+        />
+        <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block text-center min-w-xs max-w-sm">
+          <h2 class="text-base font-bold">
+            🛠 Settings
+          </h2>
+          <div class="grid grid-cols-2 gap-4 text-left mt-8 text-sm">
+            <div class="font-bold">
+              Difficulty
+            </div>
+            <div class="flex w-full">
+              <ActionButton
+                is-secondary
+                size="sm"
+                class="flex-grow"
+                @click="service.send('DIFFICULTY')"
+              >
+                {{ difficulties[state.context.difficulty] }}
+              </ActionButton>
+            </div>
+
+            <div class="font-bold">
+              Shadows
+            </div>
+            <div class="flex w-full">
+              <ActionButton
+                is-secondary
+                size="sm"
+                class="flex-grow"
+                @click="service.send('TOGGLE_QUALITY')"
+              >
+                {{ state.context.quality }}
+              </ActionButton>
+            </div>
+
+            <div class="font-bold">
+              Music<sup class="text-red-500">*</sup>
+            </div>
+            <div class="flex w-full">
+              <ActionButton
+                is-secondary
+                size="sm"
+                class="flex-grow"
+                @click="service.send('TOGGLE_MUSIC')"
+              >
+                {{ state.context.music ? 'ON' : 'OFF' }}
+              </ActionButton>
+            </div>
+
+            <div class="col-span-2 text-xs text-gray-500">
+              <sup class="text-red-500">*</sup>Music can't be automatically enabled yet, so it will always be <span class="font-bold">off</span> by default.
+            </div>
           </div>
+
+          <ActionButton
+            is-primary
+            size="sm"
+            class="mt-8"
+            @click="service.send('TOGGLE_SETTINGS')"
+          >
+            Close
+          </ActionButton>
         </div>
       </div>
     </transition>
 
-    <Renderer
-      ref="rendererRef"
-      antialias
-      :orbit-ctrl="{ enableDamping: true, enablePan: false, enableZoom: false }"
-      resize="window"
-      shadow
-      alpha
+    <!-- Game UI -->
+    <template v-if="state.hasTag('board')">
+      <!-- Score -->
+      <transition
+        enter-active-class="transition duration-200 ease-in-out delay-100"
+        enter-from-class="transform scale-50 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-200 ease-in-out delay-300"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-50 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying')"
+          class="fixed top-2 left-1/2 transform -translate-x-1/2 bg-white rounded shadow-block origin-top"
+        >
+          <div class="pt-2 pb-3 px-4 text-center text-sm">
+            <div class="font-bold text-gray-800">
+              Score
+            </div>
+            <div
+              class="font-bold"
+              :class="score < 0 ? 'text-rose-500' : score > 0 ? 'text-green-500' : 'text-blue-500'"
+            >
+              {{ score }}
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- Time -->
+      <transition
+        enter-active-class="transition duration-200 ease-in-out delay-200"
+        enter-from-class="transform scale-50 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-200 ease-in-out delay-200"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-50 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying')"
+          class="fixed top-2 right-2 text-xs font-bold origin-top-right"
+        >
+          <div
+            class="flex justify-center items-center rounded-full w-16 h-16 shadow-block bg-white cursor-pointer transform hover:bg-blue-200 transition-colors"
+            @click="nextTick"
+          >
+            <div
+              class="rounded-full w-16 h-16 border-2 border-white"
+              :style="grad"
+            />
+          </div>
+
+          <div class="absolute -bottom-16 left-1/2 w-16 transform -translate-x-1/2 bg-white pt-2 pb-3 px-3 rounded shadow-block text-center">
+            <div class="font-bold text-sm">
+              Time
+            </div>
+            <div class="text-blue-500">
+              {{ time }}
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- Schedule -->
+      <transition
+        enter-active-class="transition duration-200 ease-in-out delay-300"
+        enter-from-class="transform scale-50 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-200 ease-in-out delay-100"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-50 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying')"
+          class="fixed bottom-2 right-2 w-80 bg-white rounded shadow-block origin-bottom-right"
+        >
+          <div class="p-2 pb-3 text-center">
+            <div class="font-bold text-sm text-gray-800">
+              Flight Schedule
+            </div>
+            <div class="space-y-1 max-h-48 overflow-auto mt-2">
+              <table class="text-sm font-bold w-full">
+                <thead>
+                  <tr class="sticky top-0 bg-white bg-opacity-80">
+                    <th class="font-bold text-sm text-gray-700">
+                      Time
+                    </th>
+                    <th class="font-bold text-sm text-gray-700">
+                      Status
+                    </th>
+                    <th class="font-bold text-sm text-gray-700">
+                      Entry
+                    </th>
+                    <th class="font-bold text-sm text-gray-700">
+                      Exit
+                    </th>
+                    <th class="font-bold text-sm text-gray-700">
+                      Fuel
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="text-xs">
+                  <tr
+                    v-for="(plane, index) in schedule"
+                    :key="plane._id"
+                    class="transition-colors cursor-pointer"
+                    :class="getPlaneClasses(plane, index)"
+                    @click="plane._flightStatus === flightStatusses.IN_FLIGHT ? selectPlane(plane) : null"
+                  >
+                    <td class="py-1">
+                      {{ formatTime(plane._startTime) }}
+                    </td>
+                    <td class="py-1">
+                      {{ plane._flightStatus }}
+                    </td>
+                    <td class="py-1">
+                      {{ plane._start.name }}
+                    </td>
+                    <td class="py-1">
+                      {{ plane._end.name }}
+                    </td>
+                    <td class="py-1">
+                      {{ plane._fuel }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- Quit -->
+      <transition
+        enter-active-class="transition duration-200 ease-in-out delay-[400ms]"
+        enter-from-class="transform scale-50 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-200 ease-in-out"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-50 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying')"
+          class="fixed top-3 left-2 origin-top-left"
+        >
+          <ActionButton @click="service.send('QUIT')">
+            Quit
+          </ActionButton>
+        </div>
+      </transition>
+
+      <!-- Flight Controls -->
+      <transition
+        enter-active-class="transition duration-200 ease-in-out"
+        enter-from-class="transform scale-50 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-200 ease-in-out"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-50 opacity-0"
+      >
+        <div
+          v-show="state.matches('gamePlaying') && selectedPlane"
+          class="fixed bottom-2 left-2 bg-white rounded shadow-block origin-bottom-left"
+        >
+          <div class="p-2 pb-3 text-center">
+            <div class="font-bold text-sm text-gray-800">
+              Flight Controls
+            </div>
+            <div class="flex">
+              <div class="p-2 space-y-1">
+                <div class="font-bold text-sm text-gray-700">
+                  Direction
+                </div>
+                <div class="grid grid-cols-3 gap-1">
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === -1"
+                    :is-disabled="selectedPlane?._isGhost"
+                    @click="setDirection(-1)"
+                  >
+                    45
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    class="row-span-2"
+                    :is-primary="selectedPlane?._targetDirection === 0 && selectedPlane?._targetAltitude !== 0"
+                    :is-disabled="selectedPlane?._isGhost"
+                    @click="setDirection(0); setHeight(selectedPlane?._position.y)"
+                  >
+                    &uarr;
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === 1"
+                    :is-disabled="selectedPlane?._isGhost"
+                    @click="setDirection(1)"
+                  >
+                    45
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === -2"
+                    :is-disabled="selectedPlane?._isGhost"
+                    @click="setDirection(-2)"
+                  >
+                    90
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === 2"
+                    :is-disabled="selectedPlane?._isGhost"
+                    @click="setDirection(2)"
+                  >
+                    90
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === -3"
+                    :is-disabled="selectedPlane?._isGhost"
+                    @click="setDirection(-3)"
+                  >
+                    135
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === 0 && selectedPlane?._targetAltitude === 0"
+                    :is-disabled="selectedPlane?._isGhost"
+                    @click="setDirection(0); setHeight(0)"
+                  >
+                    L
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === 3"
+                    :is-disabled="selectedPlane?._isGhost"
+                    @click="setDirection(3)"
+                  >
+                    135
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === -4"
+                    :is-disabled="selectedPlane?._isGhost"
+                    @click="setDirection(-4)"
+                  >
+                    180
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    is-disabled
+                  >
+                    &infin;
+                  </ActionButton>
+                  <ActionButton
+                    size="control"
+                    :is-primary="selectedPlane?._targetDirection === 4"
+                    :is-disabled="selectedPlane?._isGhost"
+                    @click="setDirection(4)"
+                  >
+                    180
+                  </ActionButton>
+                </div>
+              </div>
+              <div class="p-2 space-y-1">
+                <div class="font-bold text-sm text-gray-700">
+                  Altitude
+                </div>
+                <div class="grid grid-cols-3 gap-1">
+                  <ActionButton
+                    v-for="height in [0, 1, 2, 3, 4, 5, 6, 7, 8]"
+                    :key="height"
+                    size="control"
+                    :is-secondary="selectedPlane?._position.y === height && selectedPlane?._targetAltitude !== height"
+                    :is-primary="selectedPlane?._targetAltitude === height"
+                    :is-disabled="selectedPlane?._isGhost"
+                    @click="setHeight(height)"
+                  >
+                    {{ height }}
+                  </ActionButton>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- Quit Modal -->
+      <transition
+        enter-active-class="transition duration-100 ease-out"
+        enter-from-class="transform scale-95 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-75 ease-in"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-95 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying.quit')"
+          class="fixed z-50 inset-0 flex items-center justify-center"
+        >
+          <div
+            class="absolute inset-0 bg-blue-300 bg-opacity-80"
+            @click.self="service.send('CANCEL')"
+          />
+          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block text-center max-w-sm">
+            <h2 class="text-base font-bold">
+              Are you sure you want to quit?
+            </h2>
+            <p class="text-gray-500 mt-2">
+              You'll have to start a new game if you quit.
+            </p>
+            <div class="flex space-x-4 items-center justify-center mt-6">
+              <ActionButton
+                size="sm"
+                is-secondary
+                @click="service.send('CANCEL')"
+              >
+                No
+              </ActionButton>
+              <ActionButton
+                size="sm"
+                is-primary
+                @click="service.send('DONE')"
+              >
+                Yes
+              </ActionButton>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- Lose Modal -->
+      <transition
+        enter-active-class="transition duration-100 ease-out"
+        enter-from-class="transform scale-95 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-75 ease-in"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-95 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying.lose')"
+          class="fixed z-50 inset-0 flex items-center justify-center"
+        >
+          <div class="absolute inset-0 bg-blue-300 bg-opacity-80" />
+          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block text-center max-w-sm">
+            <h2 class="text-base font-bold">
+              Oh boy, that didn't go well!
+            </h2>
+            <p class="text-gray-500 mt-2">
+              {{ state.context.loseMessage }}
+            </p>
+            <div class="flex space-x-4 items-center justify-center mt-6">
+              <ActionButton
+                size="sm"
+                is-primary
+                @click="service.send('DONE')"
+              >
+                Admit Defeat
+              </ActionButton>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- Win Modal -->
+      <transition
+        enter-active-class="transition duration-100 ease-out"
+        enter-from-class="transform scale-95 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-75 ease-in"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-95 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying.win')"
+          class="fixed z-50 inset-0 flex items-center justify-center"
+        >
+          <div class="absolute inset-0 bg-blue-300 bg-opacity-80" />
+          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block text-center max-w-sm">
+            <h2 class="text-base font-bold">
+              You won{{ score < 0 ? ' (sort of)' : '' }}! {{ score < 0 ? '😅' : '🎉' }}
+            </h2>
+            <p class="text-gray-500 mt-2">
+              You scored a total of <span
+                class="font-bold"
+                :class="score < 0 ? 'text-rose-500' : score > 0 ? 'text-green-500' : 'text-blue-500'"
+              >{{ score }}</span> points.
+            </p>
+            <div class="flex space-x-4 items-center justify-center mt-6">
+              <ActionButton
+                size="sm"
+                is-primary
+                @click="service.send('DONE')"
+              >
+                Nice{{ score < 0 ? '-ish' : '' }}!
+              </ActionButton>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </template>
+
+    <!-- Debug UI -->
+    <!-- <button
+      class="fixed bottom-64 left-2 bg-white rounded px-4 py-2 font-bold"
+      @click="logStats"
     >
-      <Camera
-        ref="cameraRef"
-        :position="{ x: 15, y: 9, z: 15 }"
-      />
-      <Scene ref="sceneRef">
-        <HemisphereLight
-          ref="hemiLight"
-          color="#ffffff"
-          groundColor="#080802"
-          :intensity="0.7"
-          :position="{ x: 15, y: 25, z: 15 }"
-        />
-        <DirectionalLight
-          ref="dirLight"
-          color="#ffffff"
-          :intensity="0.3"
-          cast-shadow
-          :shadowMapSize="{ width: 2048, height: 2048 }"
-        />
-        <DirectionalLight
-          ref="dirLight2"
-          color="#b0e1ed"
-          :intensity="0.2"
-          :position="{ x: -20, y: 25, z: -20 }"
-        />
-
-        <Intro v-if="state.matches('idle')"></Intro>
-        <Editor v-if="state.matches('edit')"></Editor>
-        <Board v-if="state.matches('start')"></Board>
-      </Scene>
-    </Renderer>
-
-    <div class="debug">
-      <button @click="DEBUG = !DEBUG">Debug</button>
-      <button @click="fly = Math.abs(fly - 1)">Fly</button>
-      <button @click="tick++">Tick</button>
-    </div>
+      Stats
+    </button> -->
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed, onBeforeUnmount } from 'vue'
-import { Camera, DirectionalLight, HemisphereLight, Renderer, Scene } from 'troisjs'
-import { AxesHelper, HemisphereLightHelper, DirectionalLightHelper, Object3D, Color, Quaternion, Vector3, PCFSoftShadowMap } from 'three'
+import { onMounted, ref, computed, watch } from 'vue'
+import TWEEN from '@tweenjs/tween.js'
+import { service, state } from '#/state-machines/main'
+// import { gameMachine } from '#/state-machines/game'
+// import { useMachine } from '@xstate/vue'
 
-import { useMachine } from '@xstate/vue'
-import { machine } from '#/machines/main'
+import renderer, { initRenderer, stats, initStats } from '#/renderer'
+import controls, { resetControls } from '#/controls'
+import camera from '#/camera'
+import clock from '#/clock'
 
-import useDebugger from '#composables/use-debugger'
-import useRenderer from '#composables/use-renderer'
-import useScene from '#composables/use-scene'
-import useCamera from '#composables/use-camera'
+import { formatTime, getDirectionFactors, lerpColor } from '#/tools'
+import { flightStatusses, difficulties, qualities, quality, timers } from '#/constants'
 
-import { randomNumber, randomRoundNumber, lerpColor } from '#tools'
+import IntroScene from '#classes/scenes/intro-scene'
+import EditScene from '#classes/scenes/edit-scene'
+import BoardScene from '#classes/scenes/board-scene'
 
-import { DEBUG } from './utils'
+import { Raycaster, Vector2, Color, Fog } from 'three'
 
-import Intro from '#components/intro.vue'
-import Editor from '#components/editor.vue'
-import Board from '#components/board.vue'
+import ActionButton from '#/components/ActionButton.vue'
+import { click1Sound } from '#/sounds'
 
-import TestButton from '#components/test-button.vue'
+let EditSceneRef = null
+let IntroSceneRef = null
+let BoardSceneRef = null
 
-const { debugging, toggleDebugging } = useDebugger()
-const { sceneRef } = useScene()
-const { cameraRef, camera } = useCamera()
-const { rendererRef, renderer } = useRenderer()
-
-const { state, send, service } = useMachine(machine)
-
-const quitDialog = ref(false)
-const showQuitDialog = () => quitDialog.value = true
-const hideQuitDialog = () => quitDialog.value = false
-const quitGame = () => {
-  hideQuitDialog()
-  service.children.get('gameMachine').send('STOP')
-}
+const schedule = ref([])
+const time = computed(() => formatTime(BoardSceneRef._tick.value))
+const score = computed(() => BoardSceneRef._score.value)
 
 /**
- * States
+ * Returns the classes for a plane in the flight schedule.
  */
+const getPlaneClasses = (plane, index) => {
+  const isSelected = plane._id === selectedPlane.value?._id
+  const isInFlight = plane._flightStatus === flightStatusses.IN_FLIGHT
+
+  const status = [
+    plane._flightStatus === flightStatusses.APPROACHING && 'bg-blue-200 text-blue-400 cursor-not-allowed',
+    plane._flightStatus === flightStatusses.SCHEDULED && 'text-gray-400 cursor-not-allowed',
+    plane._flightStatus === flightStatusses.LANDED && 'bg-teal-100 text-teal-500 cursor-not-allowed',
+    plane._flightStatus === flightStatusses.EXITED && 'bg-teal-100 text-teal-500 cursor-not-allowed',
+    plane._flightStatus === flightStatusses.LOST && 'bg-rose-100 text-rose-400 cursor-not-allowed',
+  ]
+
+  const selected = [
+    'bg-blue-500 text-white hover:bg-blue-600 border-b-2 border-blue-800',
+  ]
+
+  const inFlight = [
+    !isSelected && (index % 2 === 0) && 'bg-gray-100',
+    !isSelected && 'hover:bg-gray-200',
+  ]
+
+  return [
+    ...(!isSelected ? status : []),
+    ...(isSelected ? selected : []),
+    ...(isInFlight ? inFlight : []),
+  ]
+}
+
+const color1 = ref('#ecfeff')
+const color2 = ref('#7dd3fc')
 
 onMounted(() => {
-  send({ type: 'IDLE' })
+  initRenderer()
+  // initStats()
+
+  controls.autoRotate = false
+  controls.enablePan = true
+
+  let watcher1
+  let watcher2
+  let watcher3
+
+  // Refactor
+  service.onTransition(async (state) => {
+    if (state.changed && state.matches('editIn')) {
+      controls.autoRotate = false
+
+      EditSceneRef = new EditScene()
+      EditSceneRef.start()
+      EditSceneRef.render()
+
+      await EditSceneRef.animateIn()
+
+      service.send('DONE')
+    }
+
+    /**
+     * The intro should animate in.
+     */
+    if (state.changed && state.matches('introIn')) {
+      controls.autoRotate = true
+
+      IntroSceneRef = new IntroScene()
+      IntroSceneRef.start()
+      IntroSceneRef.render()
+
+      await IntroSceneRef.animateIn()
+
+      service.send('DONE')
+    }
+
+    /**
+     * The intro should animate out.
+     */
+    if (state.changed && state.matches('introOut')) {
+      controls.enableRotate = false
+      controls.autoRotate = false
+
+      await IntroSceneRef.animateOut()
+
+      service.send('DONE')
+    }
+
+    /**
+     * The Game board should animate in.
+     */
+    if (state.changed && state.matches('gameIn')) {
+      IntroSceneRef.reset()
+      BoardSceneRef = new BoardScene()
+
+      watcher1 = watch(
+        BoardSceneRef._tick,
+        (tick) => {
+          clearInterval(subTickTimer.value)
+
+          subTick.value = 0
+
+          subTickTimer.value = setInterval(() => {
+            subTick.value++
+          }, timers[difficulties[state.context.difficulty]])
+
+          // Update colors.
+          const factor = tick / 96
+          const sin = Math.sin(factor * Math.PI)
+
+          color1.value = lerpColor('#7ba2a4', '#ecfeff', sin)
+          color2.value = lerpColor('#498baa', '#7dd3fc', sin)
+
+          const fog = lerpColor('#5a7683', '#a6daef', sin)
+          const hemi = lerpColor('#3e728a', '#9bc8e9', sin)
+          const sunlight = lerpColor('#f19ac1', '#f5ecc1', sin)
+
+          BoardSceneRef._scene.fog = new Fog(new Color(fog), 15, 350)
+          BoardSceneRef._scene.children.forEach(child => {
+            if (child.name === 'hemi') {
+              child.color = new Color(hemi)
+            }
+
+            if (child.name === 'sun') {
+              child.children[0].color = new Color(sunlight)
+            }
+          })
+
+          // Update schedule.
+          schedule.value = BoardSceneRef._board._airplanesQueue.map(plane => {
+            const n = BoardSceneRef._airplanes.value.find((a) => a._id === plane._id)
+
+            return n || plane
+          })
+        }
+      )
+
+      BoardSceneRef.start()
+      BoardSceneRef.render()
+
+      const pos = camera.position
+
+      new TWEEN.Tween(pos)
+        .to({ x: 80, y: 35, z: 80 }, 1500)
+        .easing(TWEEN.Easing.Cubic.InOut)
+        .onUpdate(() => camera.position.set(pos.x, pos.y, pos.z))
+        .onComplete(() => {
+          controls.enableRotate = true
+          controls.enableZoom = true
+          service.send('DONE')
+        })
+        .start()
+
+      await BoardSceneRef.animateIn()
+    }
+
+    /**
+     * The game is currently underway.
+     */
+    if (state.changed && state.matches('gamePlaying')) {
+      controls.enableRotate = true
+
+      watcher2 = watch(
+        BoardSceneRef._airplanes,
+        (planes) => {
+          if (!planes.find(plane => plane._id === selectedPlane.value?._id)) {
+            selectedPlane.value = null
+          }
+        }
+      )
+
+      watcher3 = watch(
+        schedule,
+        (newSchedule) => {
+          if (newSchedule.every(plane => plane._flightStatus === flightStatusses.LANDED || plane._flightStatus === flightStatusses.EXITED || plane._flightStatus === flightStatusses.LOST)) {
+            service.send('WIN')
+          }
+        }
+      )
+    }
+
+    /**
+     * The game is done and we animate out to the intro again.
+     */
+    if (state.changed && state.matches('gameOut')) {
+      controls.enableRotate = false
+
+      const pos = camera.position
+
+      new TWEEN.Tween(pos)
+        .to({ x: 15, y: 9, z: 15 }, 1500)
+        .easing(TWEEN.Easing.Cubic.InOut)
+        .onUpdate(() => camera.position.set(pos.x, pos.y, pos.z))
+        .onComplete(() => {
+          controls.enableRotate = true
+          controls.enableZoom = true
+          service.send('DONE')
+        })
+        .delay(500)
+        .start()
+
+      await BoardSceneRef.animateOut()
+      BoardSceneRef.reset()
+
+      // Reset background
+      color1.value = '#ecfeff'
+      color2.value = '#7dd3fc'
+
+      watcher1()
+      watcher2()
+      watcher3()
+    }
+  })
+
+  let delta = 0
+  let interval = 1 / 60 // 60 FPS
+
+  const raycaster = new Raycaster()
+  const pointer = new Vector2()
+  let isMouseDown = false
+
+  const onMouseDown = (e) => {
+    isMouseDown = true
+    pointer.x = ( e.clientX / window.innerWidth ) * 2 - 1
+    pointer.y = - ( e.clientY / window.innerHeight ) * 2 + 1
+  }
+
+  const onMouseUp = () => {
+    isMouseDown = false
+  }
+
+
+  // The main animation loop for the game, which is clamped to 60 FPS.
+  renderer.setAnimationLoop(async (_) => {
+    delta += clock.getDelta()
+
+    stats.begin()
+
+    if (service.state.hasTag('intro') && IntroSceneRef?._scene) {
+      renderer.render(IntroSceneRef._scene, camera)
+
+      if (delta > interval) {
+        IntroSceneRef._animate()
+      }
+    } else if (service.state.hasTag('edit') && EditSceneRef?._scene) {
+      renderer.render(EditSceneRef._scene, camera)
+
+      if (delta > interval) {
+        EditSceneRef._animate()
+      }
+    } else if (service.state.hasTag('board') && BoardSceneRef?._scene) {
+
+      if (isMouseDown) {
+        raycaster.setFromCamera( pointer, camera )
+
+        const intersects = raycaster.intersectObjects( BoardSceneRef._scene.children )
+
+        // Find the closest airplane
+        const objects = intersects.sort((a, b) => a.distance < b.distance)
+        const planeParent = objects.find(object => object.object.parent.name === 'plane')
+
+        if (planeParent) {
+          selectPlane(planeParent.object.parent)
+          isMouseDown = false
+        }
+      }
+
+      renderer.render(BoardSceneRef._scene, camera)
+
+      if (delta > interval) {
+        BoardSceneRef._animate()
+      }
+    }
+
+    controls.update()
+    TWEEN.update(_)
+
+    stats.end()
+
+    delta = delta % interval
+  })
+
+  // Make sure the canvas resizes when the window resizes.
+  const onWindowResize = () => {
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+
+    renderer.setSize(window.innerWidth, window.innerHeight)
+  }
+
+  window.addEventListener('resize', onWindowResize, false)
+  window.addEventListener('mousedown', onMouseDown)
+  window.addEventListener('mouseup', onMouseUp)
+
+  service.send('INTRO_IN')
+  // service.send('EDIT_IN')
 })
+
+
+const nextTick = async () => {
+  click1Sound.play()
+  await BoardSceneRef.nextTick()
+}
+
+const selectedPlane = ref(null)
+
+const selectPlane = (plane) => {
+  BoardSceneRef.selectPlane(plane._id)
+
+  selectedPlane.value = BoardSceneRef._airplanes.value.find(plane => plane._isSelected)
+}
+
+const setHeight = (height) => {
+  if (selectedPlane.value && !selectedPlane.value._isGhost) {
+    selectedPlane.value.setHeight(height)
+  }
+}
+
+const setDirection = (direction) => {
+  if (selectedPlane.value && !selectedPlane.value._isGhost) {
+    selectedPlane.value.setDirection(direction)
+  }
+}
+
+const subTick = ref(0)
+const subTickTimer = ref(null)
+
+watch(
+  subTick,
+  async (newTick) => {
+    // next boardTick
+    if (newTick === 30) {
+      await BoardSceneRef.nextTick()
+    }
+  }
+)
 
 watch(
   state,
   (newState) => {
-    // Update shadows when switching between game modes.
-    shouldShadowsUpdate = true
-
-    if (newState.matches('idle')) {
-      dirLight.value.light.shadow.camera.top = 90
-      dirLight.value.light.shadow.camera.bottom = -120
-      dirLight.value.light.shadow.camera.left = -90
-      dirLight.value.light.shadow.camera.right = 90
-    } else {
-      dirLight.value.light.shadow.camera.top = 5
-      dirLight.value.light.shadow.camera.bottom = -5
-      dirLight.value.light.shadow.camera.left = -5
-      dirLight.value.light.shadow.camera.right = 5
-    }
-
-    if (newState.matches('start')) {
-      pivot2.rotation.y = 0
-    }
-
-    // When entering edit mode, we enable certain orbit controls (like zooming)
-    // and reset them when we exit this mode.
-    if (newState.matches('edit')) {
-      rendererRef.value.three.cameraCtrl.enableZoom = true
-      rendererRef.value.three.cameraCtrl.enablePan = true
-      rendererRef.value.three.cameraCtrl.reset()
-    } else if (newState.matches('start')) {
-      rendererRef.value.three.cameraCtrl.enableZoom = true
-      rendererRef.value.three.cameraCtrl.reset()
-      // console.log(cameraRef.value.camera)
-      cameraRef.value.camera.position.set(100, 80, 100)
-    } else {
-      rendererRef.value.three.cameraCtrl.enableZoom = false
-      rendererRef.value.three.cameraCtrl.enablePan = false
-      rendererRef.value.three.cameraCtrl.reset()
+    if (newState.matches('gamePlaying.lose') || newState.matches('gamePlaying.win') || newState.matches('gameOut')) {
+      selectedPlane.value = null
+      clearInterval(subTickTimer.value)
     }
   }
 )
 
-
-const GRASS_TILE = 'GrassTile'
-const FARM_TILE = 'FarmTile'
-const TRAIN_TILE = 'TrainTracksTile'
-const AIRPORT_TILE = 'AirportTile'
-
-const MIN_CLOUDS = 2
-const MAX_CLOUDS = 4
-const MIN_AIRFIELDS = 2
-const MAX_AIRFIELDS = 4
-
-const numberOfClouds = randomNumber(MIN_CLOUDS, MAX_CLOUDS)
-const numberOfAirfields = randomNumber(MIN_AIRFIELDS, MAX_AIRFIELDS)
-
-const time = computed(() => {
-  const h = Math.floor((tick.value % 96) / 4)
-  const q = (tick.value % 4) * 15
-
-  return `${h.toString().padStart(2, '0')}:${q.toString().padStart(2, '0')}`
+const grad = computed(() => {
+  return { 'background': `conic-gradient(#3b82f6 ${(subTick.value / 30) * 360}deg, transparent ${(subTick.value / 30) * 360}deg)` }
 })
-
-const cloudPositions = []
-while (cloudPositions.length < numberOfClouds) {
-  const r = {
-    x: randomRoundNumber(-5, 5),
-    y: randomRoundNumber(-5, 5),
-    z: randomRoundNumber(5, 7),
-  }
-
-  if (!cloudPositions.find(i => i.x === r.x && i.y === r.y)) {
-    cloudPositions.push(r)
-  }
-}
-
-const airfieldPositions = []
-while (airfieldPositions.length < numberOfAirfields) {
-  const r = {
-    x: randomRoundNumber(-4, 4),
-    y: randomRoundNumber(-4, 4),
-    direction: randomRoundNumber(0, 7),
-  }
-
-  if (!airfieldPositions.find(i => i.x === r.x && i.y === r.y)) {
-    airfieldPositions.push(r)
-  }
-}
+const foo = computed(() => `radial-gradient(${color1.value}, ${color2.value})`)
 
 
-const score = ref(0)
-const hemiLight = ref()
-const dirLight = ref()
-
-const fly = ref(0)
-const tick = ref(42) // 4am
-const cycle = ref(0)
-
-let shouldShadowsUpdate = false
-
+/**
+ * @todo
+ *
+ * This doesn't seem to work for some reason.
+ */
 watch(
-  tick,
-  (newTick) => {
-    shouldShadowsUpdate = true
+  state,
+  (newState, oldState) => {
+    localStorage.setItem('atc-context', JSON.stringify(newState.context))
 
-    console.log("Scene polycount:", rendererRef.value.renderer.info.render.triangles)
-    console.log("Active Drawcalls:", rendererRef.value.renderer.info.render.calls)
-    console.log("Textures in Memory", rendererRef.value.renderer.info.memory.textures)
-    console.log("Geometries in Memory", rendererRef.value.renderer.info.memory.geometries)
+    if (newState.context.quality !== oldState.context.quality) {
+      console.log(IntroSceneRef)
 
-    if (newTick % 4 === 0) {
-      cycle.value++
-
-      // cleanPlanes()
-      // movePlanes()
-      // scorePlanes()
+      IntroSceneRef._scene.children.forEach(child => {
+        if (child.name === 'sun') {
+          console.log(child.children[0].shadow)
+          // child.children[0].shadow.mapSize.width = quality[newState.context.quality].shadows
+          // child.children[0].shadow.mapSize.height = quality[newState.context.quality].shadows
+          // child.children[0].shadow.needsUpdate = true
+        }
+      })
     }
-
-    // Move the sun.
-    pivot.rotation.y = ((-newTick / 96) * Math.PI * 2) + (Math.PI / 2)
-
-    // Interpolate the sun's color.
-    // Between 6pm and midnight: pink to dark pink
-    // Between mindnight and 6am: dark pink to pink
-    // Between 6am and noon: pink to white
-    // Between noon and 6pm: white to pink
-    let hex1, hex2, i
-    if ((newTick % 96) >= 0 && (newTick % 96) < 24) {
-      // midnight => 6am
-      hex1 = '#8d1953'
-      hex2 = '#d95f70'
-    } else if ((newTick % 96) >= 24 && (newTick % 96) < 48) {
-      // 6am => noon
-      hex1 = '#d95f70'
-      hex2 = '#f7f4db'
-    } else if ((newTick % 96) >= 48 && (newTick % 96) < 72) {
-      // noon => 6pm
-      hex1 = '#f7f4db'
-      hex2 = '#d95f70'
-    } else if ((newTick % 96) >= 72 && (newTick % 96) < 96) {
-      // 6pm => midnight
-      hex1 = '#d95f70'
-      hex2 = '#8d1953'
-    }
-
-    dirLight.value.light.color = new Color(lerpColor(hex1, hex2, (newTick % 24) / 24))
-
-    // The intensity of the sun increases during the day and decreases during the night.
-    dirLight.value.light.intensity = 0.2 + Math.sin((((newTick % 96) / 96) * Math.PI * 2) - Math.PI / 2) / 10
   }
 )
-// const iTiles = ref()
-// const iTiles2 = ref()
 
-const pivot = new Object3D()
-const pivot2 = new Object3D()
-
-
-let beforeRenderMethod
-let afterRenderMethod
-
-
-onMounted(() => {
-  const axeshelper = new AxesHelper(5)
-  sceneRef.value.add(axeshelper)
-
-  const hemiLightHelper = new HemisphereLightHelper(hemiLight.value.light)
-  sceneRef.value.add(hemiLightHelper)
-
-  const dirLightHelper = new DirectionalLightHelper(dirLight.value.light)
-  sceneRef.value.add(dirLightHelper)
-
-  console.log(dirLight.value)
-  // dirLight.value.light.shadow.radius = 10
-
-  console.log(dirLight.value)
-  // dirLight.value.light.shadow.camera.top = 90
-  // dirLight.value.light.shadow.camera.bottom = -120
-  // dirLight.value.light.shadow.camera.left = -90
-  // dirLight.value.light.shadow.camera.right = 90
-
-  sceneRef.value.scene.add(pivot)
-  pivot.add(dirLight.value.light)
-  pivot.rotation.x = Math.PI / -3
-  // pivot.rotation.y = (Math.PI / 2) + (((nextTick % 96) / 96) * Math.PI * 2) // move depending on start time (nectTick) this is currently midnight
-  pivot.rotation.y = ((-tick.value / 96) * Math.PI * 2) + (Math.PI / 2)
-
-  dirLight.value.light.position.x = 60
-  // dirLight.value.light.position.z = 50
-  dirLight.value.light.lookAt(0, 0, 0)
-
-  // pivot.rotation.y = 0.1
-  // pivot.rotation.x = Math.PI / -4
-  // pivot.rotation.z = Math.PI / -2
-
-  // const cameraHelper = new CameraHelper(cameraRef.value.camera)
-  // sceneRef.value.add(cameraHelper)
-
-  // Dir light test
-  dirLight.value.light.shadow.near = 0.5
-  dirLight.value.light.shadow.far = 500
-
-  let i = 0
-
-  // rendererRef.value.renderer.shadowMap.type = PCFSoftShadowMap
-  rendererRef.value.renderer.shadowMap.autoUpdate = false
-
-  console.log(cameraRef.value.camera)
-
-  sceneRef.value.scene.add(pivot2)
-  pivot2.add(cameraRef.value.camera)
-  shouldShadowsUpdate = true
-  // pivot.rotation.x = Math.PI / -3
-  // pivot.rotation.y = (Math.PI / 2) + (((nextTick % 96) / 96) * Math.PI * 2) // move depending on start time (nectTick) this is currently midnight
-  // pivot.rotation.y += i/100
-
-
-  beforeRenderMethod = () => {
-    stats.begin()
-    rendererRef.value.renderer.shadowMap.needsUpdate = shouldShadowsUpdate
-
-    if (state.value.matches('idle') && !debugging.value) {
-      pivot2.rotation.y = i / 300
-    }
-
-    i++
-  }
-
-  afterRenderMethod = () => {
-    stats.end()
-    shouldShadowsUpdate = false
-  }
-
-  rendererRef.value.onBeforeRender(beforeRenderMethod)
-  rendererRef.value.onAfterRender(afterRenderMethod)
-})
-
-onBeforeUnmount(() => {
-  rendererRef.value.offBeforeRender(beforeRenderMethod)
-  rendererRef.value.offAfterRender(afterRenderMethod)
-})
-
-import Stats from 'stats.js'
-
-var stats = new Stats();
-stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-document.body.appendChild(stats.dom);
 </script>
 
 <style>
-body {
-  margin: 0;
-}
-canvas {
-  display: block;
-}
-
-.debug {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  z-index: 10;
-}
-
-.what {
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(#ecfeff, #7dd3fc);
+#three {
+  background: v-bind(foo)
 }
 
 .stage {
-  height: 250px;
-  width: 500px;
-  position: fixed;
-  /* bottom: 0; */
-  top: 0;
-  left: 50%;
+  position: relative;
   perspective: 9999px;
   transform-style: preserve-3d;
-  transform: translateX(-50%);
 }
 
 .layer {
@@ -471,11 +1004,8 @@ canvas {
   position: absolute;
   color: whitesmoke;
   transform-style: preserve-3d;
-  animation: ಠ_ಠ 10s infinite alternate ease-in-out -10s;
-  animation-fill-mode: forwards;
-  transform: rotateY(-15deg) translateZ(0);
+  transform: rotateX(15deg) translateZ(0) translateY(-5%);
 }
-
 .layer:after {
   font: 4rem/0.95 "Carter One", "Domgle", Futura, "Roboto", "Trebuchet MS", Helvetica, sans-serif;
   content: "Air Traffic Control";
@@ -484,123 +1014,89 @@ canvas {
   height: 100%;
   width: 100%;
   position: absolute;
-  top: 50px;
+  top: 0px;
   letter-spacing: -2px;
   text-shadow: 4px 0 10px rgba(0, 0, 0, 0.13);
 }
-
 .layer:nth-child(1):after {
   transform: translateZ(0px);
 }
-
 .layer:nth-child(2):after {
   transform: translateZ(-1.5px);
 }
-
 .layer:nth-child(3):after {
   transform: translateZ(-3px);
 }
-
 .layer:nth-child(4):after {
   transform: translateZ(-4.5px);
 }
-
 .layer:nth-child(5):after {
   transform: translateZ(-6px);
 }
-
 .layer:nth-child(6):after {
   transform: translateZ(-7.5px);
 }
-
 .layer:nth-child(7):after {
   transform: translateZ(-9px);
 }
-
 .layer:nth-child(8):after {
   transform: translateZ(-10.5px);
 }
-
 .layer:nth-child(9):after {
   transform: translateZ(-12px);
 }
-
 .layer:nth-child(10):after {
   transform: translateZ(-13.5px);
 }
-
 .layer:nth-child(11):after {
   transform: translateZ(-15px);
 }
-
 .layer:nth-child(12):after {
   transform: translateZ(-16.5px);
 }
-
 .layer:nth-child(13):after {
   transform: translateZ(-18px);
 }
-
 .layer:nth-child(14):after {
   transform: translateZ(-19.5px);
 }
-
 .layer:nth-child(15):after {
   transform: translateZ(-21px);
 }
-
 .layer:nth-child(16):after {
   transform: translateZ(-22.5px);
 }
-
 .layer:nth-child(17):after {
   transform: translateZ(-24px);
 }
-
 .layer:nth-child(18):after {
   transform: translateZ(-25.5px);
 }
-
 .layer:nth-child(19):after {
   transform: translateZ(-27px);
 }
-
 .layer:nth-child(20):after {
   transform: translateZ(-28.5px);
 }
-
 .layer:nth-child(n+10):after {
   -webkit-text-stroke: 3px rgba(0, 0, 0, 0.25);
 }
-
 .layer:nth-child(n+11):after {
-  -webkit-text-stroke: 15px #0891b2;
-  text-shadow: 6px 0 6px #00366b, 5px 5px 5px #002951, 0 6px 6px #00366b;
+  -webkit-text-stroke: 15px #0ea5e9;
 }
-
 .layer:nth-child(n+12):after {
-  -webkit-text-stroke: 15px #0077ea;
+  -webkit-text-stroke: 15px #0369a1;
 }
-
 .layer:last-child:after {
   -webkit-text-stroke: 17px rgba(0, 0, 0, 0.1);
+  text-shadow: 0px 5px 26px rgba(3, 105, 161, 1);
 }
-
 .layer:first-child:after {
-  /* color: #fff; */
   text-shadow: none;
 }
 
-@keyframes ಠ_ಠ {
-  0% {
-    color: #eee;
-  }
-  50% {
-    color: #fff;
-  }
-  100% {
-    color: #eee;
-    transform: rotateY(15deg);
-  }
+.what {
+  width: 100%;
+  height: 100%;
 }
 </style>
