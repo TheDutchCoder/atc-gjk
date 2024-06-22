@@ -1,3 +1,5 @@
+export const DEBUG = true
+
 export const difficulties = [
   'EASY',
   'NORMAL',

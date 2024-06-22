@@ -33,8 +33,9 @@ const defaultContext = {
   music: false,
   quality: 'MEDIUM',
   settings: false,
+  loseMessage: 'You have lost!',
 }
-const context = storedContext ? Object.assign({}, JSON.parse(storedContext), { settings: false, music: false }) : defaultContext
+const context = { ...defaultContext, ...JSON.parse(storedContext) }
 
 export const mainMachine = createMachine({
   id: 'main',
@@ -98,7 +99,10 @@ export const mainMachine = createMachine({
       states: {
         playing: {
           on: {
-            LOSE: 'lose',
+            LOSE: {
+              target: 'lose',
+              actions: ['setLoseMessage'],
+            },
             WIN: 'win',
             QUIT: 'quit',
           },
@@ -149,6 +153,9 @@ export const mainMachine = createMachine({
     }),
     toggleSettings: assign({
       settings: (ctx) => !ctx.settings,
+    }),
+    setLoseMessage: assign({
+      loseMessage: (ctx, event) => event.message,
     }),
   },
 })

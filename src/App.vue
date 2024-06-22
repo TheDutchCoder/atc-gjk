@@ -514,7 +514,7 @@
               Oh boy, that didn't go well!
             </h2>
             <p class="text-gray-500 mt-2">
-              It looks like you've lost the game. Go hang your head in shame!
+              {{ state.context.loseMessage }}
             </p>
             <div class="flex space-x-4 items-center justify-center mt-6">
               <ActionButton
