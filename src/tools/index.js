@@ -539,7 +539,7 @@ export const getRandomStart = (width, depth, maxHeight, airports = []) => {
 }
 
 export const getRandomDestination = (width, depth, maxHeight, airports = []) => {
-  const isAirport = airports.length ? Math.random() > 0.3 : false
+  const isAirport = airports.length ? Math.random() <= 0.3 : false
 
   const minX = Math.ceil(0 - (width / 2)) -1
   const maxX = Math.abs(minX)
