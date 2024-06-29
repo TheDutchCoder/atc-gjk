@@ -99,6 +99,7 @@ export const mainMachine = createMachine({
       states: {
         playing: {
           on: {
+            PAUSE: 'pause',
             LOSE: {
               target: 'lose',
               actions: ['setLoseMessage'],
@@ -106,6 +107,11 @@ export const mainMachine = createMachine({
             WIN: 'win',
             QUIT: 'quit',
           },
+        },
+        pause: {
+          on: {
+            RESUME: 'playing',
+          }
         },
         lose: {
           on: {

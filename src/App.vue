@@ -1,7 +1,5 @@
 <template>
-  <div
-    id="three"
-  />
+  <div id="three" />
 
   <div>
     <transition
@@ -316,6 +314,25 @@
         </div>
       </transition>
 
+      <!-- Pause -->
+      <transition
+        enter-active-class="transition duration-200 ease-in-out delay-[400ms]"
+        enter-from-class="transform scale-50 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-200 ease-in-out"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-50 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying')"
+          class="fixed top-3 left-28 origin-top-left"
+        >
+          <ActionButton @click="state.matches('gamePlaying.pause') ? service.send('RESUME') : service.send('PAUSE')">
+            {{ state.matches('gamePlaying.pause') ? 'Resume' : 'Pause' }}
+          </ActionButton>
+        </div>
+      </transition>
+
       <!-- Flight Controls -->
       <transition
         enter-active-class="transition duration-200 ease-in-out"
@@ -495,6 +512,43 @@
         </div>
       </transition>
 
+      <!-- Pause Modal -->
+      <transition
+        enter-active-class="transition duration-100 ease-out"
+        enter-from-class="transform scale-95 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-75 ease-in"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-95 opacity-0"
+      >
+        <div
+          v-if="state.matches('gamePlaying.pause')"
+          class="fixed z-50 inset-0 flex items-center justify-center"
+        >
+          <div
+            class="absolute inset-0 bg-blue-300 bg-opacity-80"
+            @click.self="service.send('RESUME')"
+          />
+          <div class="relative z-10 p-6 pb-7 rounded bg-white shadow-block text-center max-w-sm">
+            <h2 class="text-base font-bold">
+              Paused
+            </h2>
+            <p class="text-gray-500 mt-2">
+              The game is currently paused.
+            </p>
+            <div class="flex space-x-4 items-center justify-center mt-6">
+              <ActionButton
+                size="sm"
+                is-primary
+                @click="service.send('RESUME')"
+              >
+                Resume
+              </ActionButton>
+            </div>
+          </div>
+        </div>
+      </transition>
+
       <!-- Lose Modal -->
       <transition
         enter-active-class="transition duration-100 ease-out"
@@ -656,6 +710,7 @@ onMounted(() => {
 
   // Refactor
   service.onTransition(async (state) => {
+    console.log(state)
     if (state.changed && state.matches('editIn')) {
       controls.autoRotate = false
 
@@ -786,6 +841,22 @@ onMounted(() => {
           }
         }
       )
+    }
+
+    /**
+     * The game is paused.
+     */
+    if (state.changed && state.matches('gamePlaying.pause')) {
+      clearInterval(subTickTimer.value)
+    }
+
+    /**
+     * The game is resume.
+     */
+     if (state.changed && state.event.type === 'RESUME') {
+      subTickTimer.value = setInterval(() => {
+        subTick.value++
+      }, timers[difficulties[state.context.difficulty]])
     }
 
     /**
