@@ -64,7 +64,7 @@ export default class GameTile {
   }
 
   /**
-   * Set the ne wposition of the game tile and update the model's physical
+   * Set the new position of the game tile and update the model's physical
    * position on the board.
    */
   set position (position) {
